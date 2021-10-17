@@ -23,7 +23,6 @@ class CustomTheme {
     };
 
     return ThemeData(
-        // primaryColor: Colors.purple,
         primarySwatch: MaterialColor(0xfffffaca, color),
         scaffoldBackgroundColor: Colors.white,
         fontFamily: 'Nunito Sans',

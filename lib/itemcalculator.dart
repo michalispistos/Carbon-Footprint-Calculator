@@ -5,180 +5,86 @@ import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:collection';
 
 void main() => runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     title: "Carbon Footprint Calculator",
     theme: CustomTheme.lightTheme,
-    home: ItemCalculationStart()));
+    home: const ItemCalculationStart()));
 
-class MyApp extends StatelessWidget {
+class ItemInfoPage extends StatelessWidget {
+  const ItemInfoPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    Color color = Theme.of(context).primaryColor;
-
-    Widget inputSections = Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _buildButtonRow(color, Icons.call, 'CALL'),
-        _buildButtonRow(color, Icons.near_me, 'ROUTE'),
-        _buildButtonRow(color, Icons.share, 'SHARE'),
-      ],
-    );
-
-    // return MaterialApp(
-    //   theme: CustomTheme.lightTheme,
-    //   title: 'Welcome to Flutter',
-    home:
-    return Scaffold(
-      appBar: AppBar(
-          // title: const Text('Carbon Footprint Calculator'),
+    return MaterialApp(
+      theme: CustomTheme.lightTheme,
+      title: 'Welcome to Flutter',
+      home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Complete some details about your item'),
           ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset('images/coatrack.png'),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [Text("Type of product")]),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
-            SizedBox(
-                width: 200,
-                height: 40,
-                child: TextField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Type of product"),
-                ))
-          ]),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [Text("Weight of product")]),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
-            SizedBox(
-                width: 200,
-                height: 40,
-                child: TextField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), hintText: "Weight in kg"),
-                ))
-          ]),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
-            Text("Material"),
-          ]),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
-            Expanded(
-                child:
-                    SizedBox(width: 200, height: 100, child: MaterialsList()))
-          ]),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            SizedBox(
-                width: 350,
-                child: TextButton(
-                  onPressed: () {},
-                  child: const Text('Calculate carbon score'),
-                ))
-          ]),
-        ],
-      ),
-      // ),
-    );
-  }
-
-  Row _buildButtonRow(Color color, IconData icon, String label) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color),
-        Container(
-          margin: const EdgeInsets.only(top: 1),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: color,
-            ),
-          ),
-        ),
-      ],
+          resizeToAvoidBottomInset: false,
+          body: const ItemDetails()),
     );
   }
 }
 
-class MaterialsList extends StatefulWidget {
-  const MaterialsList({Key? key}) : super(key: key);
+class ItemDetails extends StatefulWidget {
+  const ItemDetails({Key? key}) : super(key: key);
 
   @override
-  _MaterialsListState createState() => _MaterialsListState();
+  _ItemDetailsState createState() => _ItemDetailsState();
 }
 
-class _MaterialsListState extends State<MaterialsList> {
-  HashMap materials_to_percentages = new HashMap<String, double>();
-  String valueChoose = "Choose material";
-
+class _ItemDetailsState extends State<ItemDetails> {
+  HashMap materialsToPercentages = HashMap<String, double>();
+  String dropdownValue = 'Acrylic';
   List<String> materials = [
-    "Wool",
-    "Acrylic",
-    "Viscose",
-    "Cotton",
-    "Silk",
-    "polyester",
-    "Polyurethane",
-    "Flax linen"
+    'Acrylic',
+    'Cotton',
+    'Flax linen',
+    'Polyester',
+    'Polyurethane',
+    'Silk',
+    'Viscose',
+    'Wool',
   ];
 
-  Future createDialog(BuildContext context) {
-    TextEditingController controller1 = TextEditingController();
-    TextEditingController controller2 = TextEditingController();
+  calculateTotalPercentages() {
+    double totalPercentage = 0;
+    for (var v in materialsToPercentages.values) {
+      totalPercentage += v;
+    }
+    return totalPercentage;
+  }
 
+  calculateCarbonScore() {
+    if (calculateTotalPercentages() != 100) {
+      createErrorDialog(context, "Percentages don't add up to 100");
+    }
+  }
+
+  Future createErrorDialog(BuildContext context, String errorMessage) {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text(""),
-            content: Container(
-                height: 150,
-                child: Column(children: [
-                  Text("Material"),
-                  DropdownButton<String>(
-                    // value:valueChoose,
-                    onChanged: (newValue) {
-                      setState(() {
-                        valueChoose = newValue.toString();
-                      });
-                    },
-                    items: materials.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-
-                  // TextField(
-                  //   controller: controller1,
-                  // ),
-                  SizedBox(height: 10),
-                  Text("Percentage (%)"),
-                  TextField(
-                    controller: controller2,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(
-                          RegExp(r'^(\d+)?\.?\d{0,2}'))
-                    ],
-                  )
-                ])),
+            title: const Text("Error"),
+            content: SizedBox(
+              height: 20,
+              child: Text(errorMessage),
+            ),
             actions: <Widget>[
               MaterialButton(
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0)),
                 elevation: 5.0,
-                child: Text("SUBMIT"),
+                child: const Text("CLOSE"),
                 onPressed: () {
-                  Navigator.of(context)
-                      .pop([valueChoose, controller2.text.toString()]);
+                  Navigator.of(context).pop();
                 },
               )
             ],
@@ -186,53 +92,229 @@ class _MaterialsListState extends State<MaterialsList> {
         });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        height: 10,
-        child: Column(
-          children: [
-            Expanded(
-                child: Center(
-                    child: FlatButton(
-              onPressed: () {
-                createDialog(context).then((value) => {
-                      setState(() {
-                        materials_to_percentages.putIfAbsent(
-                            value[0], () => double.parse(value[1]));
+  Future createMaterialPercentageDialog(BuildContext context) {
+    TextEditingController controller = TextEditingController();
+
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text(""),
+            content: SizedBox(
+                height: 145,
+                child: Column(children: [
+                  const Text("Material"),
+                  StatefulBuilder(
+                      builder: (BuildContext context, StateSetter setState) {
+                        return DropdownButton(
+                          hint: Text(dropdownValue),
+                          icon: const Icon(Icons.arrow_downward),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: const TextStyle(color: Colors.green),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.greenAccent,
+                          ),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              dropdownValue = newValue!;
+                            });
+                          },
+                          items: materials.map((String value) {
+                            return DropdownMenuItem(
+                              child: Text(value),
+                              value: value,
+                            );
+                          }).toList(),
+                        );
                       }),
-                      materials.remove(value[0])
-                    });
-              },
-              child: Text("Add"),
-            ))),
-            Expanded(child: _displayMap()),
-          ],
-        ));
+                  const SizedBox(height: 10),
+                  const Text("Percentage (%)"),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                      height: 30,
+                      child: TextField(
+                        textAlign: TextAlign.center,
+                        cursorColor: Colors.black,
+                        decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.all(10.0),
+                            border: OutlineInputBorder(),
+                            focusedBorder: OutlineInputBorder(),
+                            hintText: "i.e. 45%"),
+                        style: const TextStyle(
+                            fontSize: 15.0, color: Colors.black),
+                        controller: controller,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'^(\d+)?\.?\d{0,2}'))
+                        ],
+                      )),
+                ])),
+            actions: <Widget>[
+              MaterialButton(
+                color: Colors.blue,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0)),
+                elevation: 5.0,
+                child: const Text("SUBMIT"),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pop([dropdownValue, controller.text.toString()]);
+                },
+              )
+            ],
+          );
+        });
   }
 
-  Widget _displayMap() {
+  Widget _buildAddMaterialButton() {
+    return FlatButton(
+      color: const Color(0xfffffaca),
+      shape: const CircleBorder(),
+      onPressed: () {
+        createMaterialPercentageDialog(context).then((value) => {
+          setState(() {
+            if (calculateTotalPercentages() + double.parse(value[1]) >
+                100) {
+              createErrorDialog(
+                  context, "Percentages add up to more than 100");
+            } else {
+              materialsToPercentages.putIfAbsent(
+                  value[0], () => double.parse(value[1]));
+              materials.remove(value[0]);
+              dropdownValue = materials[0];
+            }
+          }),
+        });
+      },
+      child: const Text("+"),
+    );
+  }
+
+  Widget _displayMaterialsToPercentageMap() {
     return ListView.builder(
-      itemCount: materials_to_percentages.length,
+      itemCount: materialsToPercentages.length,
       itemBuilder: (BuildContext context, int index) {
-        String key = materials_to_percentages.keys.elementAt(index);
+        String key = materialsToPercentages.keys.elementAt(index);
         return Column(
           children: <Widget>[
-            ListTile(
-              title: new Text("$key"),
-              subtitle: new Text("${materials_to_percentages[key]}%"),
-            ),
-            const Divider(
-              height: 0.2,
-            ),
+            SizedBox(
+                width: 250,
+                child:
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                          left: 40,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: ListTile(
+                          title: Text("$key: ${materialsToPercentages[key]}%"),
+                        ),
+                      )),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                      setState(() {
+                        materials.add(key);
+                        materials.sort();
+                        materialsToPercentages.remove(key);
+                      });
+                    },
+                  )
+                ])),
+            const SizedBox(height: 10)
           ],
         );
       },
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Image.asset('images/coatrack.png'),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [Text("Type of product")]),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
+          SizedBox(
+              width: 200,
+              height: 30,
+              child: TextField(
+                  cursorColor: Colors.black,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.all(10.0),
+                      hintText: "i.e. t-shirt"),
+                  style: TextStyle(fontSize: 15.0, color: Colors.black)))
+        ]),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [Text("Weight of product (kg)")]),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
+          SizedBox(
+              width: 200,
+              height: 30,
+              child: TextField(
+                  cursorColor: Colors.black,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    focusedBorder: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.all(10.0),
+                    hintText: "i.e. 1.2",
+                  ),
+                  style: TextStyle(fontSize: 15.0, color: Colors.black)))
+        ]),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Container(
+              margin: const EdgeInsets.only(
+                left: 40,
+              ),
+              child: const Text("Materials")),
+          _buildAddMaterialButton(),
+        ]),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Expanded(
+              child: SizedBox(
+                  width: 200,
+                  height: 100,
+                  child: _displayMaterialsToPercentageMap()))
+        ]),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          SizedBox(
+              width: 350,
+              child: FlatButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0)),
+                color: const Color(0xfffffaca),
+                onPressed: () {
+                  calculateCarbonScore();
+                },
+                child: const Text('Calculate carbon score'),
+              ))
+        ]),
+      ],
+    );
+  }
 }
 
+
+
+//first page
+
 class ItemCalculationStart extends StatelessWidget {
+  const ItemCalculationStart({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -307,7 +389,7 @@ class ItemCalculationStart extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MyApp()),
+                    MaterialPageRoute(builder: (context) => const ItemInfoPage()),
                   );
                 },
               ),
@@ -324,9 +406,9 @@ class CircleBackgroundPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // Offset sets each circle's center
     canvas.drawCircle(
-        Offset(size.width - 40, 20), 150, Paint()..color = Color(0xffffe3d3));
+        Offset(size.width - 40, 20), 150, Paint()..color = const Color(0xffffe3d3));
     canvas.drawCircle(Offset(size.width / 2, size.height), 300,
-        Paint()..color = Color(0xffe7f6ff));
+        Paint()..color = const Color(0xffe7f6ff));
   }
 
   @override
