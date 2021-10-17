@@ -10,6 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Color color = Theme.of(context).primaryColor;
 
+
     Widget inputSections = Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
