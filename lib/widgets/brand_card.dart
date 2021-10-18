@@ -1,28 +1,44 @@
 import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
+import 'package:carbon_footprint_calculator/screens/brand_details.dart';
+import 'package:carbon_footprint_calculator/utils/brand_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BrandCard extends StatelessWidget {
+
+  final dynamic brandInfo;
+
   const BrandCard(
       {Key? key,
-        required this.cardColor,
-        required this.title,
-        required this.rating,
-        required this.description})
+        required this.brandInfo})
       : super(key: key);
-
-  final Color cardColor;
-  final String title;
-  final int rating;
-  final String description;
 
   @override
   Widget build(BuildContext context) {
-    return BorderIcon(
-      child: Stack(children: <Widget>[
-        Text(title),
-      ]),
-      bgColor: cardColor,
+    final ThemeData themeData = Theme.of(context);
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const BrandDetails()),
+        );
+      },
+      child: BorderIcon(
+        child: Stack(
+          children: <Widget>[
+          AspectRatio(
+            aspectRatio: 18.0 / 12.0,
+            child: Image.asset(
+              brandInfo.logoPath,
+            ),
+          ),
+          ],
+        ),
+        bgColor: themeData.primaryColorLight.withOpacity(1),
+      ),
+
     );
   }
 }
+
+
