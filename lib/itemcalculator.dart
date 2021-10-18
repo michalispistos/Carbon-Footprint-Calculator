@@ -45,13 +45,13 @@ class ItemDetails extends StatefulWidget {
 
 class _ItemDetailsState extends State<ItemDetails> {
   TextEditingController itemWeightController = TextEditingController();
-  TextEditingController itemTypeController = TextEditingController();
   Map<String, double> materialsToPercentages = HashMap();
-  String dropdownValue = 'Acrylic';
+  String materialDropdownValue = 'Acrylic';
+  String typeDropdownValue = 'Top';
   List<String> materials = [
     'Acrylic',
     'Cotton',
-    'Flax linen',
+    'Flax Linen',
     'Polyester',
     'Polyurethane',
     'Silk',
@@ -73,14 +73,13 @@ class _ItemDetailsState extends State<ItemDetails> {
       return;
     }
 
-    String itemType = itemTypeController.text;
-
     if (double.tryParse(itemWeightController.text) == null) {
+      createErrorDialog(context, "Complete weight");
       throw Exception("Invalid weight");
     }
 
     double itemWeight = double.parse(itemWeightController.text);
-    Item item = Item(materialsToPercentages, itemType, itemWeight);
+    Item item = Item(materialsToPercentages, typeDropdownValue, itemWeight);
 
     Navigator.push(
       context,
@@ -96,8 +95,9 @@ class _ItemDetailsState extends State<ItemDetails> {
             title: const Text("Error"),
             content: SizedBox(
               height: 20,
-              child: Text(errorMessage),
-            ),
+              child: Text(errorMessage,style: const TextStyle(
+                fontSize: 15,
+              ))),
             actions: <Widget>[
               MaterialButton(
                 color: Colors.red,
@@ -129,7 +129,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                   StatefulBuilder(
                       builder: (BuildContext context, StateSetter setState) {
                         return DropdownButton(
-                          hint: Text(dropdownValue),
+                          hint: Text(materialDropdownValue),
                           icon: const Icon(Icons.arrow_downward),
                           iconSize: 24,
                           elevation: 16,
@@ -140,7 +140,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                           ),
                           onChanged: (String? newValue) {
                             setState(() {
-                              dropdownValue = newValue!;
+                              materialDropdownValue = newValue!;
                             });
                           },
                           items: materials.map((String value) {
@@ -183,7 +183,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                 child: const Text("SUBMIT"),
                 onPressed: () {
                   Navigator.of(context)
-                      .pop([dropdownValue, controller.text.toString()]);
+                      .pop([materialDropdownValue, controller.text.toString()]);
                 },
               )
             ],
@@ -206,7 +206,7 @@ class _ItemDetailsState extends State<ItemDetails> {
               materialsToPercentages.putIfAbsent(
                   value[0], () => double.parse(value[1]));
               materials.remove(value[0]);
-              dropdownValue = materials[0];
+              materialDropdownValue = materials[0];
             }
           }),
         });
@@ -267,18 +267,30 @@ class _ItemDetailsState extends State<ItemDetails> {
         Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [Text("Type of product")]),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
-          SizedBox(
-              width: 200,
-              height: 30,
-              child: TextField(
-                  cursorColor: Colors.black,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.all(10.0),
-                      hintText: "i.e. t-shirt"),
-                  style: TextStyle(fontSize: 15.0, color: Colors.black)))
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          DropdownButton(
+            hint: Text(typeDropdownValue),
+            icon: const Icon(Icons.arrow_downward),
+            iconSize: 24,
+            elevation: 16,
+            style: const TextStyle(color: Colors.green),
+            underline: Container(
+              height: 2,
+              color: Colors.green,
+            ),
+            onChanged: (String? newValue) {
+              setState(() {
+                typeDropdownValue = newValue!;
+              });
+            },
+            items:  <String>['Top', 'Bottom', 'Shoes']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem(
+                child: Text(value),
+                value: value,
+              );
+            }).toList(),
+          )
         ]),
         Row(
             mainAxisAlignment: MainAxisAlignment.center,

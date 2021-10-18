@@ -11,7 +11,7 @@ class MaterialsImpact {
     "Silk" : 25,
     "Polyester" : 21,
     "Polyurethane" : 20,
-    "Flax Linen" : 15
+    "Flax Linen" : 15,
   };
 }
 
