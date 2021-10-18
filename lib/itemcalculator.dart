@@ -6,7 +6,6 @@ import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:collection';
 
 void main() => runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
@@ -19,16 +18,15 @@ class ItemInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: CustomTheme.lightTheme,
-      title: 'Welcome to Flutter',
-      home: Scaffold(
+    return  Scaffold(
           appBar: AppBar(
-            title: const Text('Complete some details about your item'),
+          title: const Text('Complete some details about your item',
+              style: TextStyle(
+              fontSize: 15,
+              )),
           ),
           resizeToAvoidBottomInset: false,
-          body: const ItemDetails()),
-    );
+          body: const ItemDetails());
   }
 }
 
@@ -267,19 +265,24 @@ class _ItemDetailsState extends State<ItemDetails> {
         Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [Text("Weight of product (kg)")]),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
+        Row(mainAxisAlignment: MainAxisAlignment.center, children:  [
           SizedBox(
               width: 200,
               height: 30,
               child: TextField(
                   cursorColor: Colors.black,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     focusedBorder: OutlineInputBorder(),
                     contentPadding: EdgeInsets.all(10.0),
                     hintText: "i.e. 1.2",
                   ),
-                  style: TextStyle(fontSize: 15.0, color: Colors.black)))
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(
+                        RegExp(r'^(\d+)?\.?\d{0,2}'))
+                  ],
+                  style: const TextStyle(fontSize: 15.0, color: Colors.black)))
         ]),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Container(
