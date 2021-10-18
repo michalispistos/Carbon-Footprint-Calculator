@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
 import 'package:carbon_footprint_calculator/themes/default_theme.dart';
 import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
@@ -63,7 +64,12 @@ class _ItemDetailsState extends State<ItemDetails> {
   calculateCarbonScore() {
     if (calculateTotalPercentages() != 100) {
       createErrorDialog(context, "Percentages don't add up to 100");
+      return;
     }
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CarbonScoreResult()),
+    );
   }
 
   Future createErrorDialog(BuildContext context, String errorMessage) {
