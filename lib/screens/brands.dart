@@ -1,20 +1,34 @@
 import 'package:carbon_footprint_calculator/themes/default_theme.dart';
 import 'package:carbon_footprint_calculator/widgets/brands_grid.dart';
+import 'package:carbon_footprint_calculator/widgets/navbar.dart';
+import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+void main() => runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    title: "Carbon Footprint Calculator",
+    theme: CustomTheme.lightTheme,
+    home: const BrandPage()));
+
 class BrandPage extends StatelessWidget {
   const BrandPage({Key? key}) : super(key: key);
+  static const NavBar navBar = NavBar();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-        appBar: AppBar(title: const Text("Top Green Brands"), backgroundColor: Colors.transparent, elevation: 0,),
-        body: Stack(children: <Widget>[
+      appBar: AppBar(
+        title: const Text("Top Green Brands"),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: Stack(
+        children: <Widget>[
           CustomPaint(size: Size.infinite, painter: CircleBackgroundPainter()),
-          const BrandsGrid(),
-        ])
+          Column(children: const <Widget>[navBar, BrandsGrid()])
+        ],
+      ),
     );
   }
 }
