@@ -2,8 +2,6 @@ import 'dart:collection';
 
 import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
 import 'package:carbon_footprint_calculator/themes/default_theme.dart';
-import 'package:carbon_footprint_calculator/utils/carbon_calculator.dart';
-import 'package:carbon_footprint_calculator/utils/carbon_footprint.dart';
 import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +42,6 @@ class ItemDetails extends StatefulWidget {
 class _ItemDetailsState extends State<ItemDetails> {
   TextEditingController itemWeightController = TextEditingController();
   TextEditingController itemTypeController = TextEditingController();
-  CarbonFootprint carbonFootprint = CarbonFootprint(calculator : DefaultCarbonCalculator());
   Map<String, double> materialsToPercentages = HashMap();
   String dropdownValue = 'Acrylic';
   List<String> materials = [
@@ -71,17 +68,16 @@ class _ItemDetailsState extends State<ItemDetails> {
       createErrorDialog(context, "Percentages don't add up to 100");
       return;
     }
+
     String itemType = itemTypeController.text;
+
     if (double.tryParse(itemWeightController.text) == null) {
-      // Should never occur?
       throw Exception("Invalid weight");
     }
+
     double itemWeight = double.parse(itemWeightController.text);
     Item item = Item(materialsToPercentages, itemType, itemWeight);
 
-    // Pass item to new screen
-
-    // carbonFootprint.getFootprint(item);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => CarbonScoreResult(item : item)),
