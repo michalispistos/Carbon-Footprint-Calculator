@@ -1,11 +1,15 @@
 import 'dart:collection';
 
 import 'package:carbon_footprint_calculator/themes/default_theme.dart';
+import 'package:carbon_footprint_calculator/utils/carbon_calculator.dart';
+import 'package:carbon_footprint_calculator/utils/carbon_footprint.dart';
 import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:collection';
+
+import 'data/item.dart';
 
 void main() => runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
@@ -39,7 +43,10 @@ class ItemDetails extends StatefulWidget {
 }
 
 class _ItemDetailsState extends State<ItemDetails> {
-  HashMap materialsToPercentages = HashMap<String, double>();
+  TextEditingController weightController = TextEditingController();
+  TextEditingController itemTypeController = TextEditingController();
+  CarbonFootprint carbonFootprint = CarbonFootprint(calculator : DefaultCarbonCalculator());
+  Map<String, double> materialsToPercentages = HashMap();
   String dropdownValue = 'Acrylic';
   List<String> materials = [
     'Acrylic',
@@ -64,6 +71,17 @@ class _ItemDetailsState extends State<ItemDetails> {
     if (calculateTotalPercentages() != 100) {
       createErrorDialog(context, "Percentages don't add up to 100");
     }
+    String itemType = itemTypeController.text;
+    if (double.tryParse(itemTypeController.text) == null) {
+      // Should never occur?
+      throw Exception("Invalid weight");
+    }
+    double itemWeight = double.parse(itemTypeController.text);
+    Item item = Item(materialsToPercentages, itemType, itemWeight);
+
+    // Pass item to new screen
+
+    // carbonFootprint.getFootprint(item);
   }
 
   Future createErrorDialog(BuildContext context, String errorMessage) {
@@ -261,19 +279,21 @@ class _ItemDetailsState extends State<ItemDetails> {
         Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [Text("Weight of product (kg)")]),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           SizedBox(
               width: 200,
               height: 30,
               child: TextField(
+                  controller: weightController,
                   cursorColor: Colors.black,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     focusedBorder: OutlineInputBorder(),
                     contentPadding: EdgeInsets.all(10.0),
                     hintText: "i.e. 1.2",
                   ),
-                  style: TextStyle(fontSize: 15.0, color: Colors.black)))
+                  style: const TextStyle(fontSize: 15.0, color: Colors.black),
+              )),
         ]),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Container(

@@ -17,7 +17,7 @@ class DefaultCarbonCalculator implements CarbonCalculator {
       double percentage = item.materials[material]!;
 
       if (!materialsImpact.containsKey(material)) {
-        throw Exception("Item contains an unknown material.");
+        throw ArgumentError("Item contains an unknown material.");
       }
 
       result += materialsImpact[material]! * percentage * item.weight * 0.001;
