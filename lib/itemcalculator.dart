@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
 import 'package:carbon_footprint_calculator/themes/default_theme.dart';
 import 'package:carbon_footprint_calculator/utils/carbon_calculator.dart';
 import 'package:carbon_footprint_calculator/utils/carbon_footprint.dart';
@@ -7,7 +8,6 @@ import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:collection';
 
 import 'data/item.dart';
 
@@ -22,16 +22,15 @@ class ItemInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: CustomTheme.lightTheme,
-      title: 'Welcome to Flutter',
-      home: Scaffold(
+    return  Scaffold(
           appBar: AppBar(
-            title: const Text('Complete some details about your item'),
+          title: const Text('Complete some details about your item',
+              style: TextStyle(
+              fontSize: 15,
+              )),
           ),
           resizeToAvoidBottomInset: false,
-          body: const ItemDetails()),
-    );
+          body: const ItemDetails());
   }
 }
 
@@ -43,7 +42,7 @@ class ItemDetails extends StatefulWidget {
 }
 
 class _ItemDetailsState extends State<ItemDetails> {
-  TextEditingController weightController = TextEditingController();
+  TextEditingController itemWeightController = TextEditingController();
   TextEditingController itemTypeController = TextEditingController();
   CarbonFootprint carbonFootprint = CarbonFootprint(calculator : DefaultCarbonCalculator());
   Map<String, double> materialsToPercentages = HashMap();
@@ -70,18 +69,23 @@ class _ItemDetailsState extends State<ItemDetails> {
   calculateCarbonScore() {
     if (calculateTotalPercentages() != 100) {
       createErrorDialog(context, "Percentages don't add up to 100");
+      return;
     }
     String itemType = itemTypeController.text;
-    if (double.tryParse(itemTypeController.text) == null) {
+    if (double.tryParse(itemWeightController.text) == null) {
       // Should never occur?
       throw Exception("Invalid weight");
     }
-    double itemWeight = double.parse(itemTypeController.text);
+    double itemWeight = double.parse(itemWeightController.text);
     Item item = Item(materialsToPercentages, itemType, itemWeight);
 
     // Pass item to new screen
 
     // carbonFootprint.getFootprint(item);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CarbonScoreResult(item : item)),
+    );
   }
 
   Future createErrorDialog(BuildContext context, String errorMessage) {
@@ -279,12 +283,12 @@ class _ItemDetailsState extends State<ItemDetails> {
         Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [Text("Weight of product (kg)")]),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Row(mainAxisAlignment: MainAxisAlignment.center, children:  [
           SizedBox(
               width: 200,
               height: 30,
               child: TextField(
-                  controller: weightController,
+                  controller: itemWeightController,
                   cursorColor: Colors.black,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
@@ -292,8 +296,12 @@ class _ItemDetailsState extends State<ItemDetails> {
                     contentPadding: EdgeInsets.all(10.0),
                     hintText: "i.e. 1.2",
                   ),
-                  style: const TextStyle(fontSize: 15.0, color: Colors.black),
-              )),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(
+                        RegExp(r'^(\d+)?\.?\d{0,2}'))
+                  ],
+                  style: const TextStyle(fontSize: 15.0, color: Colors.black)))
         ]),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Container(
