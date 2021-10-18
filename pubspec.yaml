@@ -60,6 +60,7 @@ flutter:
   assets:
     - images/coatrack.png
     - images/leaf.png
+    - images/patagonia-logo.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
