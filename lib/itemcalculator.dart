@@ -1,5 +1,4 @@
 import 'dart:collection';
-
 import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
 import 'package:carbon_footprint_calculator/themes/default_theme.dart';
 import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
@@ -9,11 +8,16 @@ import 'package:flutter/services.dart';
 
 import 'data/item.dart';
 
-void main() => runApp(MaterialApp(
+void main() => {
+  WidgetsFlutterBinding.ensureInitialized(),
+  SystemChrome.setPreferredOrientations(
+  [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]),
+
+  runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     title: "Carbon Footprint Calculator",
     theme: CustomTheme.lightTheme,
-    home: const ItemCalculationStart()));
+    home: const ItemCalculationStart()))};
 
 class ItemInfoPage extends StatelessWidget {
   const ItemInfoPage({Key? key}) : super(key: key);
