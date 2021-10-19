@@ -1,14 +1,15 @@
-image: haizen/flutter
+# image: haizen/flutter
+image: fischerscode/flutter
 
 stages:          # List of stages for jobs, and their order of execution
   - test
   - build
   # - deploy
 
-flutter_test: 
-  stage: test 
+flutter_test:
+  stage: test
   script:
-    - flutter test 
+    - flutter test
 
 build_android:
   stage: build
@@ -42,4 +43,3 @@ build_ios:
 # deploy_ios:
 #   stage: deploy
 #   script:
-
