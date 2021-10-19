@@ -2,7 +2,7 @@ image: ameysunu/flutterdocker
 
 stages:          # List of stages for jobs, and their order of execution
   - test
-  # - build
+  - build
   # - deploy
 
 flutter_test: 
@@ -10,11 +10,18 @@ flutter_test:
   script:
     - flutter test 
 
-# build_android:
-#   stage: build
-#   script:
+build_android:
+  stage: build
+  before_script:
+    - flutter packages get
+    - flutter clean
+  script:
+     - flutter build apk
+  artifacts:
+    paths:
+      - build/app/outputs/apk/release/app-release.apk
 
-# build_ios:
+#   build_ios:
 #   stage: build
 #   script:
 
