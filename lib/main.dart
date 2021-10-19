@@ -1,20 +1,16 @@
+import 'package:carbon_footprint_calculator/screens/check_item.dart';
+import 'package:carbon_footprint_calculator/themes/default_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Welcome to Flutter',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Welcome to Flutter'),
-        ),
-        body: const Center(
-          child: Text('Hello World'),
-        ),
-      ),
-    );
-  }
-}
+void main() => {
+  WidgetsFlutterBinding.ensureInitialized(),
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]),
+
+  runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: "Carbon Footprint Calculator",
+      theme: CustomTheme.lightTheme,
+      home: const ItemCalculationStart()))};

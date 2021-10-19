@@ -6,18 +6,6 @@ import 'package:carbon_footprint_calculator/widgets/brands_grid.dart';
 import 'package:carbon_footprint_calculator/widgets/navbar.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-void main() => {
-  WidgetsFlutterBinding.ensureInitialized(),
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]),
-
-  runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Carbon Footprint Calculator",
-      theme: CustomTheme.lightTheme,
-      home: const ItemCalculationStart()))};
 
 class ItemCalculationStart extends StatelessWidget {
   const ItemCalculationStart({Key? key}) : super(key: key);

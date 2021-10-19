@@ -1,8 +1,5 @@
 import 'dart:collection';
 import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
-import 'package:carbon_footprint_calculator/themes/default_theme.dart';
-import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
-import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../data/item.dart';

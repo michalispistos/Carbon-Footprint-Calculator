@@ -100,7 +100,9 @@ class CarbonScoreResult extends StatelessWidget {
                 child: const Text("SUBMIT"),
                 onPressed: () {
                   Navigator.of(context)
-                      .pop(controller.text.toString());
+                      .pop();
+                  itemName = controller.text.toString();
+                  createItemAddedDialog(context);
                 },
               )
             ],
@@ -132,10 +134,7 @@ class CarbonScoreResult extends StatelessWidget {
                       borderRadius: BorderRadius.circular(18.0)),
                   color: const Color(0xfffffaca),
                   onPressed: () {
-                      createNameDialog(context).then((value) => {
-                        itemName = value.toString(),
-                        createItemAddedDialog(context)
-                      });
+                      createNameDialog(context);
                   },
                   child: const Text('Add this to your clothes'),
                 )
