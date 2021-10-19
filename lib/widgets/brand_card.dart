@@ -44,20 +44,18 @@ class BrandCard extends StatelessWidget {
                               color: Colors.pink.shade50.withAlpha(100), width: 1)
                       )),
                   const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        brandInfo.name,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: const TextStyle(
-                          fontSize: 14.0,
-                          color: CustomTheme.COLOR_BLACK,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  Flexible(
+                    child: Text(
+                      brandInfo.name,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: const TextStyle(
+                        fontSize: 15.0,
+                        color: CustomTheme.COLOR_BLACK,
+                        fontWeight: FontWeight.bold,
+                        height: 1.2
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ),
