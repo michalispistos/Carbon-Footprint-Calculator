@@ -11,14 +11,13 @@ class BrandsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded( child: GridView.count(
+    return GridView.count(
       primary: false,
       padding: const EdgeInsets.all(20),
       crossAxisSpacing: 10,
       mainAxisSpacing: 10,
       crossAxisCount: 2,
       children: brandData.map((brand) => BrandCard(brandInfo: brand,)).toList(),
-    ),
     );
   }
 }

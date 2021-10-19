@@ -1,6 +1,7 @@
 import 'package:carbon_footprint_calculator/screens/item_details.dart';
 import 'package:carbon_footprint_calculator/themes/default_theme.dart';
 import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
+import 'package:carbon_footprint_calculator/widgets/brands_grid.dart';
 import 'package:carbon_footprint_calculator/widgets/navbar.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +73,7 @@ class ItemCalculationStart extends StatelessWidget {
                     child: TabBarView(children: [
                   CheckItemStart(),
                   Icon(Icons.ac_unit),
-                  Icon(Icons.ac_unit),
+                  BrandsGrid(),
                   Icon(Icons.ac_unit)
                 ])),
               ],
