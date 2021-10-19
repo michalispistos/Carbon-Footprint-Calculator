@@ -1,48 +1,14 @@
-# image: haizen/flutter
-# image: fischerscode/flutter
+stages:
+  - release
 
-stages:          # List of stages for jobs, and their order of execution
-  - test
-  - build
-  # - deploy
-
-flutter_test:
-  stage: test
-  image: haizen/flutter
+release:staging:
+  stage: release
+  when: manual
   script:
-    - flutter test
-
-build_android:
-  stage: build
-  image: ameysunu/flutterdocker
-  before_script:
-    - flutter packages get
-    - flutter clean
-  script:
-     - flutter build apk --release
-  artifacts:
-    paths:
-      - build/app/outputs/apk/release/app-release.apk
-
-build_ios:
-  stage: build
-  image: ameysunu/flutterdocker
-  before_script:
-    - flutter packages get
-    - flutter clean
-  script:
-    - flutter build ipa
-    - cd ios
-    - xcodebuild clean archive -workspace Runner.xcworkspace -scheme Runner -archivePath RunnerArchive
-    - xcodebuild -exportArchive -archivePath RunnerArchive.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./build
-  artifacts:
-    paths:
-      - ios/build/Runner.ipa
-
-# deploy_android:
-#   stage: deploy
-#   script:
-
-# deploy_ios:
-#   stage: deploy
-#   script:
+    - curl -H "Content-Type:application/json"
+    -H "x-auth-token:DkJjNR_kPLyfyye3iZvL6caj6ejCssCkAsYsLVKVHiU" 
+    https://api.codemagic.io/builds --data
+    '{"appId":"616f4874a1779ec900754ac2", "workflowId":"601faafd83016c431a4b12e7","branch":"ci-cd"}'
+  only:
+    refs:
+      - ci-cd
