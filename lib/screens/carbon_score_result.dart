@@ -3,12 +3,61 @@ import 'package:carbon_footprint_calculator/utils/carbon_calculator.dart';
 import 'package:carbon_footprint_calculator/utils/carbon_footprint.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:carbon_footprint_calculator/screens/your_clothes.dart';
 
 class CarbonScoreResult extends StatelessWidget {
   final Item item;
   final CarbonFootprint carbonFootprint = CarbonFootprint(calculator : DefaultCarbonCalculator());
+  String itemName = "";
 
   CarbonScoreResult({Key? key, required this.item}) : super(key: key);
+
+  Future createItemAddedDialog(BuildContext context) {
+
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text(""),
+            content: SizedBox(
+                height: 80,
+                child: Column(children: [
+                  const Text("Item Added to your Clothes",
+                      style: TextStyle(
+                          fontSize: 15.0, color: Colors.black)),
+                  const SizedBox(height: 10),
+              FlatButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0)),
+                color: const Color(0xfffffaca),
+                onPressed: () {
+
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const YourClothes()),
+                        (Route<dynamic> route) => false,
+                  );
+                },
+                child: const Text('Go to your clothes'),
+                )
+              ])),
+            actions: <Widget>[
+              MaterialButton(
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0)),
+                elevation: 5.0,
+                child: const Text("CLOSE"),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
 
   Future createNameDialog(BuildContext context) {
     TextEditingController controller = TextEditingController();
@@ -81,7 +130,10 @@ class CarbonScoreResult extends StatelessWidget {
                       borderRadius: BorderRadius.circular(18.0)),
                   color: const Color(0xfffffaca),
                   onPressed: () {
-                      createNameDialog(context);
+                      createNameDialog(context).then((value) => {
+                        itemName = value.toString(),
+                        createItemAddedDialog(context)
+                      });
                   },
                   child: const Text('Add this to your clothes'),
                 )
