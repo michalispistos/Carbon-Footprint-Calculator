@@ -1,20 +1,23 @@
+import 'package:carbon_footprint_calculator/utils/brand_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BrandDetails extends StatelessWidget {
-  const BrandDetails({Key? key}) : super(key: key);
+  const BrandDetails({Key? key, required this.brandInfo}) : super(key: key);
+
+  final BrandInfo brandInfo;
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Brand Details"),
+          title: Text(brandInfo.name),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
         body: Stack(children: <Widget>[
-      Text("brand name here"),
+      Text(brandInfo.description),
       Material(
       child: InkWell(
         onTap: () {

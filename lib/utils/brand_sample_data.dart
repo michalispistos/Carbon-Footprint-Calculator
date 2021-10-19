@@ -13,11 +13,11 @@ final List<BrandInfo> brandData = [
     websiteLink: 'https://www.patagonia.com/',
   ),
   BrandInfo(
-    name: "Pact",
+    name: "Pact2",
     logoPath: 'images/patagonia-logo.jpg',
     basedIn: 'Colorado, USA',
     priceRange: "\$",
-    rating: 5,
+    rating: 3,
     description: 'Pact is pretty obsessed with making super-soft clothes that also make the world a better place. This socially conscious brand goes to great lengths to make sure its entire supply chain, from the growing and harvesting of the organic cotton to the final sewing and all the processes in between, are as responsible and clean as possible. And the non-GMO cotton is great for you and the farmers growing it. Pact is one of our go-to brands for basics and underwear, and offers carbon-offset shipping for a more sustainable purchase.',
     style: 'Adult & children’s basics, underwear, activewear, bedding & bath',
     websiteLink: 'https://wearpact.com/',
