@@ -1,5 +1,5 @@
 # image: haizen/flutter
-image: fischerscode/flutter
+# image: fischerscode/flutter
 
 stages:          # List of stages for jobs, and their order of execution
   - test
@@ -8,11 +8,13 @@ stages:          # List of stages for jobs, and their order of execution
 
 flutter_test:
   stage: test
+  image: haizen/flutter
   script:
     - flutter test
 
 build_android:
   stage: build
+  image: matsp/docker-flutter
   before_script:
     - flutter packages get
     - flutter clean
@@ -24,6 +26,7 @@ build_android:
 
 build_ios:
   stage: build
+  image: matsp/docker-flutter
   before_script:
     - flutter packages get
     - flutter clean
