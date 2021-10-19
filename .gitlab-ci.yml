@@ -21,9 +21,19 @@ build_android:
     paths:
       - build/app/outputs/apk/release/app-release.apk
 
-#   build_ios:
-#   stage: build
-#   script:
+build_ios:
+  stage: build
+  before_script:
+    - flutter packages get
+    - flutter clean
+  script:
+    - flutter build ios --release
+    - cd ios
+    - xcodebuild clean archive -workspace Runner.xcworkspace -scheme Runner -archivePath RunnerArchive
+    - xcodebuild -exportArchive -archivePath RunnerArchive.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./build
+  artifacts:
+    paths:
+      - ios/build/Runner.ipa
 
 # deploy_android:
 #   stage: deploy
