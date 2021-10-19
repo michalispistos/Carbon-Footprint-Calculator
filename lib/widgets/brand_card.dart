@@ -27,19 +27,21 @@ class BrandCard extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
+              padding: const EdgeInsets.only(left: 5),
               child: Row(
                 //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                      height: 50.0,
-                      width: 50.0,
+                      height: 40.0,
+                      width: 40.0,
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage(brandInfo.logoPath),
                           //fit: BoxFit.fill,
                         ),
                         shape: BoxShape.circle,
+                          border: Border.all(
+                              color: Colors.pink.shade50.withAlpha(100), width: 1)
                       )),
                   const SizedBox(width: 10),
                   Column(
@@ -48,9 +50,9 @@ class BrandCard extends StatelessWidget {
                       Text(
                         brandInfo.name,
                         overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
+                        maxLines: 2,
                         style: const TextStyle(
-                          fontSize: 12.0,
+                          fontSize: 14.0,
                           color: CustomTheme.COLOR_BLACK,
                           fontWeight: FontWeight.bold,
                         ),
@@ -60,18 +62,40 @@ class BrandCard extends StatelessWidget {
                 ],
               ),
             ),
-            addVerticalSpace(10),
-            Row(
-              children: [
-                const Text("Eco Rating:",
-                style: TextStyle(
-                  color: CustomTheme.COLOR_BLACK,
-                )),
-                BrandRatings(stars: brandInfo.rating),
-              ],
+            addVerticalSpace(5),
+            Container(
+              width: 150,
+              height: 30,
+              decoration: const BoxDecoration(
+                color: CustomTheme.COLOR_WHITE,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(100),
+                    topRight: Radius.circular(100),
+                    bottomLeft: Radius.circular(100),
+                    bottomRight: Radius.circular(100)
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: CustomTheme.COLOR_GREY,
+                    spreadRadius: 1,
+                    blurRadius: 1,
+                    offset: Offset(0, 1), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: BrandRatings(stars: brandInfo.rating),
             ),
             addVerticalSpace(10),
-          ],
+            Text(
+              brandInfo.description,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 4,
+              style: const TextStyle(
+                fontSize: 10.0,
+                color: CustomTheme.COLOR_BLACK,
+              ),
+            ),
+      ],
         ),
         bgColor: const Color(0xfffffaca),
       ),
