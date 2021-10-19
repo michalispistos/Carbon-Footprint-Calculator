@@ -1,4 +1,5 @@
 import 'package:carbon_footprint_calculator/screens/item_details.dart';
+import 'package:carbon_footprint_calculator/screens/your_clothes.dart';
 import 'package:carbon_footprint_calculator/themes/default_theme.dart';
 import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/brands_grid.dart';
@@ -68,11 +69,10 @@ class ItemCalculationStart extends StatelessWidget {
                   ChoiceOption(text: "Your Score")
                 ]),
                 addVerticalSpace(15),
-                // CheckItemStart(),
                 const Expanded(
                     child: TabBarView(children: [
                   CheckItemStart(),
-                  Icon(Icons.ac_unit),
+                  ClothesList(),
                   BrandsGrid(),
                   Icon(Icons.ac_unit)
                 ])),

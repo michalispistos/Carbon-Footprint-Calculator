@@ -73,29 +73,35 @@ class _ClothesListState extends State<ClothesList> {
       itemCount: clothes.length,
       itemBuilder: (BuildContext context, int index) {
         String key = clothes.keys.elementAt(index);
-        String icon_path = "images/top.png";
+        String iconPath = "images/top.png";
         if (clothes[key]?.type == "Bottom") {
-          icon_path = "images/bottom.png";
+          iconPath = "images/bottom.png";
         }
         if (clothes[key]?.type == "Shoes") {
-          icon_path = "images/shoes.png";
+          iconPath = "images/shoes.png";
         }
         return Column(
           children: <Widget>[
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              const SizedBox(width: 10),
               BorderIcon(
                   height: 40,
                   width: 40,
                   bgColor: const Color(0xffffe8ec),
-                  child: Image.asset(icon_path)),
+                  child: Image.asset(iconPath)),
               addHorizontalSpace(10),
               Expanded(
                 child: ListTile(
-                  title: Text("$key   ${clothes[key]?.score}",
-                      style: const TextStyle(
-                        fontSize: 16,
-                      )),
+                  title: Row(
+                    children: [
+                      Text("$key",
+                          style: const TextStyle(
+                            fontSize: 16,
+                          )),
+                      const Spacer(),
+                      Text("${clothes[key]?.score}",
+                          style: const TextStyle(fontSize: 16))
+                    ],
+                  ),
                 ),
               ),
             ]),
@@ -112,77 +118,81 @@ class _ClothesListState extends State<ClothesList> {
     createClothes();
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Row(children:  [
-          const SizedBox(width: 10),
-          const Text("Filter         ",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-              )),
-          const Text("Type   ",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-              )),
-          DropdownButton(
-            hint: Text(typeDropdownValue),
-            icon: const Icon(Icons.arrow_downward),
-            iconSize: 24,
-            elevation: 16,
-            style: const TextStyle(color: Colors.green),
-            underline: Container(
-              height: 2,
-              color: Colors.green,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: Row(children:  [
+            // const SizedBox(width: 10),
+            const Text("Filter         ",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                )),
+            const Text("Type   ",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                )),
+            DropdownButton(
+              hint: Text(typeDropdownValue),
+              icon: const Icon(Icons.arrow_downward),
+              iconSize: 24,
+              elevation: 16,
+              style: const TextStyle(color: Colors.green),
+              underline: Container(
+                height: 2,
+                color: Colors.green,
+              ),
+              onChanged: (String? newValue) {
+                setState(() {
+                  typeDropdownValue = newValue!;
+                });
+              },
+              items:  <String>['All', 'Top', 'Bottom', 'Shoes']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem(
+                  child: Text(value),
+                  value: value,
+                );
+              }).toList(),
             ),
-            onChanged: (String? newValue) {
-              setState(() {
-                typeDropdownValue = newValue!;
-              });
-            },
-            items:  <String>['All', 'Top', 'Bottom', 'Shoes']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem(
-                child: Text(value),
-                value: value,
-              );
-            }).toList(),
-          ),
-          const SizedBox(width: 10),
-          const Text("Score   ",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-              )),
-          DropdownButton(
-            hint: Text(scoreDropdownValue),
-            icon: const Icon(Icons.arrow_downward),
-            iconSize: 24,
-            elevation: 16,
-            style: const TextStyle(color: Colors.green),
-            underline: Container(
-              height: 2,
-              color: Colors.green,
+            const SizedBox(width: 10),
+            const Text("Score   ",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                )),
+            DropdownButton(
+              hint: Text(scoreDropdownValue),
+              icon: const Icon(Icons.arrow_downward),
+              iconSize: 24,
+              elevation: 16,
+              style: const TextStyle(color: Colors.green),
+              underline: Container(
+                height: 2,
+                color: Colors.green,
+              ),
+              onChanged: (String? newValue) {
+                setState(() {
+                  scoreDropdownValue = newValue!;
+                });
+              },
+              items:  <String>['All', '<75', '<50', '<25']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem(
+                  child: Text(value),
+                  value: value,
+                );
+              }).toList(),
             ),
-            onChanged: (String? newValue) {
-              setState(() {
-                scoreDropdownValue = newValue!;
-              });
-            },
-            items:  <String>['All', '<75', '<50', '<25']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem(
-                child: Text(value),
-                value: value,
-              );
-            }).toList(),
-          ),
-        ]),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Expanded(child: SizedBox(height: 490, child: _displayClothes()))
-        ]),
+          ]),
+        ),
+        Expanded(child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25),
+          child: _displayClothes(),
+        )),
       ],
     );
   }

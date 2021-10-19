@@ -3,7 +3,7 @@ import 'package:carbon_footprint_calculator/utils/carbon_calculator.dart';
 import 'package:carbon_footprint_calculator/utils/carbon_footprint.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:carbon_footprint_calculator/screens/your_clothes.dart';
+import 'check_item.dart';
 
 class CarbonScoreResult extends StatelessWidget {
   final Item item;
@@ -34,7 +34,9 @@ class CarbonScoreResult extends StatelessWidget {
 
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const YourClothes()),
+                    //TODO: right now we go back to the home screen but don't
+                    //  change tab to Your Clothes. fix this.
+                    MaterialPageRoute(builder: (context) => const ItemCalculationStart()),
                         (Route<dynamic> route) => false,
                   );
                 },
