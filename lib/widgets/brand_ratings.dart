@@ -21,7 +21,7 @@ class BrandRatings extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(top: 2.0),
       child: Padding(
-        padding: const EdgeInsets.only(left: 13),
+        padding: const EdgeInsets.only(left: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
 

@@ -42,7 +42,7 @@ class BrandCard extends StatelessWidget {
                               color: Colors.pink.shade50.withAlpha(100), width: 1)
                       )),
                   const SizedBox(width: 10),
-                  Flexible(
+                  Expanded(
                     child: Text(
                       brandInfo.name,
                       overflow: TextOverflow.ellipsis,
@@ -59,6 +59,7 @@ class BrandCard extends StatelessWidget {
               ),
             ),
             addVerticalSpace(5),
+
             Container(
               width: 150,
               height: 30,
@@ -79,10 +80,11 @@ class BrandCard extends StatelessWidget {
                 //   ),
                 // ],
               ),
-              child: BrandRatings(stars: brandInfo.rating),
+              child:BrandRatings(stars: brandInfo.rating),
             ),
             addVerticalSpace(10),
-            Text(
+            Expanded(
+              child:Text(
               brandInfo.description,
               overflow: TextOverflow.ellipsis,
               maxLines: 4,
@@ -91,7 +93,7 @@ class BrandCard extends StatelessWidget {
                 height: 1.3,
                 color: CustomTheme.COLOR_BLACK,
               ),
-            ),
+            )),
       ],
         ),
         padding: const EdgeInsets.all(22.0),
