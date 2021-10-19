@@ -27,7 +27,7 @@ build_ios:
     - flutter packages get
     - flutter clean
   script:
-    - flutter build ios --release
+    - flutter build ios
     - cd ios
     - xcodebuild clean archive -workspace Runner.xcworkspace -scheme Runner -archivePath RunnerArchive
     - xcodebuild -exportArchive -archivePath RunnerArchive.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./build
