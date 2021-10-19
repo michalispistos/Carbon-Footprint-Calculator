@@ -1,8 +1,10 @@
 import 'dart:collection';
+
 import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import '../data/item.dart';
 
 class YourClothes extends StatelessWidget {
@@ -70,6 +72,7 @@ class _ClothesListState extends State<ClothesList> {
     clothes = Map.from(allClothes)..removeWhere((k, v) => isItemRemoved(k,v));
 
     return ListView.builder(
+      padding: EdgeInsets.only(top: 5),
       itemCount: clothes.length,
       itemBuilder: (BuildContext context, int index) {
         String key = clothes.keys.elementAt(index);
@@ -105,8 +108,8 @@ class _ClothesListState extends State<ClothesList> {
                 ),
               ),
             ]),
-            const SizedBox(height: 10),
-            const Divider(),
+            const SizedBox(height: 5),
+            const Divider(color: Colors.black),
           ],
         );
       },
@@ -189,7 +192,22 @@ class _ClothesListState extends State<ClothesList> {
             ),
           ]),
         ),
-        Expanded(child: Padding(
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25),
+          child: Row(children: [
+            Text("Type", style: Theme.of(context).textTheme.headline5),
+            addHorizontalSpace(33),
+            Text("Name", style: Theme.of(context).textTheme.headline5),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child:
+                  Text("Score", style: Theme.of(context).textTheme.headline5),
+            )
+          ]),
+        ),
+        Expanded(
+            child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25),
           child: _displayClothes(),
         )),

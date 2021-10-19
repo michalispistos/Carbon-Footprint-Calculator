@@ -3,7 +3,6 @@ import 'package:carbon_footprint_calculator/screens/your_clothes.dart';
 import 'package:carbon_footprint_calculator/themes/default_theme.dart';
 import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/brands_grid.dart';
-import 'package:carbon_footprint_calculator/widgets/navbar.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
 
@@ -51,12 +50,47 @@ class ItemCalculationStart extends StatelessWidget {
                       ]),
                 ),
                 addVerticalSpace(15),
-                const TabBar(isScrollable: true, tabs: [
-                  ChoiceOption(text: "Check Item"),
-                  ChoiceOption(text: "Your Clothes"),
-                  ChoiceOption(text: "Best Brands"),
-                  ChoiceOption(text: "Your Score")
-                ]),
+                TabBar(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.black,
+                    isScrollable: true,
+                    tabs: [
+                      Tab(
+                          child: Row(
+                        children: [
+                          addHorizontalSpace(30),
+                          const Text("Check Item"),
+                          addHorizontalSpace(30)
+                        ],
+                      )),
+                      // ChoiceOption(text: "Check Item"),
+                      Tab(
+                          child: Row(
+                        children: [
+                          addHorizontalSpace(30),
+                          const Text("Your Clothes"),
+                          addHorizontalSpace(30)
+                        ],
+                      )),
+                      Tab(
+                          child: Row(
+                        children: [
+                          addHorizontalSpace(30),
+                          const Text("Best Brands"),
+                          addHorizontalSpace(30)
+                        ],
+                      )),
+                      Tab(
+                          child: Row(
+                        children: [
+                          addHorizontalSpace(30),
+                          const Text("Your Score"),
+                          addHorizontalSpace(30)
+                        ],
+                      )),
+                      // ChoiceOption(text: "Your Score")
+                    ]),
                 addVerticalSpace(15),
                 const Expanded(
                     child: TabBarView(children: [

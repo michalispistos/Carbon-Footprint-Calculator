@@ -1,6 +1,4 @@
-import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/screens/brand_details.dart';
-import 'package:carbon_footprint_calculator/utils/brand_info.dart';
 import 'package:carbon_footprint_calculator/themes/default_theme.dart';
 import 'package:carbon_footprint_calculator/widgets/brand_ratings.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
@@ -23,7 +21,7 @@ class BrandCard extends StatelessWidget {
               builder: (context) => BrandDetails(brandInfo: brandInfo)),
         );
       },
-      child: BorderIcon(
+      child: Container(
         child: Column(
           children: <Widget>[
             Padding(
@@ -72,14 +70,14 @@ class BrandCard extends StatelessWidget {
                     bottomLeft: Radius.circular(100),
                     bottomRight: Radius.circular(100)
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: CustomTheme.COLOR_GREY,
-                    spreadRadius: 1,
-                    blurRadius: 1,
-                    offset: Offset(0, 1), // changes position of shadow
-                  ),
-                ],
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: CustomTheme.COLOR_GREY,
+                //     spreadRadius: 1,
+                //     blurRadius: 1,
+                //     offset: Offset(0, 1), // changes position of shadow
+                //   ),
+                // ],
               ),
               child: BrandRatings(stars: brandInfo.rating),
             ),
@@ -89,13 +87,25 @@ class BrandCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               maxLines: 4,
               style: const TextStyle(
-                fontSize: 10.0,
+                fontSize: 11.0,
+                height: 1.3,
                 color: CustomTheme.COLOR_BLACK,
               ),
             ),
       ],
         ),
-        bgColor: const Color(0xfffffaca),
+        padding: const EdgeInsets.all(22.0),
+        decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withAlpha(200),
+                spreadRadius: 1,
+                blurRadius: 12,
+                offset: const Offset(0, 1), // changes position of shadow
+              ),
+            ],
+            color: Color(0xfffffaca),
+            borderRadius: BorderRadius.all(Radius.circular(15.0))),
       ),
     );
   }

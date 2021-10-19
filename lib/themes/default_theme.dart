@@ -61,11 +61,19 @@ class CustomTheme {
                   MaterialStateProperty.all<Color>(const Color(0xfffffaca))),
         ),
         tabBarTheme: TabBarTheme(
+            labelColor: Colors.white,
+            labelStyle: const TextStyle(
+                fontFamily: "Nunito Sans",
+                color: Colors.white,
+                fontWeight: FontWeight.w900),
+            unselectedLabelStyle: const TextStyle(
+                fontFamily: "Nunito Sans",
+                color: Colors.black,
+                fontWeight: FontWeight.w400),
             indicator: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              color: CustomTheme.COLOR_BLACK.withAlpha(80),
-            ),
+                borderRadius: BorderRadius.circular(20.0),
+                color: CustomTheme.COLOR_BLACK),
             indicatorSize: TabBarIndicatorSize.label,
-            labelPadding: const EdgeInsets.symmetric(horizontal: 10), labelColor: Colors.white));
+            labelPadding: const EdgeInsets.symmetric(horizontal: 10)));
   }
 }
