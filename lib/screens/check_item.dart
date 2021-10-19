@@ -29,6 +29,7 @@ class ItemCalculationStart extends StatelessWidget {
 
     return SafeArea(
       top: false,
+      bottom: false,
       child: DefaultTabController(
         length: 4,
         child: Scaffold(
