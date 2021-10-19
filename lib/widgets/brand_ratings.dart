@@ -11,15 +11,22 @@ class BrandRatings extends StatelessWidget {
 
     for (var i = 0; i < stars; i++) {
       starIcons.add(
-        Image.asset('images/leaf.png', scale: 17),
+        Image.asset('images/leaf.png',
+            width: 25,
+            height: 25
+        ),
       );
     }
 
     return Container(
       margin: const EdgeInsets.only(top: 2.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: starIcons
+      child: Padding(
+        padding: const EdgeInsets.only(left: 13),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+
+          children: starIcons
+        ),
       ),
     );
   }
