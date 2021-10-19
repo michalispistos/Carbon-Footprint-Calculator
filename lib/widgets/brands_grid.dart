@@ -1,4 +1,3 @@
-import 'package:carbon_footprint_calculator/themes/default_theme.dart';
 import 'package:carbon_footprint_calculator/utils/brand_sample_data.dart';
 import 'package:carbon_footprint_calculator/widgets/brand_card.dart';
 import 'package:flutter/cupertino.dart';
