@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CustomTheme {
-
   static const COLOR_BLACK = Color.fromRGBO(48, 47, 48, 1.0);
   static const COLOR_GREY = Color.fromRGBO(141, 141, 141, 1.0);
   static const COLOR_WHITE = Colors.white;
 
   static ThemeData get lightTheme {
-
-
     Map<int, Color> color = {
       50: Color.fromRGBO(253, 236, 166, .1),
       100: Color.fromRGBO(253, 236, 166, .2),
@@ -62,6 +59,13 @@ class CustomTheme {
               foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
               backgroundColor:
                   MaterialStateProperty.all<Color>(const Color(0xfffffaca))),
-        ));
+        ),
+        tabBarTheme: TabBarTheme(
+            indicator: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              color: CustomTheme.COLOR_BLACK.withAlpha(80),
+            ),
+            indicatorSize: TabBarIndicatorSize.label,
+            labelPadding: const EdgeInsets.symmetric(horizontal: 10), labelColor: Colors.white));
   }
 }

@@ -37,8 +37,8 @@ class ChoiceOption extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.0),
         color: CustomTheme.COLOR_GREY.withAlpha(25),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
-      margin: const EdgeInsets.only(left: 25),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 13),
+      // margin: const EdgeInsets.only(left: 25),
       child: Text(text, style: themeData.textTheme.headline5),
     );
   }
