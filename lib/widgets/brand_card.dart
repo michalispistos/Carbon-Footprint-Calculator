@@ -33,11 +33,11 @@ class BrandCard extends StatelessWidget {
                       height: 40.0,
                       width: 40.0,
                       decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(brandInfo.logoPath),
-                          //fit: BoxFit.fill,
-                        ),
-                        shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: AssetImage(brandInfo.logoPath),
+                            //fit: BoxFit.fill,
+                          ),
+                          shape: BoxShape.circle,
                           border: Border.all(
                               color: Colors.pink.shade50.withAlpha(100), width: 1)
                       )),
@@ -48,10 +48,10 @@ class BrandCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: const TextStyle(
-                        fontSize: 15.0,
-                        color: CustomTheme.COLOR_BLACK,
-                        fontWeight: FontWeight.bold,
-                        height: 1.2
+                          fontSize: 15.0,
+                          color: CustomTheme.COLOR_BLACK,
+                          fontWeight: FontWeight.bold,
+                          height: 1.2
                       ),
                     ),
                   ),
@@ -84,19 +84,19 @@ class BrandCard extends StatelessWidget {
             ),
             addVerticalSpace(10),
             Expanded(
-              child:Text(
-              brandInfo.description,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 4,
-              style: const TextStyle(
-                fontSize: 11.0,
-                height: 1.3,
-                color: CustomTheme.COLOR_BLACK,
-              ),
-            )),
-      ],
+                child:Text(
+                  brandInfo.description,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 4,
+                  style: const TextStyle(
+                    fontSize: 11.0,
+                    height: 1.2,
+                    color: CustomTheme.COLOR_BLACK,
+                  ),
+                )),
+          ],
         ),
-        padding: const EdgeInsets.all(22.0),
+        padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -106,8 +106,8 @@ class BrandCard extends StatelessWidget {
                 offset: const Offset(0, 1), // changes position of shadow
               ),
             ],
-            color: Color(0xfffffaca),
-            borderRadius: BorderRadius.all(Radius.circular(15.0))),
+            color: const Color(0xfffffaca),
+            borderRadius: const BorderRadius.all(Radius.circular(15.0))),
       ),
     );
   }
