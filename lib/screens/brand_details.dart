@@ -24,10 +24,14 @@ class BrandDetails extends StatelessWidget {
             floating: true,
             backgroundColor: const Color(0xFF200087),
             expandedHeight: 300,
-            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(40), bottomRight: Radius.circular(40))),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(40),
+                    bottomRight: Radius.circular(40))),
             flexibleSpace: FlexibleSpaceBar(
               background: ClipRRect(
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(40)),
+                borderRadius:
+                    const BorderRadius.vertical(bottom: Radius.circular(40)),
                 child: Image.asset(
                   brandInfo.logoPath,
                   fit: BoxFit.fitWidth,
@@ -81,7 +85,10 @@ class BrandDetails extends StatelessWidget {
                           ),
                           Text(
                             brandInfo.priceRange,
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 16),
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16),
                           )
                         ],
                       ),
@@ -108,15 +115,15 @@ class BrandDetails extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Padding(
-                          padding: const EdgeInsets.only(bottom: 6),
-                          child: Text(
-                            brandInfo.description,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Text(
+                      brandInfo.description,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -133,7 +140,8 @@ class BrandDetails extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
+                  padding:
+                      const EdgeInsets.only(left: 16, right: 16, bottom: 32),
                   child: Text(
                     brandInfo.style,
                     style: const TextStyle(
@@ -145,14 +153,36 @@ class BrandDetails extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                Padding (
-                  padding: EdgeInsets.only(left: 16, right: 16, bottom: 32),
-                  child: Center(
-                    child: ElevatedButton(
-                      onPressed: () {_launchURL(brandInfo.websiteLink); log(brandInfo.websiteLink);},
-                      child: const Text('SHOP NOW'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16, right: 16, bottom: 32),
+                      child: Center(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _launchURL(brandInfo.websiteLink);
+                            log(brandInfo.websiteLink);
+                          },
+                          child: const Text('SHOP NOW'),
+                        ),
+                      ),
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16, right: 16, bottom: 32),
+                      child: Center(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _launchURL(brandInfo.goodOnYouLink);
+                            log(brandInfo.goodOnYouLink);
+                          },
+                          child: const Text('READ MORE'),
+                        ),
+                      ),
+                    ),
+                  ],
                 )
               ],
             ),
@@ -162,6 +192,7 @@ class BrandDetails extends StatelessWidget {
     );
   }
 }
+
 void _launchURL(_url) async =>
     await canLaunch(_url) ? await launch(_url) : throw 'Could not launch $_url';
 /*

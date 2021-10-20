@@ -10,6 +10,7 @@ class BrandInfo {
     required this.basedIn,
     required this.priceRange,
     required this.style,
+    required this.goodOnYouLink,
   });
 
   String name;
@@ -20,5 +21,6 @@ class BrandInfo {
   String basedIn;
   String priceRange;
   String style;
+  String goodOnYouLink;
 
 }
