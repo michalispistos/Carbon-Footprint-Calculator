@@ -5,10 +5,7 @@ release:staging:
   stage: release
   when: manual
   script:
-    - curl -H "Content-Type:application/json"
--H "x-auth-token:DkJjNR_kPLyfyye3iZvL6caj6ejCssCkAsYsLVKVHiU" 
-https://api.codemagic.io/builds --data
-'{"appId":"616f4874a1779ec900754ac2", "workflowId":"601faafd83016c431a4b12e7","branch":"ci-cd"}'
+    - curl -H "Content-Type:application/json" -H "x-auth-token:DkJjNR_kPLyfyye3iZvL6caj6ejCssCkAsYsLVKVHiU" https://api.codemagic.io/builds --data '{"appId":"616f4874a1779ec900754ac2", "workflowId":"601faafd83016c431a4b12e7","branch":"ci-cd"}'
   only:
     refs:
       - ci-cd
