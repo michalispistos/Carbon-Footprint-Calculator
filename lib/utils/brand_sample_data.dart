@@ -27,12 +27,12 @@ final List<BrandInfo> brandData = [
       name: "Gucci",
       logoPath: "images/gucci-logo.jpg",
       basedIn: 'California, USA',
-      priceRange: "\$\$",
+      priceRange: "\$\$\$",
       rating: 5,
       description:
           'Patagonia, one of the earliest defenders of environmental ethics in the industry, was also one of the first to use recycled materials and switch to organic cotton. Patagonia continues to expand its commitment to labor ethics and works with US factories as often as it can, including in Texas and North Carolina. We admire Patagonia for the positive impact its fair trade factories have worldwide, its secondhand Worn Wear collection, and sustainable apparel for all.',
       style: 'Adult & children’s outdoor apparel, swimwear, activewear',
-      websiteLink: 'https://www.patagonia.com/',
+      websiteLink: 'https://www.gucci.com/',
       goodOnYouLink: 'https://directory.goodonyou.eco/brand/gucci'),
   BrandInfo(
       name: "Urban Outfitters",

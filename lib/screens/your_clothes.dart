@@ -53,7 +53,7 @@ class _ClothesListState extends State<ClothesList> {
         () => Item.itemWithScore(Item({"Acrylic": 100}, "Bottom", 34.5), 57));
   }
 
-  bool isItemRemoved(String name, Item item){
+  bool isItemRemoved(String name, Item item,typeDropdownValue,scoreDropdownValue){
     if(typeDropdownValue == "All" && scoreDropdownValue == "All"){
       return false;
     }
@@ -67,12 +67,16 @@ class _ClothesListState extends State<ClothesList> {
     return typeDropdownValue != item.type || double.parse(scoreDropdownValue.substring(1)) < item.score;
   }
 
+  Map<String, Item> filteredClothes(Map<String, Item> allClothes,typeDropdownValue,scoreDropdownValue){
+    return Map.from(allClothes)..removeWhere((k, v) => isItemRemoved(k,v,typeDropdownValue,scoreDropdownValue));
+  }
+
   Widget _displayClothes() {
     Map<String, Item> clothes = HashMap();
-    clothes = Map.from(allClothes)..removeWhere((k, v) => isItemRemoved(k,v));
+    clothes = filteredClothes(allClothes, typeDropdownValue, scoreDropdownValue);
 
     return ListView.builder(
-      padding: EdgeInsets.only(top: 5),
+      padding: const EdgeInsets.only(top: 5),
       itemCount: clothes.length,
       itemBuilder: (BuildContext context, int index) {
         String key = clothes.keys.elementAt(index);
