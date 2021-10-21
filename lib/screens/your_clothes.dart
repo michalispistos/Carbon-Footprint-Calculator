@@ -33,6 +33,7 @@ class ClothesList extends StatefulWidget {
 
 class _ClothesListState extends State<ClothesList> {
   Map<String, Item> allClothes = HashMap();
+  Map<String, Item> clothes = HashMap();
   String typeDropdownValue = 'All';
   String scoreDropdownValue = 'All';
 
@@ -72,7 +73,7 @@ class _ClothesListState extends State<ClothesList> {
   }
 
   Widget _displayClothes() {
-    Map<String, Item> clothes = HashMap();
+
     clothes = filteredClothes(allClothes, typeDropdownValue, scoreDropdownValue);
 
     return ListView.builder(
@@ -118,6 +119,15 @@ class _ClothesListState extends State<ClothesList> {
         );
       },
     );
+  }
+
+  double totalCarbonFootprint() {
+    double totalScore = 0;
+    for(Item c in clothes.values){
+      totalScore += c.score;
+    }
+
+    return totalScore;
   }
 
   @override
@@ -215,7 +225,10 @@ class _ClothesListState extends State<ClothesList> {
           padding: const EdgeInsets.symmetric(horizontal: 25),
           child: _displayClothes(),
         )),
+        Center(child:Text("${clothes.length} items in total    Total score: ${totalCarbonFootprint()}"))
       ],
     );
   }
+
+
 }
