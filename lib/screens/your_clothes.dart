@@ -4,25 +4,7 @@ import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../data/item.dart';
-
-class YourClothes extends StatelessWidget {
-  const YourClothes({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: const Text('Your Clothes',
-              style: TextStyle(
-                fontSize: 15,
-              )),
-        ),
-        body: const ClothesList());
-  }
-}
 
 class ClothesList extends StatefulWidget {
   const ClothesList({Key? key}) : super(key: key);

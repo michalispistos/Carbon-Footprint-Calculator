@@ -9,15 +9,21 @@ class ItemInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-          appBar: AppBar(
-          title: const Text('Complete some details about your item',
-              style: TextStyle(
-              fontSize: 15,
-              )),
+    return Scaffold(
+        appBar: AppBar(
+            title: const Flexible(
+          child: Text(
+            'Details about your item',
+            style: TextStyle(
+              fontSize: 17,
+            ),
+            maxLines: 2,
+            softWrap: false,
+            overflow: TextOverflow.fade,
           ),
-          resizeToAvoidBottomInset: false,
-          body: const ItemDetails());
+        )),
+        resizeToAvoidBottomInset: false,
+        body: const ItemDetails());
   }
 }
 
@@ -68,7 +74,7 @@ class _ItemDetailsState extends State<ItemDetails> {
 
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CarbonScoreResult(item : item)),
+      MaterialPageRoute(builder: (context) => CarbonScoreResult(item: item)),
     );
   }
 
@@ -79,10 +85,11 @@ class _ItemDetailsState extends State<ItemDetails> {
           return AlertDialog(
             title: const Text("Error"),
             content: SizedBox(
-              height: 20,
-              child: Text(errorMessage,style: const TextStyle(
-                fontSize: 15,
-              ))),
+                height: 20,
+                child: Text(errorMessage,
+                    style: const TextStyle(
+                      fontSize: 15,
+                    ))),
             actions: <Widget>[
               MaterialButton(
                 color: Colors.red,
@@ -113,29 +120,29 @@ class _ItemDetailsState extends State<ItemDetails> {
                   const Text("Material"),
                   StatefulBuilder(
                       builder: (BuildContext context, StateSetter setState) {
-                        return DropdownButton(
-                          hint: Text(materialDropdownValue),
-                          icon: const Icon(Icons.arrow_downward),
-                          iconSize: 24,
-                          elevation: 16,
-                          style: const TextStyle(color: Colors.green),
-                          underline: Container(
-                            height: 2,
-                            color: Colors.greenAccent,
-                          ),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              materialDropdownValue = newValue!;
-                            });
-                          },
-                          items: materials.map((String value) {
-                            return DropdownMenuItem(
-                              child: Text(value),
-                              value: value,
-                            );
-                          }).toList(),
+                    return DropdownButton(
+                      hint: Text(materialDropdownValue),
+                      icon: const Icon(Icons.arrow_downward),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: const TextStyle(color: Colors.green),
+                      underline: Container(
+                        height: 2,
+                        color: Colors.greenAccent,
+                      ),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          materialDropdownValue = newValue!;
+                        });
+                      },
+                      items: materials.map((String value) {
+                        return DropdownMenuItem(
+                          child: Text(value),
+                          value: value,
                         );
-                      }),
+                      }).toList(),
+                    );
+                  }),
                   const SizedBox(height: 10),
                   const Text("Percentage (%)"),
                   const SizedBox(height: 10),
@@ -182,21 +189,24 @@ class _ItemDetailsState extends State<ItemDetails> {
       shape: const CircleBorder(),
       onPressed: () {
         createMaterialPercentageDialog(context).then((value) => {
-          setState(() {
-            if (calculateTotalPercentages() + double.parse(value[1]) >
-                100) {
-              createErrorDialog(
-                  context, "Percentages add up to more than 100");
-            } else {
-              materialsToPercentages.putIfAbsent(
-                  value[0], () => double.parse(value[1]));
-              materials.remove(value[0]);
-              materialDropdownValue = materials[0];
-            }
-          }),
-        });
+              setState(() {
+                if (calculateTotalPercentages() + double.parse(value[1]) >
+                    100) {
+                  createErrorDialog(
+                      context, "Percentages add up to more than 100");
+                } else {
+                  materialsToPercentages.putIfAbsent(
+                      value[0], () => double.parse(value[1]));
+                  materials.remove(value[0]);
+                  materialDropdownValue = materials[0];
+                }
+              }),
+            });
       },
-      child: const Text("+"),
+      child: const Text("+",
+          style: TextStyle(
+            fontSize: 17,
+          )),
     );
   }
 
@@ -208,22 +218,25 @@ class _ItemDetailsState extends State<ItemDetails> {
         return Column(
           children: <Widget>[
             SizedBox(
-                width: 250,
+                width: 260,
                 child:
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Expanded(
                       child: Container(
-                        margin: const EdgeInsets.only(
-                          left: 40,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: ListTile(
-                          title: Text("$key: ${materialsToPercentages[key]}%"),
-                        ),
-                      )),
+                    margin: const EdgeInsets.only(
+                      left: 40,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: ListTile(
+                      title: Text("$key: ${materialsToPercentages[key]}%",
+                          style: const TextStyle(
+                            fontSize: 15,
+                          )),
+                    ),
+                  )),
                   IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () {
@@ -249,9 +262,12 @@ class _ItemDetailsState extends State<ItemDetails> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image.asset('images/coatrack.png'),
-        Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [Text("Type of product")]),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
+          Text("Type of product",
+              style: TextStyle(
+                fontSize: 17,
+              ))
+        ]),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           DropdownButton(
             hint: Text(typeDropdownValue),
@@ -268,7 +284,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                 typeDropdownValue = newValue!;
               });
             },
-            items:  <String>['Top', 'Bottom', 'Shoes']
+            items: <String>['Top', 'Bottom', 'Shoes']
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem(
                 child: Text(value),
@@ -277,10 +293,13 @@ class _ItemDetailsState extends State<ItemDetails> {
             }).toList(),
           )
         ]),
-        Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [Text("Weight of product (kg)")]),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children:  [
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
+          Text("Weight of product (kg)",
+              style: TextStyle(
+                fontSize: 17,
+              ))
+        ]),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           SizedBox(
               width: 200,
               height: 30,
@@ -305,7 +324,10 @@ class _ItemDetailsState extends State<ItemDetails> {
               margin: const EdgeInsets.only(
                 left: 40,
               ),
-              child: const Text("Materials")),
+              child: const Text("Materials",
+                  style: TextStyle(
+                    fontSize: 17,
+                  ))),
           _buildAddMaterialButton(),
         ]),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -325,7 +347,10 @@ class _ItemDetailsState extends State<ItemDetails> {
                 onPressed: () {
                   calculateCarbonScore();
                 },
-                child: const Text('Calculate carbon score'),
+                child: const Text('Calculate carbon score',
+                    style: TextStyle(
+                      fontSize: 17,
+                    )),
               ))
         ]),
       ],

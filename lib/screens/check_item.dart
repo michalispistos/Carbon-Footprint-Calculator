@@ -6,13 +6,63 @@ import 'package:carbon_footprint_calculator/widgets/brands_grid.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
 
-class ItemCalculationStart extends StatelessWidget {
-  const ItemCalculationStart({Key? key}) : super(key: key);
+class ItemCalculationStart extends StatefulWidget {
+  final int tab;
+
+  const ItemCalculationStart({Key? key, required this.tab}) : super(key: key);
+
+  @override
+  _ItemCalculationStartState createState() => _ItemCalculationStartState();
+}
+
+class _ItemCalculationStartState extends State<ItemCalculationStart>
+    with TickerProviderStateMixin {
+  final List<Tab> myTabs = <Tab>[
+    Tab(
+        child: Row(
+      children: [
+        addHorizontalSpace(30),
+        const Text("Check Item"),
+        addHorizontalSpace(30)
+      ],
+    )),
+    // ChoiceOption(text: "Check Item"),
+    Tab(
+        child: Row(
+      children: [
+        addHorizontalSpace(30),
+        const Text("Your Clothes"),
+        addHorizontalSpace(30)
+      ],
+    )),
+    Tab(
+        child: Row(
+      children: [
+        addHorizontalSpace(30),
+        const Text("Best Brands"),
+        addHorizontalSpace(30)
+      ],
+    )),
+    Tab(
+        child: Row(
+      children: [
+        addHorizontalSpace(30),
+        const Text("Your Score"),
+        addHorizontalSpace(30)
+      ],
+    )),
+    // ChoiceOption(text: "Your Score")
+  ];
+
+  late TabController _tabController;
 
   @override
   Widget build(BuildContext context) {
+    _tabController = TabController(vsync: this, length: myTabs.length);
     final Size size = MediaQuery.of(context).size;
     final ThemeData themeData = Theme.of(context);
+
+    _tabController.animateTo(widget.tab);
 
     return SafeArea(
       top: false,
@@ -51,54 +101,23 @@ class ItemCalculationStart extends StatelessWidget {
                 ),
                 addVerticalSpace(15),
                 TabBar(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Colors.black,
-                    isScrollable: true,
-                    tabs: [
-                      Tab(
-                          child: Row(
-                        children: [
-                          addHorizontalSpace(30),
-                          const Text("Check Item"),
-                          addHorizontalSpace(30)
-                        ],
-                      )),
-                      // ChoiceOption(text: "Check Item"),
-                      Tab(
-                          child: Row(
-                        children: [
-                          addHorizontalSpace(30),
-                          const Text("Your Clothes"),
-                          addHorizontalSpace(30)
-                        ],
-                      )),
-                      Tab(
-                          child: Row(
-                        children: [
-                          addHorizontalSpace(30),
-                          const Text("Best Brands"),
-                          addHorizontalSpace(30)
-                        ],
-                      )),
-                      Tab(
-                          child: Row(
-                        children: [
-                          addHorizontalSpace(30),
-                          const Text("Your Score"),
-                          addHorizontalSpace(30)
-                        ],
-                      )),
-                      // ChoiceOption(text: "Your Score")
-                    ]),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.black,
+                  isScrollable: true,
+                  controller: _tabController,
+                  tabs: myTabs,
+                ),
                 addVerticalSpace(15),
-                const Expanded(
-                    child: TabBarView(children: [
-                  CheckItemStart(),
-                  ClothesList(),
-                  BrandsGrid(),
-                  Icon(Icons.ac_unit)
-                ])),
+                Expanded(
+                    child: TabBarView(
+                        controller: _tabController,
+                        children: const [
+                      CheckItemStart(),
+                      ClothesList(),
+                      BrandsGrid(),
+                      Icon(Icons.ac_unit)
+                    ])),
               ],
             )
           ]),
@@ -112,8 +131,8 @@ class CircleBackgroundPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     // Offset sets each circle's center
-    canvas.drawCircle(
-        Offset(size.width - 40, 20), 150, Paint()..color = const Color(0xffffe3d3));
+    canvas.drawCircle(Offset(size.width - 40, 20), 150,
+        Paint()..color = const Color(0xffffe3d3));
     canvas.drawCircle(Offset(size.width / 2, size.height), 300,
         Paint()..color = const Color(0xffe7f6ff));
   }
