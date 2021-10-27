@@ -5,6 +5,14 @@ import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/brands_grid.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
+import 'package:carbon_footprint_calculator/data/item.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:carbon_footprint_calculator/data/item.dart';
+import 'package:carbon_footprint_calculator/utils/barcode_items_sample_data.dart';
+import 'package:flutter/material.dart';
+import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
+import 'package:carbon_footprint_calculator/screens/check_item.dart';
 
 class ItemCalculationStart extends StatefulWidget {
   final int tab;
@@ -143,9 +151,14 @@ class CircleBackgroundPainter extends CustomPainter {
   }
 }
 
-class CheckItemStart extends StatelessWidget {
+class CheckItemStart extends StatefulWidget {
   const CheckItemStart({Key? key}) : super(key: key);
 
+  @override
+  _CheckItemStartState createState() => _CheckItemStartState();
+}
+
+class _CheckItemStartState extends State<CheckItemStart> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -169,22 +182,144 @@ class CheckItemStart extends StatelessWidget {
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Flexible(
               child: Text(
-            "We'll ask you a few questions to calculate the impact of your item.",
+            "Check method to calculate the impact of your item.",
             textAlign: TextAlign.center,
             style: themeData.textTheme.headline3,
           ))
         ]),
       ),
       addVerticalSpace(25),
-      ElevatedButton(
-        child: const Text('Start'),
+      FlatButton(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+        color: const Color(0xfffffaca),
+        onPressed: () async {
+          scan();
+        },
+        child: const Text('Scan Barcode',
+            style: TextStyle(
+              fontSize: 17,
+            )),
+      ),
+      addVerticalSpace(25),
+      FlatButton(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+        color: const Color(0xfffffaca),
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const ItemInfoPage()),
           );
         },
-      )
+        child: const Text('Import Details Manually',
+            style: TextStyle(
+              fontSize: 17,
+            )),
+      ),
     ]);
+  }
+
+  String _data = "";
+  Map<String, Item> sampleBarcodeItems = BarcodeItems.sampleBarcodeItems;
+
+  scan() async {
+    await FlutterBarcodeScanner.scanBarcode(
+            "#000000", "Cancel", true, ScanMode.BARCODE)
+        .then((value) => {
+              setState(() {
+                _data = value.toString();
+                if (_data == "-1") {
+                  createErrorDialog(context, "Couldn't scan item");
+                } else {
+                  createCalculateFootprintDialog(context);
+                }
+              })
+            });
+  }
+
+  Future createCalculateFootprintDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Center(
+                child: Text("Item detected",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ))),
+            content: SizedBox(
+                height: 300,
+                child: Container(
+                    height: 300,
+                    width: 300,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image:
+                              AssetImage(sampleBarcodeItems[_data]!.imagePath),
+                          //fit: BoxFit.fill,
+                        ),
+                        border: Border.all(
+                            color: Colors.pink.shade50.withAlpha(100),
+                            width: 1)))),
+            actions: <Widget>[
+              FlatButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0)),
+                color: const Color(0xfffffaca),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CarbonScoreResult(
+                            item: sampleBarcodeItems[_data]!)),
+                  );
+                },
+                child: const Text('Calculate carbon score',
+                    style: TextStyle(
+                      fontSize: 17,
+                    )),
+              ),
+              MaterialButton(
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0)),
+                elevation: 5.0,
+                child: const Text("CLOSE"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  Future createErrorDialog(BuildContext context, String errorMessage) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Error"),
+            content: SizedBox(
+                height: 20,
+                child: Text(errorMessage,
+                    style: const TextStyle(
+                      fontSize: 15,
+                    ))),
+            actions: <Widget>[
+              MaterialButton(
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0)),
+                elevation: 5.0,
+                child: const Text("CLOSE"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 }

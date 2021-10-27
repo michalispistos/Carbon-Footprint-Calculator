@@ -8,7 +8,7 @@ class Item {
   // TODO barcode - store as id? use external package?
   double score = 0;
 
-  String name = "";
+  String imagePath = "";
 
   // All the doubles in materials should sum to 1 - currently this is a pre
   // condition assumed here
@@ -22,6 +22,12 @@ class Item {
     materials = item.materials,
     type = item.type,
     weight = item.weight
+  ;
+
+  Item.itemWithImage(Item item, this.imagePath):
+        materials = item.materials,
+        type = item.type,
+        weight = item.weight
   ;
 
 

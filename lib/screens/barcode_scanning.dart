@@ -8,32 +8,30 @@ import 'package:carbon_footprint_calculator/data/album.dart';
 
 String title = "";
 
-Future<Album> fetchAlbum() async {
+fetchAlbum() async {
 
   String key = "1kv0c3pwix7fr73b47v66vkvmvycnj";
   print("hello");
   title = "lol";
-  try{
-    final response = await http.get(Uri.parse('https://api.barcodelookup.com/v3/products?barcode=9780140157376&formatted=y&key=1kv0c3pwix7fr73b47v66vkvmvycnj')
-    , );
+
+    final response = await http.get(Uri.parse('https://api.barcodelookup.com/v3/products?barcode=3614272049529&formatted=y&key='+key)
+    );
     print("here");
-    final jsonData = jsonDecode(response.body);
+    // final jsonData = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      title = jsonData['title'];
-
-      return Album.fromJson(jsonDecode(response.body));
+      title = "title";
+      print("here1");
+      return ;
     } else {
+      print("here2");
       title = "yoo";
       // If the server did not return a 200 OK response,
       // then throw an exception.
       throw Exception('Failed to load album3');
-    }
-  }catch(err){
-    title = "rere";
-    throw Exception('Failed to load album2');
+
   }
 
 
