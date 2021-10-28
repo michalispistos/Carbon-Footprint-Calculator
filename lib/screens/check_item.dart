@@ -238,14 +238,18 @@ class _CheckItemStartState extends State<CheckItemStart> {
             });
   }
 
+  Item getItem(){
+    return sampleBarcodeItems[_data]!;
+  }
+
   Future createCalculateFootprintDialog(BuildContext context) {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Center(
-                child: Text("Item detected",
-                    style: TextStyle(
+            title: Center(
+                child: Text("Item detected: ${getItem().name}",
+                    style: const TextStyle(
                       fontSize: 20,
                     ))),
             content: SizedBox(
@@ -256,7 +260,7 @@ class _CheckItemStartState extends State<CheckItemStart> {
                     decoration: BoxDecoration(
                         image: DecorationImage(
                           image:
-                              AssetImage(sampleBarcodeItems[_data]!.imagePath),
+                              AssetImage(getItem().imagePath),
                           //fit: BoxFit.fill,
                         ),
                         border: Border.all(
@@ -272,7 +276,7 @@ class _CheckItemStartState extends State<CheckItemStart> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => CarbonScoreResult(
-                            item: sampleBarcodeItems[_data]!)),
+                            item: getItem())),
                   );
                 },
                 child: const Text('Calculate carbon score',

@@ -9,6 +9,7 @@ class Item {
   double score = 0;
 
   String imagePath = "";
+  String name = "";
 
   // All the doubles in materials should sum to 1 - currently this is a pre
   // condition assumed here
@@ -24,7 +25,7 @@ class Item {
     weight = item.weight
   ;
 
-  Item.itemWithImage(Item item, this.imagePath):
+  Item.itemWithImageAndName(Item item, this.imagePath, this.name):
         materials = item.materials,
         type = item.type,
         weight = item.weight

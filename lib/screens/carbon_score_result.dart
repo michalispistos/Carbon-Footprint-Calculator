@@ -70,7 +70,7 @@ class CarbonScoreResult extends StatelessWidget {
             content: SizedBox(
                 height: 60,
                 child: Column(children: [
-                  const Text("Please input name of your Item",
+                   const Text("Please input name of your Item",
                       style: TextStyle(fontSize: 15.0, color: Colors.black)),
                   const SizedBox(height: 10),
                   SizedBox(
@@ -85,7 +85,7 @@ class CarbonScoreResult extends StatelessWidget {
                             hintText: "i.e. Adidas shirt"),
                         style: const TextStyle(
                             fontSize: 15.0, color: Colors.black),
-                        controller: controller,
+                        controller: controller..text= item.name,
                       )),
                 ])),
             actions: <Widget>[
