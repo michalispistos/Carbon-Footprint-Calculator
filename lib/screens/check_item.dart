@@ -230,10 +230,13 @@ class _CheckItemStartState extends State<CheckItemStart> {
               setState(() {
                 _data = value.toString();
                 if (_data == "-1") {
-                  createErrorDialog(context, "Couldn't scan item");
+
                 } else {
-                  createCalculateFootprintDialog(context);
-                }
+                  if(sampleBarcodeItems.containsKey(_data)){
+                    createCalculateFootprintDialog(context);
+                  }else{
+                    createErrorDialog(context,"Item is not in database");
+                }}
               })
             });
   }
