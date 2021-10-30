@@ -230,18 +230,19 @@ class _CheckItemStartState extends State<CheckItemStart> {
               setState(() {
                 _data = value.toString();
                 if (_data == "-1") {
-                  createErrorDialog(context,"Couldn't scan item");
+                  createErrorDialog(context, "Couldn't scan item");
                 } else {
-                  if(sampleBarcodeItems.containsKey(_data)){
+                  if (sampleBarcodeItems.containsKey(_data)) {
                     createCalculateFootprintDialog(context);
-                  }else{
-                    createErrorDialog(context,"Item is not in database");
-                }}
+                  } else {
+                    createErrorDialog(context, "Item is not in database");
+                  }
+                }
               })
             });
   }
 
-  Item getItem(){
+  Item getItem() {
     return sampleBarcodeItems[_data]!;
   }
 
@@ -262,8 +263,7 @@ class _CheckItemStartState extends State<CheckItemStart> {
                     width: 300,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                          image:
-                              AssetImage(getItem().imagePath),
+                          image: AssetImage(getItem().imagePath),
                           //fit: BoxFit.fill,
                         ),
                         border: Border.all(
@@ -278,8 +278,8 @@ class _CheckItemStartState extends State<CheckItemStart> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => CarbonScoreResult(
-                            item: getItem())),
+                        builder: (context) =>
+                            CarbonScoreResult(item: getItem())),
                   );
                 },
                 child: const Text('Calculate carbon score',
@@ -288,7 +288,7 @@ class _CheckItemStartState extends State<CheckItemStart> {
                     )),
               ),
               MaterialButton(
-                color: Colors.red,
+                color: const Color.fromRGBO(254, 96, 79, 1),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0)),
                 elevation: 5.0,
@@ -307,7 +307,7 @@ class _CheckItemStartState extends State<CheckItemStart> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text("Error"),
+            title: const Text("Error", style: TextStyle(fontSize: 17)),
             content: SizedBox(
                 height: 20,
                 child: Text(errorMessage,
@@ -316,7 +316,7 @@ class _CheckItemStartState extends State<CheckItemStart> {
                     ))),
             actions: <Widget>[
               MaterialButton(
-                color: Colors.red,
+                color: const Color.fromRGBO(254, 96, 79, 1),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0)),
                 elevation: 5.0,

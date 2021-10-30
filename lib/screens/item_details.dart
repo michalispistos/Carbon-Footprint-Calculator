@@ -83,7 +83,10 @@ class _ItemDetailsState extends State<ItemDetails> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text("Error"),
+            title: const Text("Error",
+                style: TextStyle(
+                  fontSize: 17,
+                )),
             content: SizedBox(
                 height: 20,
                 child: Text(errorMessage,
@@ -92,7 +95,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                     ))),
             actions: <Widget>[
               MaterialButton(
-                color: Colors.red,
+                color: const Color.fromRGBO(254, 96, 79, 1),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0)),
                 elevation: 5.0,
@@ -117,7 +120,10 @@ class _ItemDetailsState extends State<ItemDetails> {
             content: SizedBox(
                 height: 145,
                 child: Column(children: [
-                  const Text("Material"),
+                  const Text("Material",
+                      style: TextStyle(
+                        fontSize: 17,
+                      )),
                   StatefulBuilder(
                       builder: (BuildContext context, StateSetter setState) {
                     return DropdownButton(
@@ -125,10 +131,11 @@ class _ItemDetailsState extends State<ItemDetails> {
                       icon: const Icon(Icons.arrow_downward),
                       iconSize: 24,
                       elevation: 16,
-                      style: const TextStyle(color: Colors.green),
+                      style: const TextStyle(
+                          color: Color.fromRGBO(64, 133, 72, 1)),
                       underline: Container(
                         height: 2,
-                        color: Colors.greenAccent,
+                        color: const Color.fromRGBO(64, 133, 72, 1),
                       ),
                       onChanged: (String? newValue) {
                         setState(() {
@@ -144,7 +151,10 @@ class _ItemDetailsState extends State<ItemDetails> {
                     );
                   }),
                   const SizedBox(height: 10),
-                  const Text("Percentage (%)"),
+                  const Text("Percentage (%)",
+                      style: TextStyle(
+                        fontSize: 17,
+                      )),
                   const SizedBox(height: 10),
                   SizedBox(
                       height: 30,
@@ -265,8 +275,7 @@ class _ItemDetailsState extends State<ItemDetails> {
         Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
           Text("Type of product",
               style: TextStyle(
-                fontSize: 17,
-              ))
+                  fontSize: 17, color: const Color.fromRGBO(91, 91, 91, 1)))
         ]),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           DropdownButton(
@@ -274,10 +283,10 @@ class _ItemDetailsState extends State<ItemDetails> {
             icon: const Icon(Icons.arrow_downward),
             iconSize: 24,
             elevation: 16,
-            style: const TextStyle(color: Colors.green),
+            style: const TextStyle(color: Color.fromRGBO(64, 133, 72, 1)),
             underline: Container(
               height: 2,
-              color: Colors.green,
+              color: const Color.fromRGBO(64, 133, 72, 1),
             ),
             onChanged: (String? newValue) {
               setState(() {
@@ -295,9 +304,8 @@ class _ItemDetailsState extends State<ItemDetails> {
         ]),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
           Text("Weight of product (kg)",
-              style: TextStyle(
-                fontSize: 17,
-              ))
+              style:
+                  TextStyle(fontSize: 17, color: Color.fromRGBO(91, 91, 91, 1)))
         ]),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           SizedBox(
@@ -327,6 +335,7 @@ class _ItemDetailsState extends State<ItemDetails> {
               child: const Text("Materials",
                   style: TextStyle(
                     fontSize: 17,
+                    color: Color.fromRGBO(91, 91, 91, 1),
                   ))),
           _buildAddMaterialButton(),
         ]),

@@ -121,6 +121,7 @@ class BrandDetails extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
+                        color: Color.fromRGBO(91, 91, 91, 1),
                       ),
                     ),
                   ),
@@ -147,6 +148,7 @@ class BrandDetails extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
+                      color: Color.fromRGBO(91, 91, 91, 1),
                     ),
                   ),
                 ),
