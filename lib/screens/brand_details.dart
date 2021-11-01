@@ -23,7 +23,7 @@ class BrandDetails extends StatelessWidget {
           SliverAppBar(
             snap: true,
             floating: true,
-            backgroundColor: const Color(0xFF200087),
+            backgroundColor: const Color(0xFFE9E9E9),
             expandedHeight: 300,
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
@@ -48,15 +48,15 @@ class BrandDetails extends StatelessWidget {
                   height: 20,
                 ),
                 ListTile(
-                  title: Text(
-                    // TODO LOCATION
-                    brandInfo.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 13,
-                      color: Colors.blueGrey,
-                    ),
-                  ),
+                  // title: Text(
+                  //   // TODO LOCATION
+                  //   brandInfo.location[0].name,
+                  //   style: const TextStyle(
+                  //     fontWeight: FontWeight.w800,
+                  //     fontSize: 13,
+                  //     color: Colors.blueGrey,
+                  //   ),
+                  // ),
                   subtitle: Text(
                     brandInfo.name,
                     style: const TextStyle(
@@ -84,15 +84,9 @@ class BrandDetails extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           const SizedBox(
-                            width: 140,
+                            width: 53,
                           ),
-                          Text(
-                            brandInfo.priceRating.toString(),
-                            style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16),
-                          )
+                          BrandRatings(rating: brandInfo.priceRating, imageUrl: 'images/dollar-sign.png',)
                         ],
                       ),
                     ],
@@ -150,7 +144,9 @@ class BrandDetails extends StatelessWidget {
                   const EdgeInsets.only(left: 16, right: 16, bottom: 32),
                   child: Text(
                     // TODO STYLE
-                    brandInfo.categories[0].name,
+                    // map categories[0].name, categories[1].name...
+                    // brandInfo.categories.map((x) => x.name + ', ').toString(),
+                    brandInfo.categoriesToString(),
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -176,20 +172,20 @@ class BrandDetails extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16, right: 16, bottom: 32),
-                      child: Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // TODO GOODONYOULINK
-                            _launchURL(brandInfo.websiteUrl);
-                            log(brandInfo.websiteUrl);
-                          },
-                          child: const Text('READ MORE'),
-                        ),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(
+                    //       left: 16, right: 16, bottom: 32),
+                    //   child: Center(
+                    //     child: ElevatedButton(
+                    //       onPressed: () {
+                    //         // TODO GOODONYOULINK
+                    //         _launchURL(brandInfo.websiteUrl);
+                    //         log(brandInfo.websiteUrl);
+                    //       },
+                    //       child: const Text('READ MORE'),
+                    //     ),
+                    //   ),
+                    //),
                   ],
                 )
               ],

@@ -37,6 +37,24 @@ class Categories {
   }
 }
 
+class Location {
+  final String code;
+  final String name;
+
+  Location({
+    required this.code,
+    required this.name,
+  });
+
+  factory Location.fromJson(Map<String, dynamic> json) {
+    return Location(
+      code: json['code'],
+      name: json['name'],
+    );
+  }
+
+}
+
 class BrandInfo {
   final String name;
   final String ethicalInfo1;
@@ -47,7 +65,7 @@ class BrandInfo {
   final int ethicalRating;
   final String websiteUrl;
   final String imageUrl;
-  // final String location;
+  final List<Location> location;
 
 
   BrandInfo({
@@ -60,11 +78,12 @@ class BrandInfo {
     required this.ethicalRating,
     required this.websiteUrl,
     required this.imageUrl,
-    //  required this.location
+    required this.location
   });
 
   factory BrandInfo.fromJson(Map<String, dynamic> json) {
     var listCategories = json['categories'] as List;
+    var listLocation = json['location'] as List;
 
     return BrandInfo(
       name: json['name'],
@@ -76,7 +95,17 @@ class BrandInfo {
       ethicalRating: json['ethicalRating'],
       websiteUrl: json['website'],
       imageUrl: json['imageUrl'],
-      // location: json['location'],
+      location: listLocation.map((i) => Location.fromJson(i)).toList(),
     );
+  }
+
+  String categoriesToString() {
+    StringBuffer res = StringBuffer();
+    res.write(categories[0].name);
+    for (int i = 1; i < categories.length; i++) {
+      res.write(", ");
+      res.write(categories[i].name);
+    }
+    return res.toString();
   }
 }
