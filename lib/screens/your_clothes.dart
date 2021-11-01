@@ -36,27 +36,32 @@ class _ClothesListState extends State<ClothesList> {
         () => Item.itemWithScore(Item({"Acrylic": 100}, "Bottom", 34.5), 57));
   }
 
-  bool isItemRemoved(String name, Item item,typeDropdownValue,scoreDropdownValue){
-    if(typeDropdownValue == "All" && scoreDropdownValue == "All"){
+  bool isItemRemoved(
+      String name, Item item, typeDropdownValue, scoreDropdownValue) {
+    if (typeDropdownValue == "All" && scoreDropdownValue == "All") {
       return false;
     }
-    if(typeDropdownValue == "All"){
-      return  double.parse(scoreDropdownValue.substring(1)) < item.score;
+    if (typeDropdownValue == "All") {
+      return double.parse(scoreDropdownValue.substring(1)) < item.score;
     }
-    if(scoreDropdownValue == "All"){
+    if (scoreDropdownValue == "All") {
       return typeDropdownValue != item.type;
     }
 
-    return typeDropdownValue != item.type || double.parse(scoreDropdownValue.substring(1)) < item.score;
+    return typeDropdownValue != item.type ||
+        double.parse(scoreDropdownValue.substring(1)) < item.score;
   }
 
-  Map<String, Item> filteredClothes(Map<String, Item> allClothes,typeDropdownValue,scoreDropdownValue){
-    return Map.from(allClothes)..removeWhere((k, v) => isItemRemoved(k,v,typeDropdownValue,scoreDropdownValue));
+  Map<String, Item> filteredClothes(
+      Map<String, Item> allClothes, typeDropdownValue, scoreDropdownValue) {
+    return Map.from(allClothes)
+      ..removeWhere(
+          (k, v) => isItemRemoved(k, v, typeDropdownValue, scoreDropdownValue));
   }
 
   Widget _displayClothes() {
-
-    clothes = filteredClothes(allClothes, typeDropdownValue, scoreDropdownValue);
+    clothes =
+        filteredClothes(allClothes, typeDropdownValue, scoreDropdownValue);
 
     return ListView.builder(
       padding: const EdgeInsets.only(top: 5),
@@ -105,7 +110,7 @@ class _ClothesListState extends State<ClothesList> {
 
   double totalCarbonFootprint() {
     double totalScore = 0;
-    for(Item c in clothes.values){
+    for (Item c in clothes.values) {
       totalScore += c.score;
     }
 
@@ -122,7 +127,7 @@ class _ClothesListState extends State<ClothesList> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: Row(children:  [
+          child: Row(children: [
             // const SizedBox(width: 10),
             const Text("Filter         ",
                 style: TextStyle(
@@ -139,17 +144,17 @@ class _ClothesListState extends State<ClothesList> {
               icon: const Icon(Icons.arrow_downward),
               iconSize: 24,
               elevation: 16,
-              style: const TextStyle(color: Colors.green),
+              style: const TextStyle(color: Color.fromRGBO(64, 133, 72, 1)),
               underline: Container(
                 height: 2,
-                color: Colors.green,
+                color: const Color.fromRGBO(64, 133, 72, 1),
               ),
               onChanged: (String? newValue) {
                 setState(() {
                   typeDropdownValue = newValue!;
                 });
               },
-              items:  <String>['All', 'Top', 'Bottom', 'Shoes']
+              items: <String>['All', 'Top', 'Bottom', 'Shoes']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem(
                   child: Text(value),
@@ -168,17 +173,17 @@ class _ClothesListState extends State<ClothesList> {
               icon: const Icon(Icons.arrow_downward),
               iconSize: 24,
               elevation: 16,
-              style: const TextStyle(color: Colors.green),
+              style: const TextStyle(color: Color.fromRGBO(64, 133, 72, 1)),
               underline: Container(
                 height: 2,
-                color: Colors.green,
+                color: const Color.fromRGBO(64, 133, 72, 1),
               ),
               onChanged: (String? newValue) {
                 setState(() {
                   scoreDropdownValue = newValue!;
                 });
               },
-              items:  <String>['All', '<75', '<50', '<25']
+              items: <String>['All', '<75', '<50', '<25']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem(
                   child: Text(value),
@@ -207,10 +212,10 @@ class _ClothesListState extends State<ClothesList> {
           padding: const EdgeInsets.symmetric(horizontal: 25),
           child: _displayClothes(),
         )),
-        Center(child:Text("${clothes.length} items in total    Total score: ${totalCarbonFootprint()}"))
+        Center(
+            child: Text(
+                "${clothes.length} items in total    Total score: ${totalCarbonFootprint()}"))
       ],
     );
   }
-
-
 }

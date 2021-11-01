@@ -23,7 +23,7 @@ class CarbonScoreResult extends StatelessWidget {
                 height: 80,
                 child: Column(children: [
                   const Text("Item Added to your Clothes",
-                      style: TextStyle(fontSize: 15.0, color: Colors.black)),
+                      style: TextStyle(fontSize: 16.0, color: Colors.black)),
                   const SizedBox(height: 10),
                   FlatButton(
                     shape: RoundedRectangleBorder(
@@ -45,7 +45,7 @@ class CarbonScoreResult extends StatelessWidget {
                 ])),
             actions: <Widget>[
               MaterialButton(
-                color: Colors.red,
+                color: const Color.fromRGBO(254, 96, 79, 1),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0)),
                 elevation: 5.0,
@@ -68,10 +68,10 @@ class CarbonScoreResult extends StatelessWidget {
           return AlertDialog(
             title: const Text(""),
             content: SizedBox(
-                height: 60,
+                height: 70,
                 child: Column(children: [
                   const Text("Please input name of your Item",
-                      style: TextStyle(fontSize: 15.0, color: Colors.black)),
+                      style: TextStyle(fontSize: 16.0, color: Colors.black)),
                   const SizedBox(height: 10),
                   SizedBox(
                       height: 30,
@@ -85,7 +85,7 @@ class CarbonScoreResult extends StatelessWidget {
                             hintText: "i.e. Adidas shirt"),
                         style: const TextStyle(
                             fontSize: 15.0, color: Colors.black),
-                        controller: controller,
+                        controller: controller..text = item.name,
                       )),
                 ])),
             actions: <Widget>[
