@@ -20,19 +20,17 @@ Future<BrandInfo> fetchBrand(String id) async {
 class Categories {
   final String id;
   final String name;
-  final bool isDominant;
+
 
   Categories({
     required this.id,
     required this.name,
-    required this.isDominant,
   });
 
   factory Categories.fromJson(Map<String, dynamic> json) {
     return Categories(
       id: json['id'],
       name: json['name'],
-      isDominant: json['isDominant'],
     );
   }
 }

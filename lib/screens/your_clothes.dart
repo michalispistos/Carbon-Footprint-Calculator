@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:carbon_footprint_calculator/screens/your_score.dart';
 import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,49 +15,43 @@ class ClothesList extends StatefulWidget {
 }
 
 class _ClothesListState extends State<ClothesList> {
-  Map<String, Item> allClothes = HashMap();
-  Map<String, Item> clothes = HashMap();
+  List<Clothing> allClothes = [];
+  List<Clothing> clothes = [];
   String typeDropdownValue = 'All';
   String scoreDropdownValue = 'All';
 
-  void createClothes() {
-    allClothes.putIfAbsent("Adidas shirt",
-        () => Item.itemWithScore(Item({"Acrylic": 100}, "Top", 34.5), 20));
-    allClothes.putIfAbsent("Nike trainers",
-        () => Item.itemWithScore(Item({"Acrylic": 100}, "Shoes", 2.5), 14));
-    allClothes.putIfAbsent("Gucci shoes",
-        () => Item.itemWithScore(Item({"Acrylic": 100}, "Shoes", 34.5), 45));
-    allClothes.putIfAbsent("Dress",
-        () => Item.itemWithScore(Item({"Acrylic": 100}, "Top", 34.5), 5));
-    allClothes.putIfAbsent("T-shirt",
-        () => Item.itemWithScore(Item({"Acrylic": 100}, "Top", 34.5), 67));
-    allClothes.putIfAbsent("Underwear",
-        () => Item.itemWithScore(Item({"Acrylic": 100}, "Bottom", 34.5), 78));
-    allClothes.putIfAbsent("Jeans",
-        () => Item.itemWithScore(Item({"Acrylic": 100}, "Bottom", 34.5), 57));
+  @override
+  void initState() {
+    super.initState();
+    fetchClothesInventory().then((value) => {
+      setState(() {
+        allClothes = value;
+        clothes = allClothes;
+    })
+    });
   }
 
-  bool isItemRemoved(
-      String name, Item item, typeDropdownValue, scoreDropdownValue) {
+  bool isClothesRemoved(
+      Clothing clothes, typeDropdownValue, scoreDropdownValue) {
     if (typeDropdownValue == "All" && scoreDropdownValue == "All") {
       return false;
     }
     if (typeDropdownValue == "All") {
-      return double.parse(scoreDropdownValue.substring(1)) < item.score;
+      return double.parse(scoreDropdownValue.substring(1)) < clothes.carbonScore;
     }
     if (scoreDropdownValue == "All") {
-      return typeDropdownValue != item.type;
+      return typeDropdownValue != clothes.type;
     }
 
-    return typeDropdownValue != item.type ||
-        double.parse(scoreDropdownValue.substring(1)) < item.score;
+    return typeDropdownValue != clothes.type ||
+        double.parse(scoreDropdownValue.substring(1)) < clothes.carbonScore;
   }
 
-  Map<String, Item> filteredClothes(
-      Map<String, Item> allClothes, typeDropdownValue, scoreDropdownValue) {
-    return Map.from(allClothes)
+  List<Clothing> filteredClothes(
+      List<Clothing> allClothes, typeDropdownValue, scoreDropdownValue) {
+    return List.from(allClothes)
       ..removeWhere(
-          (k, v) => isItemRemoved(k, v, typeDropdownValue, scoreDropdownValue));
+          (c) => isClothesRemoved(c, typeDropdownValue, scoreDropdownValue));
   }
 
   Widget _displayClothes() {
@@ -67,12 +62,12 @@ class _ClothesListState extends State<ClothesList> {
       padding: const EdgeInsets.only(top: 5),
       itemCount: clothes.length,
       itemBuilder: (BuildContext context, int index) {
-        String key = clothes.keys.elementAt(index);
+        Clothing clothing = clothes.elementAt(index);
         String iconPath = "images/top.png";
-        if (clothes[key]?.type == "Bottom") {
+        if (clothing.type == "Bottom") {
           iconPath = "images/bottom.png";
         }
-        if (clothes[key]?.type == "Shoes") {
+        if (clothing.type == "Shoes") {
           iconPath = "images/shoes.png";
         }
         return Column(
@@ -88,12 +83,12 @@ class _ClothesListState extends State<ClothesList> {
                 child: ListTile(
                   title: Row(
                     children: [
-                      Text("$key",
+                      Text(clothing.name,
                           style: const TextStyle(
                             fontSize: 16,
                           )),
                       const Spacer(),
-                      Text("${clothes[key]?.score}",
+                      Text("${clothing.carbonScore}",
                           style: const TextStyle(fontSize: 16))
                     ],
                   ),
@@ -110,8 +105,8 @@ class _ClothesListState extends State<ClothesList> {
 
   double totalCarbonFootprint() {
     double totalScore = 0;
-    for (Item c in clothes.values) {
-      totalScore += c.score;
+    for (Clothing c in clothes) {
+      totalScore += c.carbonScore;
     }
 
     return totalScore;
@@ -119,8 +114,6 @@ class _ClothesListState extends State<ClothesList> {
 
   @override
   Widget build(BuildContext context) {
-    createClothes();
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -154,7 +147,7 @@ class _ClothesListState extends State<ClothesList> {
                   typeDropdownValue = newValue!;
                 });
               },
-              items: <String>['All', 'Top', 'Bottom', 'Shoes']
+              items: <String>['All', 'Tops', 'Bottoms', 'Shoes']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem(
                   child: Text(value),

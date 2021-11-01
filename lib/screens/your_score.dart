@@ -269,12 +269,14 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
 class Clothing {
   final int id;
   final String name;
+  final String type;
   final DateTime dateTime;
   final double carbonScore;
 
   Clothing(
       {required this.id,
       required this.name,
+      required this.type,
       required this.dateTime,
       required this.carbonScore});
 
@@ -284,6 +286,7 @@ class Clothing {
       dateTime: DateTime.parse(json['date']),
       carbonScore: double.parse(json['carbon_score'].toString()),
       name: json['name'] as String,
+      type: json['type'] as String,
     );
   }
 

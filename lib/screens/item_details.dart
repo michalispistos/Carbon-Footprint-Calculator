@@ -293,7 +293,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                 typeDropdownValue = newValue!;
               });
             },
-            items: <String>['Top', 'Bottom', 'Shoes']
+            items: <String>['Tops', 'Bottoms', 'Shoes']
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem(
                 child: Text(value),

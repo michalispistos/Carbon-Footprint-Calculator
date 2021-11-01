@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:carbon_footprint_calculator/data/item.dart';
 import 'package:carbon_footprint_calculator/utils/carbon_calculator.dart';
 import 'package:carbon_footprint_calculator/utils/carbon_footprint.dart';
 import 'package:carbon_footprint_calculator/screens/check_item.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
+
+import 'package:http/http.dart' as http;
 
 class CarbonScoreResult extends StatelessWidget {
   final Item item;
@@ -98,6 +102,7 @@ class CarbonScoreResult extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pop();
                   itemName = controller.text.toString();
+                  addClothes(itemName, item);
                   createItemAddedDialog(context);
                 },
               )
@@ -141,5 +146,21 @@ class CarbonScoreResult extends StatelessWidget {
             )
           ],
         ));
+  }
+
+  void addClothes(String itemName, Item item) async {
+    final test = await http.post(
+        Uri.parse("https://footprintcalculator.herokuapp.com/clothes"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'name': itemName,
+          'type': item.type,
+          'carbon_score': carbonFootprint.getFootprint(item),
+          'owner': 1
+        }));
+
+
   }
 }
