@@ -37,13 +37,5 @@ class BrandsGrid extends StatelessWidget {
         },
       ),
     );
-    return GridView.count(
-      primary: false,
-      padding: const EdgeInsets.all(20),
-      crossAxisSpacing: 10,
-      mainAxisSpacing: 10,
-      crossAxisCount: 2,
-      children: brandData.map((brand) => BrandCard(topPick: brand,)).toList(),
-    );
   }
 }
