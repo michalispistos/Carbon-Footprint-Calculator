@@ -6,14 +6,22 @@ import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class BrandCard extends StatelessWidget {
+class BrandCard extends StatefulWidget {
   final dynamic topPick;
+
+  const BrandCard({Key? key, required this.topPick}) : super(key: key);
+
+  @override
+  _BrandCardState createState() => _BrandCardState();
+}
+
+class _BrandCardState extends State<BrandCard> {
   late Future<BrandInfo> futureBrandInfo;
 
-  // const BrandCard({Key? key, required this.topPick}) : super(key: key);
-
-  BrandCard({Key? key, required this.topPick}) : super(key: key) {
-    futureBrandInfo = fetchBrand(topPick.id);
+  @override
+  void initState() {
+    futureBrandInfo = fetchBrand(widget.topPick.id);
+    super.initState();
   }
 
   @override
@@ -29,7 +37,8 @@ class BrandCard extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => BrandDetails(brandInfo: snapshot.data!)),
+                      builder: (context) =>
+                          BrandDetails(brandInfo: snapshot.data!)),
                 );
               },
               child: Container(
@@ -51,27 +60,25 @@ class BrandCard extends StatelessWidget {
                                   ),
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                      color: Colors.pink.shade50.withAlpha(100), width: 1)
-                              )),
+                                      color: Colors.pink.shade50.withAlpha(100),
+                                      width: 1))),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              topPick.name,
+                              widget.topPick.name,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: const TextStyle(
                                   fontSize: 15.0,
                                   color: CustomTheme.COLOR_BLACK,
                                   fontWeight: FontWeight.bold,
-                                  height: 1.2
-                              ),
+                                  height: 1.2),
                             ),
                           ),
                         ],
                       ),
                     ),
                     addVerticalSpace(4),
-
                     Container(
                       width: 150,
                       height: 30,
@@ -81,8 +88,7 @@ class BrandCard extends StatelessWidget {
                             topLeft: Radius.circular(100),
                             topRight: Radius.circular(100),
                             bottomLeft: Radius.circular(100),
-                            bottomRight: Radius.circular(100)
-                        ),
+                            bottomRight: Radius.circular(100)),
                         // boxShadow: [
                         //   BoxShadow(
                         //     color: CustomTheme.COLOR_GREY,
@@ -92,20 +98,22 @@ class BrandCard extends StatelessWidget {
                         //   ),
                         // ],
                       ),
-                      child:BrandRatings(rating: topPick.ethicalRating, imageUrl: 'images/leaf.png'),
+                      child: BrandRatings(
+                          rating: widget.topPick.ethicalRating,
+                          imageUrl: 'images/leaf.png'),
                     ),
                     addVerticalSpace(20),
                     Expanded(
-                        child:Text(
-                          snapshot.data!.ethicalInfo1,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 4,
-                          style: const TextStyle(
-                            fontSize: 11.0,
-                            height: 1.2,
-                            color: CustomTheme.COLOR_BLACK,
-                          ),
-                        )),
+                        child: Text(
+                      snapshot.data!.ethicalInfo1,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 4,
+                      style: const TextStyle(
+                        fontSize: 11.0,
+                        height: 1.2,
+                        color: CustomTheme.COLOR_BLACK,
+                      ),
+                    )),
                   ],
                 ),
                 padding: const EdgeInsets.all(10.0),
@@ -115,11 +123,13 @@ class BrandCard extends StatelessWidget {
                         color: Colors.grey.withAlpha(200),
                         spreadRadius: 1,
                         blurRadius: 12,
-                        offset: const Offset(0, 1), // changes position of shadow
+                        offset:
+                            const Offset(0, 1), // changes position of shadow
                       ),
                     ],
                     color: const Color(0xfffffaca),
-                    borderRadius: const BorderRadius.all(Radius.circular(15.0))),
+                    borderRadius:
+                        const BorderRadius.all(Radius.circular(15.0))),
               ),
             );
           } else if (snapshot.hasError) {
@@ -131,6 +141,5 @@ class BrandCard extends StatelessWidget {
         },
       ),
     );
-
   }
 }

@@ -14,7 +14,7 @@ Future<List<TopPicks>> fetchTopPicks(http.Client client) async {
   final response = await client.get(
       Uri.parse('https://footprintcalculator.herokuapp.com/brands/top-picks'));
 
-  return compute(parseTopPicks, response.body);
+  return parseTopPicks(response.body);
 }
 
 class TopPicks {
@@ -26,15 +26,14 @@ class TopPicks {
   final int ethicalRating;
   final int price;
 
-  TopPicks({
-    required this.id,
-    required this.name,
-    required this.slug,
-    required this.imageUrl,
-    required this.ethicalLabel,
-    required this.ethicalRating,
-    required this.price
-  });
+  TopPicks(
+      {required this.id,
+      required this.name,
+      required this.slug,
+      required this.imageUrl,
+      required this.ethicalLabel,
+      required this.ethicalRating,
+      required this.price});
 
   factory TopPicks.fromJson(Map<String, dynamic> json) {
     return TopPicks(
@@ -47,6 +46,4 @@ class TopPicks {
       price: json['price'] as int,
     );
   }
-
-
 }

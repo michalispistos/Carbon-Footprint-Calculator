@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:carbon_footprint_calculator/utils/brand_info.dart';
 import 'package:carbon_footprint_calculator/utils/brands_request.dart';
 import 'package:carbon_footprint_calculator/widgets/brand_card.dart';
 import 'package:carbon_footprint_calculator/widgets/brand_ratings.dart';
@@ -32,7 +31,7 @@ class BrandDetails extends StatelessWidget {
             flexibleSpace: FlexibleSpaceBar(
               background: ClipRRect(
                 borderRadius:
-                const BorderRadius.vertical(bottom: Radius.circular(40)),
+                    const BorderRadius.vertical(bottom: Radius.circular(40)),
                 child: Image.network(brandInfo.imageUrl),
                 // child: Image.asset(
                 //   brandInfo.logoPath,
@@ -74,7 +73,10 @@ class BrandDetails extends StatelessWidget {
                           const SizedBox(
                             width: 30,
                           ),
-                          BrandRatings(rating: brandInfo.ethicalRating, imageUrl: 'images/leaf.png',)
+                          BrandRatings(
+                            rating: brandInfo.ethicalRating,
+                            imageUrl: 'images/leaf.png',
+                          )
                         ],
                       ),
                       const SizedBox(
@@ -86,7 +88,10 @@ class BrandDetails extends StatelessWidget {
                           const SizedBox(
                             width: 53,
                           ),
-                          BrandRatings(rating: brandInfo.priceRating, imageUrl: 'images/dollar-sign.png',)
+                          BrandRatings(
+                            rating: brandInfo.priceRating,
+                            imageUrl: 'images/dollar-sign.png',
+                          )
                         ],
                       ),
                     ],
@@ -141,11 +146,8 @@ class BrandDetails extends StatelessWidget {
                 ),
                 Padding(
                   padding:
-                  const EdgeInsets.only(left: 16, right: 16, bottom: 32),
+                      const EdgeInsets.only(left: 16, right: 16, bottom: 32),
                   child: Text(
-                    // TODO STYLE
-                    // map categories[0].name, categories[1].name...
-                    // brandInfo.categories.map((x) => x.name + ', ').toString(),
                     brandInfo.categoriesToString(),
                     style: const TextStyle(
                       fontSize: 16,
@@ -196,7 +198,6 @@ class BrandDetails extends StatelessWidget {
     );
   }
 }
-
 
 void _launchURL(_url) async =>
     await canLaunch(_url) ? await launch(_url) : throw 'Could not launch $_url';

@@ -17,6 +17,13 @@ class ItemCalculationStart extends StatefulWidget {
 
 class _ItemCalculationStartState extends State<ItemCalculationStart>
     with TickerProviderStateMixin {
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   final List<Tab> myTabs = <Tab>[
     Tab(
         child: Row(
@@ -125,6 +132,7 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
       ),
     );
   }
+
 }
 
 class CircleBackgroundPainter extends CustomPainter {
