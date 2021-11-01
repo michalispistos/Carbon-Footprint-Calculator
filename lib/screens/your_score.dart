@@ -78,20 +78,63 @@ class _YourScoreState extends State<YourScore> {
         });
   }
 
+  FutureBuilder calculateLifetimeAverageCarbonScore() {
+    return FutureBuilder<List<Clothing>>(
+        future: clothesInventory,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var themeData = Theme.of(context);
+            double avgScore = snapshot.data!.fold(
+                    0.0, (prev, curr) => (prev as double) + curr.carbonScore) /
+                snapshot.data!.length;
+            return Text(avgScore.toString(),
+                style: themeData.textTheme.headline1!
+                    .copyWith(color: Colors.green));
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
+
+          // By default, show a loading spinner.
+          return const CircularProgressIndicator();
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
     final Size size = MediaQuery.of(context).size;
 
     return Column(children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        child: Text(
-          "Your lifetime carbon score is:",
-          style: themeData.textTheme.headline1,
-        ),
-      ),
-      calculateLifetimeCarbonScore(),
+      Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          elevation: 3,
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
+            child: Column(children: [
+              Text(
+                "Lifetime total carbon score:",
+                style: themeData.textTheme.headline2,
+              ),
+              calculateLifetimeCarbonScore()
+            ]),
+          )),
+      Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          elevation: 3,
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
+            child: Column(children: [
+              Text(
+                "Lifetime average carbon score:",
+                style: themeData.textTheme.headline2,
+              ),
+              calculateLifetimeAverageCarbonScore()
+            ]),
+          )),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 25.0),
         child: SizedBox(
