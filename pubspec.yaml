@@ -37,6 +37,7 @@ dependencies:
 
   # To launch url's from app
   url_launcher: ^6.0.12
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_test:

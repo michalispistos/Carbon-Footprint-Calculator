@@ -6,9 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BrandCard extends StatelessWidget {
-  final dynamic brandInfo;
+  final dynamic topPick;
 
-  const BrandCard({Key? key, required this.brandInfo}) : super(key: key);
+  const BrandCard({Key? key, required this.topPick}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class BrandCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => BrandDetails(brandInfo: brandInfo)),
+              builder: (context) => BrandDetails(topPick.id)),
         );
       },
       child: Container(
@@ -34,7 +34,7 @@ class BrandCard extends StatelessWidget {
                       width: 40.0,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage(brandInfo.logoPath),
+                            image: AssetImage(topPick.imageUrl),
                             //fit: BoxFit.fill,
                           ),
                           shape: BoxShape.circle,
@@ -44,7 +44,7 @@ class BrandCard extends StatelessWidget {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      brandInfo.name,
+                      topPick.name,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: const TextStyle(
@@ -80,12 +80,13 @@ class BrandCard extends StatelessWidget {
                 //   ),
                 // ],
               ),
-              child:BrandRatings(stars: brandInfo.rating),
+              child:BrandRatings(stars: topPick.ethicalRating),
             ),
             addVerticalSpace(10),
             Expanded(
                 child:Text(
-                  brandInfo.description,
+                  // TODO: CHANGE THIS
+                  topPick.imageUrl,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 4,
                   style: const TextStyle(

@@ -1,7 +1,7 @@
 import 'brand_info.dart';
 
-final List<BrandInfo> brandData = [
-  BrandInfo(
+final List<BrandInfoOld> brandData = [
+  BrandInfoOld(
       name: "Patagonia",
       logoPath: "images/patagonia-logo.jpg",
       basedIn: 'California, USA',
@@ -12,7 +12,7 @@ final List<BrandInfo> brandData = [
       style: 'Adult & children’s outdoor apparel, swimwear, activewear',
       websiteLink: 'https://www.patagonia.com/',
       goodOnYouLink: 'https://directory.goodonyou.eco/brand/patagonia'),
-  BrandInfo(
+  BrandInfoOld(
       name: "The North Face",
       logoPath: 'images/northface-logo.png',
       basedIn: 'Colorado, USA',
@@ -23,7 +23,7 @@ final List<BrandInfo> brandData = [
       style: 'Adult & children’s basics, underwear, activewear, bedding & bath',
       websiteLink: 'https://www.thenorthface.co.uk/',
       goodOnYouLink: 'https://directory.goodonyou.eco/brand/the-north-face'),
-  BrandInfo(
+  BrandInfoOld(
       name: "Gucci",
       logoPath: "images/gucci-logo.jpg",
       basedIn: 'California, USA',
@@ -34,7 +34,7 @@ final List<BrandInfo> brandData = [
       style: 'Adult & children’s outdoor apparel, swimwear, activewear',
       websiteLink: 'https://www.gucci.com/',
       goodOnYouLink: 'https://directory.goodonyou.eco/brand/gucci'),
-  BrandInfo(
+  BrandInfoOld(
       name: "Urban Outfitters",
       logoPath: "images/urban-outfitters-logo.png",
       basedIn: 'California, USA',
@@ -45,7 +45,7 @@ final List<BrandInfo> brandData = [
       style: 'Adult & children’s outdoor apparel, swimwear, activewear',
       websiteLink: 'https://www.urbanoutfitters.com/',
       goodOnYouLink: 'https://directory.goodonyou.eco/brand/urban-outfitters'),
-  BrandInfo(
+  BrandInfoOld(
       name: "Lorem Ipsum",
       logoPath: "images/patagonia-logo.jpg",
       basedIn: 'California, USA',
@@ -56,7 +56,7 @@ final List<BrandInfo> brandData = [
       style: 'Adult & children’s outdoor apparel, swimwear, activewear',
       websiteLink: 'https://www.patagonia.com/',
       goodOnYouLink: 'https://directory.goodonyou.eco/brand/gucci'),
-  BrandInfo(
+  BrandInfoOld(
       name: "Paagonia",
       logoPath: "images/patagonia-logo.jpg",
       basedIn: 'California, USA',
@@ -67,7 +67,7 @@ final List<BrandInfo> brandData = [
       style: 'Adult & children’s outdoor apparel, swimwear, activewear',
       websiteLink: 'https://www.patagonia.com/',
       goodOnYouLink: 'https://directory.goodonyou.eco/brand/urban-outfitters'),
-  BrandInfo(
+  BrandInfoOld(
       name: "Paagonia",
       logoPath: "images/patagonia-logo.jpg",
       basedIn: 'California, USA',
@@ -78,7 +78,7 @@ final List<BrandInfo> brandData = [
       style: 'Adult & children’s outdoor apparel, swimwear, activewear',
       websiteLink: 'https://www.patagonia.com/',
       goodOnYouLink: 'https://directory.goodonyou.eco/brand/gucci'),
-  BrandInfo(
+  BrandInfoOld(
       name: "Paagonia",
       logoPath: "images/patagonia-logo.jpg",
       basedIn: 'California, USA',

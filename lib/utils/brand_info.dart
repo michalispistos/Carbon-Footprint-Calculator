@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-class BrandInfo {
-  BrandInfo({
+class BrandInfoOld {
+  BrandInfoOld({
     required this.name,
     required this.description,
     required this.rating,
