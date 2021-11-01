@@ -74,6 +74,7 @@ class _YourScoreState extends State<YourScore> {
             return Text('${snapshot.error}');
           }
 
+
           // By default, show a loading spinner.
           return const CircularProgressIndicator();
         });
