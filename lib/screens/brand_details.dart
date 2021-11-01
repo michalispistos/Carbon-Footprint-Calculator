@@ -31,7 +31,7 @@ class BrandDetails extends StatelessWidget {
             flexibleSpace: FlexibleSpaceBar(
               background: ClipRRect(
                 borderRadius:
-                    const BorderRadius.vertical(bottom: Radius.circular(40)),
+                const BorderRadius.vertical(bottom: Radius.circular(40)),
                 child: Image.asset(
                   brandInfo.logoPath,
                   fit: BoxFit.fitWidth,
@@ -121,7 +121,6 @@ class BrandDetails extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
-                        color: Color.fromRGBO(91, 91, 91, 1),
                       ),
                     ),
                   ),
@@ -142,13 +141,12 @@ class BrandDetails extends StatelessWidget {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.only(left: 16, right: 16, bottom: 32),
+                  const EdgeInsets.only(left: 16, right: 16, bottom: 32),
                   child: Text(
                     brandInfo.style,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Color.fromRGBO(91, 91, 91, 1),
                     ),
                   ),
                 ),
