@@ -31,20 +31,12 @@ class BrandDetails extends StatelessWidget {
             flexibleSpace: FlexibleSpaceBar(
               background: ClipRRect(
                 borderRadius:
-<<<<<<< HEAD
                 const BorderRadius.vertical(bottom: Radius.circular(40)),
-                child: Image.asset(
-                  brandInfo.logoPath,
-                  fit: BoxFit.fitWidth,
-                ),
-=======
-                    const BorderRadius.vertical(bottom: Radius.circular(40)),
                 child: Image.network(brandInfo.imageUrl),
                 // child: Image.asset(
                 //   brandInfo.logoPath,
                 //   fit: BoxFit.fitWidth,
                 // ),
->>>>>>> brands-page
               ),
             ),
           ),
