@@ -5,6 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 
 List<Clothing> parseClothes(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
@@ -66,7 +67,7 @@ class _YourScoreState extends State<YourScore> {
             var themeData = Theme.of(context);
             double totalScore =
                 snapshot.data!.fold(0, (prev, curr) => prev + curr.carbonScore);
-            return Text(totalScore.toString(),
+            return Text(totalScore.toStringAsFixed(2),
                 style: themeData.textTheme.headline1!
                     .copyWith(color: Colors.green));
           } else if (snapshot.hasError) {
@@ -87,7 +88,7 @@ class _YourScoreState extends State<YourScore> {
             double avgScore = snapshot.data!.fold(
                     0.0, (prev, curr) => (prev as double) + curr.carbonScore) /
                 snapshot.data!.length;
-            return Text(avgScore.toString(),
+            return Text(avgScore.toStringAsFixed(2),
                 style: themeData.textTheme.headline1!
                     .copyWith(color: Colors.green));
           } else if (snapshot.hasError) {

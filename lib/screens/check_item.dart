@@ -14,11 +14,11 @@ import 'package:carbon_footprint_calculator/utils/barcode_items_sample_data.dart
 import 'package:flutter/material.dart';
 import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
 import 'package:carbon_footprint_calculator/screens/check_item.dart';
+import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 
 class ItemCalculationStart extends StatefulWidget {
-  final int tab;
 
-  const ItemCalculationStart({Key? key, required this.tab}) : super(key: key);
+  const ItemCalculationStart({Key? key,}) : super(key: key);
 
   @override
   _ItemCalculationStartState createState() => _ItemCalculationStartState();
@@ -77,8 +77,7 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
     _tabController = TabController(vsync: this, length: myTabs.length);
     final Size size = MediaQuery.of(context).size;
     final ThemeData themeData = Theme.of(context);
-
-    _tabController.animateTo(widget.tab);
+    _tabController.animateTo(globals.tab);
 
     return SafeArea(
       top: false,

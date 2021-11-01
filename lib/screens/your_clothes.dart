@@ -6,6 +6,7 @@ import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../data/item.dart';
+import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 
 class ClothesList extends StatefulWidget {
   const ClothesList({Key? key}) : super(key: key);
@@ -88,7 +89,7 @@ class _ClothesListState extends State<ClothesList> {
                             fontSize: 16,
                           )),
                       const Spacer(),
-                      Text("${clothing.carbonScore}",
+                      Text(clothing.carbonScore.toStringAsFixed(2),
                           style: const TextStyle(fontSize: 16))
                     ],
                   ),
@@ -114,6 +115,7 @@ class _ClothesListState extends State<ClothesList> {
 
   @override
   Widget build(BuildContext context) {
+    globals.tab = 1;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -207,7 +209,7 @@ class _ClothesListState extends State<ClothesList> {
         )),
         Center(
             child: Text(
-                "${clothes.length} items in total    Total score: ${totalCarbonFootprint()}"))
+                "${clothes.length} items in total    Total score: ${totalCarbonFootprint().toStringAsFixed(2)}"))
       ],
     );
   }

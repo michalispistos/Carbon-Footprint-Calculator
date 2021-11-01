@@ -120,6 +120,12 @@ class BrandDetails extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 6),
                     child: Html(
                       data: brandInfo.ethicalInfo2,
+                      style:{
+                        "body": Style(
+                          color: const Color.fromRGBO(91, 91, 91, 1),
+                        )
+                      }
+
                     ),
                     // child: Text(
                     //   brandInfo.description,
@@ -152,6 +158,7 @@ class BrandDetails extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
+                      color: Color.fromRGBO(91, 91, 91, 1),
                     ),
                   ),
                 ),
