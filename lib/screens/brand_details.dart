@@ -1,20 +1,20 @@
 import 'dart:developer';
 
-import 'package:carbon_footprint_calculator/utils/brand_info.dart';
+import 'package:carbon_footprint_calculator/utils/brands_request.dart';
 import 'package:carbon_footprint_calculator/widgets/brand_card.dart';
 import 'package:carbon_footprint_calculator/widgets/brand_ratings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BrandDetails extends StatelessWidget {
-  const BrandDetails({Key? key, required this.brandInfo}) : super(key: key);
-
   final BrandInfo brandInfo;
+
+  const BrandDetails({Key? key, required this.brandInfo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       backgroundColor: const Color(0xFFE9E9E9),
       body: CustomScrollView(
@@ -22,7 +22,7 @@ class BrandDetails extends StatelessWidget {
           SliverAppBar(
             snap: true,
             floating: true,
-            backgroundColor: const Color(0xFF200087),
+            backgroundColor: const Color(0xFFE9E9E9),
             expandedHeight: 300,
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
@@ -31,11 +31,20 @@ class BrandDetails extends StatelessWidget {
             flexibleSpace: FlexibleSpaceBar(
               background: ClipRRect(
                 borderRadius:
+<<<<<<< HEAD
                 const BorderRadius.vertical(bottom: Radius.circular(40)),
                 child: Image.asset(
                   brandInfo.logoPath,
                   fit: BoxFit.fitWidth,
                 ),
+=======
+                    const BorderRadius.vertical(bottom: Radius.circular(40)),
+                child: Image.network(brandInfo.imageUrl),
+                // child: Image.asset(
+                //   brandInfo.logoPath,
+                //   fit: BoxFit.fitWidth,
+                // ),
+>>>>>>> brands-page
               ),
             ),
           ),
@@ -46,14 +55,15 @@ class BrandDetails extends StatelessWidget {
                   height: 20,
                 ),
                 ListTile(
-                  title: Text(
-                    brandInfo.basedIn,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 13,
-                      color: Colors.blueGrey,
-                    ),
-                  ),
+                  // title: Text(
+                  //   // TODO LOCATION
+                  //   brandInfo.location[0].name,
+                  //   style: const TextStyle(
+                  //     fontWeight: FontWeight.w800,
+                  //     fontSize: 13,
+                  //     color: Colors.blueGrey,
+                  //   ),
+                  // ),
                   subtitle: Text(
                     brandInfo.name,
                     style: const TextStyle(
@@ -71,7 +81,10 @@ class BrandDetails extends StatelessWidget {
                           const SizedBox(
                             width: 30,
                           ),
-                          BrandRatings(stars: brandInfo.rating)
+                          BrandRatings(
+                            rating: brandInfo.ethicalRating,
+                            imageUrl: 'images/leaf.png',
+                          )
                         ],
                       ),
                       const SizedBox(
@@ -81,14 +94,11 @@ class BrandDetails extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           const SizedBox(
-                            width: 140,
+                            width: 53,
                           ),
-                          Text(
-                            brandInfo.priceRange,
-                            style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16),
+                          BrandRatings(
+                            rating: brandInfo.priceRating,
+                            imageUrl: 'images/dollar-sign.png',
                           )
                         ],
                       ),
@@ -116,13 +126,16 @@ class BrandDetails extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 6),
-                    child: Text(
-                      brandInfo.description,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    child: Html(
+                      data: brandInfo.ethicalInfo2,
                     ),
+                    // child: Text(
+                    //   brandInfo.description,
+                    //   style: const TextStyle(
+                    //     fontSize: 16,
+                    //     fontWeight: FontWeight.w500,
+                    //   ),
+                    // ),
                   ),
                 ),
                 const SizedBox(
@@ -143,7 +156,7 @@ class BrandDetails extends StatelessWidget {
                   padding:
                   const EdgeInsets.only(left: 16, right: 16, bottom: 32),
                   child: Text(
-                    brandInfo.style,
+                    brandInfo.categoriesToString(),
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -162,26 +175,27 @@ class BrandDetails extends StatelessWidget {
                       child: Center(
                         child: ElevatedButton(
                           onPressed: () {
-                            _launchURL(brandInfo.websiteLink);
-                            log(brandInfo.websiteLink);
+                            _launchURL(brandInfo.websiteUrl);
+                            log(brandInfo.websiteUrl);
                           },
                           child: const Text('SHOP NOW'),
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16, right: 16, bottom: 32),
-                      child: Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            _launchURL(brandInfo.goodOnYouLink);
-                            log(brandInfo.goodOnYouLink);
-                          },
-                          child: const Text('READ MORE'),
-                        ),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(
+                    //       left: 16, right: 16, bottom: 32),
+                    //   child: Center(
+                    //     child: ElevatedButton(
+                    //       onPressed: () {
+                    //         // TODO GOODONYOULINK
+                    //         _launchURL(brandInfo.websiteUrl);
+                    //         log(brandInfo.websiteUrl);
+                    //       },
+                    //       child: const Text('READ MORE'),
+                    //     ),
+                    //   ),
+                    //),
                   ],
                 )
               ],

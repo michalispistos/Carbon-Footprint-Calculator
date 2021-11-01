@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 
 class BrandRatings extends StatelessWidget {
 
-  final int stars;
-  const BrandRatings({Key? key, required this.stars}) : super(key: key);
+  final int rating;
+  final String imageUrl;
+  const BrandRatings({Key? key, required this.rating, required this.imageUrl}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     List<Image> starIcons = [];
 
-    for (var i = 0; i < stars; i++) {
+    for (var i = 0; i < rating; i++) {
       starIcons.add(
-        Image.asset('images/leaf.png',
-            width: 25,
-            height: 25
+        Image.asset(imageUrl,
+            width: 24,
+            height: 24
         ),
       );
     }
