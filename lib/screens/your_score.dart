@@ -104,7 +104,9 @@ class _YourScoreState extends State<YourScore> {
     ThemeData themeData = Theme.of(context);
     final Size size = MediaQuery.of(context).size;
 
-    return Column(children: [
+    return SingleChildScrollView(
+      child:
+      Column(children: [
       Card(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -218,7 +220,7 @@ class _YourScoreState extends State<YourScore> {
               }),
         ),
       ),
-    ]);
+    ]));
   }
 }
 
