@@ -1,5 +1,6 @@
 import 'package:carbon_footprint_calculator/screens/item_details.dart';
 import 'package:carbon_footprint_calculator/screens/your_clothes.dart';
+import 'package:carbon_footprint_calculator/screens/your_score.dart';
 import 'package:carbon_footprint_calculator/themes/default_theme.dart';
 import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/brands_grid.dart';
@@ -116,7 +117,7 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
                       CheckItemStart(),
                       ClothesList(),
                       BrandsGrid(),
-                      Icon(Icons.ac_unit)
+                      YourScore()
                     ])),
               ],
             )
