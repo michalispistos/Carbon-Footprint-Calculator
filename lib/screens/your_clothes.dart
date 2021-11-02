@@ -115,7 +115,6 @@ class _ClothesListState extends State<ClothesList> {
 
   @override
   Widget build(BuildContext context) {
-    globals.tab = 1;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
