@@ -65,7 +65,7 @@ class _ClothesListState extends State<ClothesList> {
       itemBuilder: (BuildContext context, int index) {
         Clothing clothing = clothes.elementAt(index);
         String iconPath = "images/top.png";
-        if (clothing.type == "Bottom") {
+        if (clothing.type == "Bottoms") {
           iconPath = "images/bottom.png";
         }
         if (clothing.type == "Shoes") {
