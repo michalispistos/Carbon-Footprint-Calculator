@@ -65,14 +65,11 @@ class BrandDetails extends StatelessWidget {
                     ),
                   ),
                   trailing: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          const SizedBox(
-                            width: 30,
-                          ),
                           BrandRatings(
                             rating: brandInfo.ethicalRating,
                             imageUrl: 'images/leaf.png',
@@ -85,9 +82,6 @@ class BrandDetails extends StatelessWidget {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          const SizedBox(
-                            width: 53,
-                          ),
                           BrandRatings(
                             rating: brandInfo.priceRating,
                             imageUrl: 'images/dollar-sign.png',

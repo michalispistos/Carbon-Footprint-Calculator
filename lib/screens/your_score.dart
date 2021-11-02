@@ -103,6 +103,7 @@ class _YourScoreState extends State<YourScore> {
 
   @override
   Widget build(BuildContext context) {
+    globals.tab = 3;
     ThemeData themeData = Theme.of(context);
     final Size size = MediaQuery.of(context).size;
 

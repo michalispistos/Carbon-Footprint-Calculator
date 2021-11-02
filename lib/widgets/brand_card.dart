@@ -5,6 +5,7 @@ import 'package:carbon_footprint_calculator/widgets/brand_ratings.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 
 class BrandCard extends StatefulWidget {
   final dynamic topPick;
@@ -34,6 +35,7 @@ class _BrandCardState extends State<BrandCard> {
           if (snapshot.hasData) {
             return GestureDetector(
               onTap: () {
+                globals.tab = 2;
                 Navigator.push(
                   context,
                   MaterialPageRoute(

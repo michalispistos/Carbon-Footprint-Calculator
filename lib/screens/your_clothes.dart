@@ -6,6 +6,7 @@ import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../data/item.dart';
+import 'package:http/http.dart' as http;
 import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 
 class ClothesList extends StatefulWidget {
@@ -23,6 +24,7 @@ class _ClothesListState extends State<ClothesList> {
 
   @override
   void initState() {
+
     super.initState();
     fetchClothesInventory().then((value) => {
       setState(() {
@@ -82,19 +84,35 @@ class _ClothesListState extends State<ClothesList> {
               addHorizontalSpace(10),
               Expanded(
                 child: ListTile(
-                  title: Row(
+                  title:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Flexible(
+                        child:
                       Text(clothing.name,
                           style: const TextStyle(
                             fontSize: 16,
-                          )),
-                      const Spacer(),
+                          ))),
+                      Row(children:[
                       Text(clothing.carbonScore.toStringAsFixed(2),
-                          style: const TextStyle(fontSize: 16))
+                          style: const TextStyle(fontSize: 16)),
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          removeClothes(clothing.id);
+                          setState(() {
+                            allClothes =
+                            List.from(allClothes)
+                              ..removeWhere(
+                                      (c) => c.id == clothing.id);
+                          });
+                        },
+                      )
                     ],
                   ),
-                ),
-              ),
+                ]),
+              )),
             ]),
             const SizedBox(height: 5),
             const Divider(color: Colors.black),
@@ -115,6 +133,9 @@ class _ClothesListState extends State<ClothesList> {
 
   @override
   Widget build(BuildContext context) {
+
+    globals.tab = 1;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -195,7 +216,7 @@ class _ClothesListState extends State<ClothesList> {
             Text("Name", style: Theme.of(context).textTheme.headline5),
             const Spacer(),
             Padding(
-              padding: const EdgeInsets.only(right: 15.0),
+              padding: const EdgeInsets.only(right: 60.0),
               child:
                   Text("Score", style: Theme.of(context).textTheme.headline5),
             )
@@ -211,5 +232,13 @@ class _ClothesListState extends State<ClothesList> {
                 "${clothes.length} items in total    Total score: ${totalCarbonFootprint().toStringAsFixed(2)}"))
       ],
     );
+  }
+
+  void removeClothes(int id) async {
+    await http.delete(
+        Uri.parse("https://footprintcalculator.herokuapp.com/clothes/$id"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },);
   }
 }

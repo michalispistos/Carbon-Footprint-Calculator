@@ -167,10 +167,12 @@ class CheckItemStart extends StatefulWidget {
 }
 
 class _CheckItemStartState extends State<CheckItemStart> {
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     ThemeData themeData = Theme.of(context);
+    globals.tab = 0;
 
     return Column(children: [
       Padding(
