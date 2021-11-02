@@ -190,7 +190,7 @@ class _CheckItemStartState extends State<CheckItemStart> {
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Flexible(
               child: Text(
-            "Check method to calculate the impact of your item.",
+            "Choose method to calculate the impact of your item.",
             textAlign: TextAlign.center,
             style: themeData.textTheme.headline3,
           ))
