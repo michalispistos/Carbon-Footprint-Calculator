@@ -224,7 +224,7 @@ class _YourScoreState extends State<YourScore> {
                             prefix +
                                 period +
                                 ' ' +
-                                (viewBy == 2 ? months[group.x - 1] : '') +
+                                (viewBy == 2 ? months[selectedMonth - 1] : '') +
                                 '\n',
                             themeData.textTheme.bodyText1!
                                 .copyWith(color: Colors.white),
