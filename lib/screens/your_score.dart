@@ -1,11 +1,27 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:ui';
 
+import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
+import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
+
+const months = <String>[
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'November',
+  'December'
+];
 
 List<Clothing> parseClothes(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
@@ -52,10 +68,17 @@ class YourScore extends StatefulWidget {
 
 class _YourScoreState extends State<YourScore> {
   late Future<List<Clothing>> clothesInventory;
+  late int viewBy;
+  late int selectedMonth;
+  late int selectedYear;
 
   @override
   void initState() {
     super.initState();
+    //By default, view by year
+    viewBy = 2;
+    selectedMonth = DateTime.now().month;
+    selectedYear = DateTime.now().year;
     clothesInventory = fetchClothesInventory();
   }
 
@@ -68,12 +91,11 @@ class _YourScoreState extends State<YourScore> {
             double totalScore =
                 snapshot.data!.fold(0, (prev, curr) => prev + curr.carbonScore);
             return Text(totalScore.toStringAsFixed(2),
-                style: themeData.textTheme.headline1!
+                style: themeData.textTheme.headline3!
                     .copyWith(color: Colors.green));
           } else if (snapshot.hasError) {
             return Text('${snapshot.error}');
           }
-
 
           // By default, show a loading spinner.
           return const CircularProgressIndicator();
@@ -90,7 +112,7 @@ class _YourScoreState extends State<YourScore> {
                     0.0, (prev, curr) => (prev as double) + curr.carbonScore) /
                 snapshot.data!.length;
             return Text(avgScore.toStringAsFixed(2),
-                style: themeData.textTheme.headline1!
+                style: themeData.textTheme.headline3!
                     .copyWith(color: Colors.green));
           } else if (snapshot.hasError) {
             return Text('${snapshot.error}');
@@ -108,40 +130,61 @@ class _YourScoreState extends State<YourScore> {
     final Size size = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
-      child:
-      Column(children: [
-      Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-          elevation: 3,
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
-            child: Column(children: [
-              Text(
-                "Lifetime total carbon score:",
-                style: themeData.textTheme.headline2,
-              ),
-              calculateLifetimeCarbonScore()
-            ]),
-          )),
-      Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-          elevation: 3,
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
-            child: Column(children: [
-              Text(
-                "Lifetime average carbon score:",
-                style: themeData.textTheme.headline2,
-              ),
-              calculateLifetimeAverageCarbonScore()
-            ]),
-          )),
+        child: Column(children: [
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 25.0),
+        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  elevation: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0, vertical: 10.0),
+                    child: Column(children: [
+                      Text(
+                        "Lifetime total carbon score:",
+                        style: themeData.textTheme.headline6!
+                            .copyWith(height: 1.1),
+                        textAlign: TextAlign.center,
+                      ),
+                      calculateLifetimeCarbonScore()
+                    ]),
+                  )),
+            ),
+            addHorizontalSpace(10),
+            Expanded(
+              child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  elevation: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0, vertical: 10.0),
+                    child: Column(children: [
+                      Text(
+                        "Lifetime average score per item:",
+                        style: themeData.textTheme.headline6!
+                            .copyWith(height: 1.1),
+                        textAlign: TextAlign.center,
+                      ),
+                      calculateLifetimeAverageCarbonScore()
+                    ]),
+                  )),
+            )
+          ],
+        ),
+      ),
+      addVerticalSpace(10),
+      Column(children: [
+        Text("Viewing data for", style: themeData.textTheme.headline6),
+        Text(currentGraphPeriod(), style: themeData.textTheme.headline5)
+      ]),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
         child: SizedBox(
           height: size.height / 2,
           child: FutureBuilder<List<Clothing>>(
@@ -155,25 +198,29 @@ class _YourScoreState extends State<YourScore> {
                       barTouchData: BarTouchData(touchTooltipData:
                           BarTouchTooltipData(getTooltipItem:
                               (group, groupIndex, rod, rodIndex) {
-                        String month = [
-                          "January",
-                          "February",
-                          "March",
-                          "April",
-                          "May",
-                          "June",
-                          "July",
-                          "August",
-                          "September",
-                          "October",
-                          "November",
-                          "December"
-                        ][group.x.toInt() - 1];
+                        String period = "";
+                        switch (viewBy) {
+                          case 2:
+                            int value = group.x.toInt();
+                            String suffix = value % 10 == 1
+                                ? "st"
+                                : value % 10 == 2
+                                    ? "nd"
+                                    : value % 10 == 3
+                                        ? "rd"
+                                        : "th";
+                            period = value.toString() + suffix;
+                            break;
+                          case 3:
+                            period = months[group.x.toInt() - 1];
+                            break;
+                        }
+
                         String prefix = rodIndex == 0
                             ? "Total score for "
                             : "Average score for ";
                         return BarTooltipItem(
-                            prefix + month + '\n',
+                            prefix + period + '\n',
                             themeData.textTheme.bodyText1!
                                 .copyWith(color: Colors.white),
                             children: [
@@ -183,36 +230,39 @@ class _YourScoreState extends State<YourScore> {
                                       .copyWith(color: rod.colors[0]))
                             ]);
                       })),
-                      barGroups:
-                          buildBarGroupsFromClothingList(snapshot.data!, 3),
+                      barGroups: buildBarGroupsFromClothingList(
+                          snapshot.data!, viewBy,
+                          month: selectedMonth, year: selectedYear),
                       titlesData: FlTitlesData(
                         show: true,
                         // rightTitles: SideTitles(showTitles: false),
                         topTitles: SideTitles(showTitles: false),
                         bottomTitles: SideTitles(
-                          showTitles: true,
-                          getTextStyles: (context, value) => const TextStyle(
-                              color: Color(0xff7589a2),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14),
-                          margin: 20,
-                          getTitles: (double value) {
-                            return [
-                              "Jan",
-                              "Feb",
-                              "Mar",
-                              "Apr",
-                              "May",
-                              "Jun",
-                              "Jul",
-                              "Aug",
-                              "Sep",
-                              "Oct",
-                              "Nov",
-                              "Dec"
-                            ][value.toInt() - 1];
-                          },
-                        ),
+                            showTitles: true,
+                            getTextStyles: (context, value) => const TextStyle(
+                                color: Color(0xff7589a2),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14),
+                            margin: 20,
+                            getTitles: (double value) {
+                              switch (viewBy) {
+                                case 2:
+                                  // Month view
+                                  String suffix = value % 10 == 1
+                                      ? "st"
+                                      : value % 10 == 2
+                                          ? "nd"
+                                          : value % 10 == 3
+                                              ? "rd"
+                                              : "th";
+                                  return value.toInt().toString() + suffix;
+                                case 3:
+                                  // Year view
+                                  return months[value.toInt() - 1].substring(0, 3);
+                                default:
+                                  return value.toString();
+                              }
+                            }),
                       )));
                 } else if (snapshot.hasError) {
                   return Text('${snapshot.error}');
@@ -225,13 +275,38 @@ class _YourScoreState extends State<YourScore> {
       ),
     ]));
   }
+
+  String currentGraphPeriod() {
+    switch (viewBy) {
+      case 2:
+        return months[selectedMonth - 1] + ' ' + selectedYear.toString();
+      case 3:
+        return selectedYear.toString();
+      default:
+        return "Invalid Date";
+    }
+  }
 }
 
 List<BarChartGroupData> buildBarGroupsFromClothingList(
-    List<Clothing> clothesList, int viewBy) {
+    List<Clothing> clothesList, int viewBy,
+    {int month = -1, int year = -1}) {
   List<BarChartGroupData> result = [];
   Map<dynamic, List<Clothing>> dateClothesMap = HashMap();
   switch (viewBy) {
+    case 2:
+      // Month View
+      for (Clothing clothing in clothesList) {
+        if (clothing.dateTime.month == month &&
+            clothing.dateTime.year == year) {
+          if (dateClothesMap.containsKey(clothing.dateTime.day)) {
+            dateClothesMap[clothing.dateTime.day]!.add(clothing);
+          } else {
+            dateClothesMap[clothing.dateTime.day] = [clothing];
+          }
+        }
+      }
+      break;
     case 3:
       // Year View
       for (Clothing clothing in clothesList) {
@@ -241,21 +316,22 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
           dateClothesMap[clothing.dateTime.month] = [clothing];
         }
       }
+      break;
+  }
 
-      for (var k in dateClothesMap.keys) {
-        result.add(BarChartGroupData(x: k, barRods: [
-          BarChartRodData(
-              // Total carbon score for the month
-              y: dateClothesMap[k]!
-                  .fold(0, (prev, curr) => prev + curr.carbonScore)),
-          BarChartRodData(
-              // Average carbon score for the month
-              y: dateClothesMap[k]!.fold(0.0,
-                      (prev, curr) => (prev as double) + curr.carbonScore) /
-                  dateClothesMap[k]!.length,
-              colors: [Colors.orangeAccent]),
-        ]));
-      }
+  for (var k in dateClothesMap.keys) {
+    result.add(BarChartGroupData(x: k, barRods: [
+      BarChartRodData(
+          // Total carbon score for the month
+          y: dateClothesMap[k]!
+              .fold(0, (prev, curr) => prev + curr.carbonScore)),
+      BarChartRodData(
+          // Average carbon score for the month
+          y: dateClothesMap[k]!.fold(
+                  0.0, (prev, curr) => (prev as double) + curr.carbonScore) /
+              dateClothesMap[k]!.length,
+          colors: [Colors.orangeAccent]),
+    ]));
   }
   print(dateClothesMap);
 
