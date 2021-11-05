@@ -221,14 +221,18 @@ class _YourScoreState extends State<YourScore> {
                             ? "Total score for "
                             : "Average score for ";
                         return BarTooltipItem(
-                            prefix + period + '\n',
+                            prefix +
+                                period +
+                                ' ' +
+                                (viewBy == 2 ? months[group.x - 1] : '') +
+                                '\n',
                             themeData.textTheme.bodyText1!
                                 .copyWith(color: Colors.white),
                             children: [
                               TextSpan(
                                   text: rod.y.toString(),
-                                  style: themeData.textTheme.bodyText2!
-                                      .copyWith(color: rod.colors[0]))
+                                  style: themeData.textTheme.headline6!
+                                      .copyWith(color: Colors.white))
                             ]);
                       })),
                       barGroups: buildBarGroupsFromClothingList(
