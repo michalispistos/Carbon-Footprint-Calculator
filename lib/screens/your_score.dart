@@ -19,6 +19,7 @@ const months = <String>[
   'July',
   'August',
   'September',
+  'October',
   'November',
   'December'
 ];
@@ -45,9 +46,9 @@ Future<List<Clothing>> fetchClothesInventory() async {
   //     }));
   // print(test.statusCode);
   if (response.statusCode == 200) {
-    print(response.body);
+    // print(response.body);
     List<Clothing> result = parseClothes(response.body);
-    print(result);
+    // print(result);
     return result;
     // If the server did return a 200 OK response,
     // then parse the JSON.
@@ -76,7 +77,7 @@ class _YourScoreState extends State<YourScore> {
   void initState() {
     super.initState();
     //By default, view by year
-    viewBy = 2;
+    viewBy = 3;
     selectedMonth = DateTime.now().month;
     selectedYear = DateTime.now().year;
     clothesInventory = fetchClothesInventory();
@@ -258,7 +259,8 @@ class _YourScoreState extends State<YourScore> {
                                   return value.toInt().toString() + suffix;
                                 case 3:
                                   // Year view
-                                  return months[value.toInt() - 1].substring(0, 3);
+                                  return months[value.toInt() - 1]
+                                      .substring(0, 3);
                                 default:
                                   return value.toString();
                               }
@@ -273,6 +275,37 @@ class _YourScoreState extends State<YourScore> {
               }),
         ),
       ),
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        FlatButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+          color: const Color(0xfffffaca),
+          onPressed: () {
+            setState(() {
+              viewBy = 2;
+            });
+          },
+          child: const Text('View by month',
+              style: TextStyle(
+                fontSize: 17,
+              )),
+        ),
+        addHorizontalSpace(10),
+        FlatButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+          color: const Color(0xfffffaca),
+          onPressed: () {
+            setState(() {
+              viewBy = 3;
+            });
+          },
+          child: const Text('View by year',
+              style: TextStyle(
+                fontSize: 17,
+              )),
+        )
+      ])
     ]));
   }
 
