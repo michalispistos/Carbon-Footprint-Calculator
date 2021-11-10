@@ -21,17 +21,18 @@ class _ClothesListState extends State<ClothesList> {
   List<Clothing> clothes = [];
   String typeDropdownValue = 'All';
   String scoreDropdownValue = 'All';
+  String removeDropDownValue = 'Recycle';
+  bool isClothingRemoved = false;
 
   @override
   void initState() {
-
     super.initState();
     fetchClothesInventory().then((value) => {
-      setState(() {
-        allClothes = value;
-        clothes = allClothes;
-    })
-    });
+          setState(() {
+            allClothes = value;
+            clothes = allClothes;
+          })
+        });
   }
 
   bool isClothesRemoved(
@@ -40,7 +41,8 @@ class _ClothesListState extends State<ClothesList> {
       return false;
     }
     if (typeDropdownValue == "All") {
-      return double.parse(scoreDropdownValue.substring(1)) < clothes.carbonScore;
+      return double.parse(scoreDropdownValue.substring(1)) <
+          clothes.carbonScore;
     }
     if (scoreDropdownValue == "All") {
       return typeDropdownValue != clothes.type;
@@ -83,35 +85,28 @@ class _ClothesListState extends State<ClothesList> {
                   child: Image.asset(iconPath)),
               addHorizontalSpace(10),
               Expanded(
-                child: ListTile(
-                  title:
-                  Row(
+                  child: ListTile(
+                title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(
-                        child:
-                      Text(clothing.name,
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ))),
-                      Row(children:[
-                      Text(clothing.carbonScore.toStringAsFixed(2),
-                          style: const TextStyle(fontSize: 16)),
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          removeClothes(clothing.id);
-                          setState(() {
-                            allClothes =
-                            List.from(allClothes)
-                              ..removeWhere(
-                                      (c) => c.id == clothing.id);
-                          });
-                        },
-                      )
-                    ],
-                  ),
-                ]),
+                          child: Text(clothing.name,
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ))),
+                      Row(
+                        children: [
+                          Text(clothing.carbonScore.toStringAsFixed(2),
+                              style: const TextStyle(fontSize: 16)),
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              removeClothes(clothing);
+                            },
+                          )
+                        ],
+                      ),
+                    ]),
               )),
             ]),
             const SizedBox(height: 5),
@@ -133,7 +128,6 @@ class _ClothesListState extends State<ClothesList> {
 
   @override
   Widget build(BuildContext context) {
-
     globals.tab = 1;
 
     return Column(
@@ -234,38 +228,73 @@ class _ClothesListState extends State<ClothesList> {
     );
   }
 
-  void removeClothes(int id) async {
-
-
-
-    await http.delete(
-        Uri.parse("https://footprintcalculator.herokuapp.com/clothes/$id"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },);
+   void removeClothes(Clothing clothing){
+    createWayOfRemovingClothesDialog(context).then((value) async => {
+          if (value)
+            {
+              await http.delete(
+                  Uri.parse(
+                      "https://footprintcalculator.herokuapp.com/clothes/${clothing.id}"),
+                  headers: <String, String>{
+                    'Content-Type': 'application/json; charset=UTF-8',
+                  }),
+              setState(() {
+                allClothes = List.from(allClothes)
+                  ..removeWhere(
+                          (c) => c.id == clothing.id);
+              }),
+            }
+        });
   }
 
-  Future createErrorDialog(BuildContext context, String errorMessage) {
+  Future createWayOfRemovingClothesDialog(BuildContext context) {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text("How will you get rid of this item?", style: TextStyle(fontSize: 17)),
+            title: const Text("How will you get rid of this item?",
+                style: TextStyle(fontSize: 17)),
             content: SizedBox(
-                height: 20,
-                child: Text(errorMessage,
-                    style: const TextStyle(
-                      fontSize: 15,
-                    ))),
+                height: 50,
+                child: StatefulBuilder(
+                    builder: (BuildContext context, StateSetter setState) {
+                       return DropdownButton(
+                    hint: Text(removeDropDownValue),
+                    icon: const Icon(Icons.arrow_downward),
+                    iconSize: 24,
+                    elevation: 16,
+                    style:
+                        const TextStyle(color: Color.fromRGBO(64, 133, 72, 1)),
+                    underline: Container(
+                      height: 2,
+                      color: const Color.fromRGBO(64, 133, 72, 1),
+                    ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        removeDropDownValue = newValue!;
+                      });
+                    },
+                    items: <String>[
+                      'Sell/Donate/Give Away',
+                      'Recycle',
+                      'throw away'
+                    ].map((String value) {
+                      return DropdownMenuItem(
+                        child: Text(value),
+                        value: value,
+                      );
+                    }).toList(),
+                  );
+                })),
             actions: <Widget>[
               MaterialButton(
-                color: const Color.fromRGBO(254, 96, 79, 1),
+                color: const Color.fromRGBO(254, 96, 79, 1.0),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0)),
                 elevation: 5.0,
                 child: const Text("CLOSE"),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(false);
                 },
               )
             ],
