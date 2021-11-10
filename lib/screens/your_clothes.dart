@@ -235,10 +235,41 @@ class _ClothesListState extends State<ClothesList> {
   }
 
   void removeClothes(int id) async {
+
+
+
     await http.delete(
         Uri.parse("https://footprintcalculator.herokuapp.com/clothes/$id"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },);
+  }
+
+  Future createErrorDialog(BuildContext context, String errorMessage) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("How will you get rid of this item?", style: TextStyle(fontSize: 17)),
+            content: SizedBox(
+                height: 20,
+                child: Text(errorMessage,
+                    style: const TextStyle(
+                      fontSize: 15,
+                    ))),
+            actions: <Widget>[
+              MaterialButton(
+                color: const Color.fromRGBO(254, 96, 79, 1),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0)),
+                elevation: 5.0,
+                child: const Text("CLOSE"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 }

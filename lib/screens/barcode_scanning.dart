@@ -10,12 +10,11 @@ String title = "";
 
 fetchAlbum() async {
 
-  String key = "1kv0c3pwix7fr73b47v66vkvmvycnj";
+  String key = "1hkn6xmlz11b0fo4cgnne9yhfq1cgo";
   print("hello");
   title = "lol";
 
-    final response = await http.get(Uri.parse('https://api.barcodelookup.com/v3/products?barcode=3614272049529&formatted=y&key='+key)
-    );
+    final response = await http.get(Uri.parse('https://api.barcodelookup.com/v3/products?barcode=3614272049529&formatted=y&key=1hkn6xmlz11b0fo4cgnne9yhfq1cgo'));
     print("here");
     // final jsonData = jsonDecode(response.body);
 
