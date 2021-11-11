@@ -1,10 +1,13 @@
 import 'dart:collection';
+import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:carbon_footprint_calculator/screens/your_score.dart';
 import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:carbon_footprint_calculator/screens/recycle_item.dart';
 import '../data/item.dart';
 import 'package:http/http.dart' as http;
 import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
@@ -16,6 +19,8 @@ class ClothesList extends StatefulWidget {
   _ClothesListState createState() => _ClothesListState();
 }
 
+
+
 class _ClothesListState extends State<ClothesList> {
   List<Clothing> allClothes = [];
   List<Clothing> clothes = [];
@@ -23,6 +28,7 @@ class _ClothesListState extends State<ClothesList> {
   String scoreDropdownValue = 'All';
   String removeDropDownValue = 'Recycle';
   bool isClothingRemoved = false;
+
 
   @override
   void initState() {
@@ -32,7 +38,7 @@ class _ClothesListState extends State<ClothesList> {
             allClothes = value;
             clothes = allClothes;
           })
-        });
+    });
   }
 
   bool isClothesRemoved(
@@ -229,8 +235,8 @@ class _ClothesListState extends State<ClothesList> {
   }
 
    void removeClothes(Clothing clothing){
-    createWayOfRemovingClothesDialog(context).then((value) async => {
-          if (value)
+    createWayOfRemovingClothesDialog(context).then((toBeRemoved) async => {
+          if (toBeRemoved)
             {
               await http.delete(
                   Uri.parse(
@@ -258,8 +264,9 @@ class _ClothesListState extends State<ClothesList> {
                 height: 50,
                 child: StatefulBuilder(
                     builder: (BuildContext context, StateSetter setState) {
-                       return DropdownButton(
-                    hint: Text(removeDropDownValue),
+                       return
+                         DropdownButton(
+                    hint: Text(removeDropDownValue,style: TextStyle(color: Colors.black)),
                     icon: const Icon(Icons.arrow_downward),
                     iconSize: 24,
                     elevation: 16,
@@ -288,6 +295,21 @@ class _ClothesListState extends State<ClothesList> {
                 })),
             actions: <Widget>[
               MaterialButton(
+                color: Colors.blue,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0)),
+                elevation: 5.0,
+                child: const Text("Go"),
+                onPressed: () {
+                  if(removeDropDownValue == "Recycle"){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RecycleItem()),
+                    );
+                  }
+                },
+              ),
+              MaterialButton(
                 color: const Color.fromRGBO(254, 96, 79, 1.0),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0)),
@@ -295,6 +317,9 @@ class _ClothesListState extends State<ClothesList> {
                 child: const Text("CLOSE"),
                 onPressed: () {
                   Navigator.of(context).pop(false);
+                  setState(() {
+                    removeDropDownValue = "Recycle";
+                  });
                 },
               )
             ],
