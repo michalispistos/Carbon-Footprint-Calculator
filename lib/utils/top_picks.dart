@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:path_provider/path_provider.dart';
 
 List<TopPicks> parseTopPicks(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
@@ -10,11 +11,37 @@ List<TopPicks> parseTopPicks(String responseBody) {
   return parsed.map<TopPicks>((json) => TopPicks.fromJson(json)).toList();
 }
 
-Future<List<TopPicks>> fetchTopPicks(http.Client client) async {
-  final response = await client.get(
-      Uri.parse('https://footprintcalculator.herokuapp.com/brands/top-picks'));
+// Future<List<TopPicks>> fetchTopPicks() async {
+//   final response = await http.get(
+//       Uri.parse('https://footprintcalculator.herokuapp.com/brands/top-picks'));
+//
+//   return parseTopPicks(response.body);
+// }
 
-  return parseTopPicks(response.body);
+Future<List<TopPicks>> fetchTopPicks() async {
+  String fileName = "CacheTopPicks.json";
+  var cacheDir = await getTemporaryDirectory();
+
+  if (await File(cacheDir.path + "/" + fileName).exists()) {
+    print("Loading from cache"+ cacheDir.path);
+    var jsonData = File(cacheDir.path + "/" + fileName).readAsStringSync();
+    return parseTopPicks(jsonData);
+  }
+  print("Loading from API");
+  final response = await http.get(
+      Uri.parse('https://footprintcalculator.herokuapp.com/brands/top-picks'));
+  if (response.statusCode == 200) {
+    var jsonResponse = response.body;
+    List<TopPicks> res = parseTopPicks(jsonResponse);
+    var tempDir = await getTemporaryDirectory();
+    File file = File(tempDir.path + "/" + fileName);
+    file.writeAsString(jsonResponse, flush: true, mode: FileMode.write);
+    return res;
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load BrandInfo');
+  }
 }
 
 class TopPicks {

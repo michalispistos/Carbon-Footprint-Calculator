@@ -21,8 +21,7 @@ class _BrandsGridState extends State<BrandsGrid>
 
   @override
   void initState() {
-
-    futureTopPicks = fetchTopPicks(http.Client());
+    futureTopPicks = fetchTopPicks();
     super.initState();
   }
 
