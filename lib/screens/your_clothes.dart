@@ -1,7 +1,4 @@
-import 'dart:collection';
-import 'dart:convert';
-import 'dart:ffi';
-
+import 'package:carbon_footprint_calculator/screens/throw_away_item.dart';
 import 'package:carbon_footprint_calculator/screens/your_score.dart';
 import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
@@ -11,6 +8,9 @@ import 'package:carbon_footprint_calculator/screens/recycle_item.dart';
 import '../data/item.dart';
 import 'package:http/http.dart' as http;
 import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
+
+import 'alternatives_to_throwing_away.dart';
+import 'give_away_item.dart';
 
 class ClothesList extends StatefulWidget {
   const ClothesList({Key? key}) : super(key: key);
@@ -282,9 +282,9 @@ class _ClothesListState extends State<ClothesList> {
                       });
                     },
                     items: <String>[
-                      'Sell/Donate/Give Away',
+                      'Sell/Donate',
                       'Recycle',
-                      'throw away'
+                      'Throw away'
                     ].map((String value) {
                       return DropdownMenuItem(
                         child: Text(value),
@@ -305,6 +305,16 @@ class _ClothesListState extends State<ClothesList> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => RecycleItem()),
+                    );
+                  } else if (removeDropDownValue == "Sell/Donate") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => GiveAwayItem()),
+                    );
+                  } else if (removeDropDownValue == "Throw away") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ThrowAwayItem()),
                     );
                   }
                 },
