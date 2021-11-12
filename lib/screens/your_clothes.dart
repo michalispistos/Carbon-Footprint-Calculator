@@ -5,11 +5,9 @@ import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carbon_footprint_calculator/screens/recycle_item.dart';
-import '../data/item.dart';
 import 'package:http/http.dart' as http;
 import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 
-import 'alternatives_to_throwing_away.dart';
 import 'give_away_item.dart';
 
 class ClothesList extends StatefulWidget {
