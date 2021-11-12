@@ -1,11 +1,11 @@
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RecycleItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     final ThemeData themeData = Theme.of(context);
 
     return Scaffold(
@@ -46,17 +46,27 @@ class RecycleItem extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: Text(
                 "Recycling clothes reduces landfill, conserves energy, and can lower "
-                "your carbon footprint. Did you know that if we recycled 100 "
-                "million lbs of our pre-loved clothing that would be the same "
-                "as taking 35,000 cars off of the road?",
+                "your carbon footprint. Nearly 100% of textiles and clothing is recyclable "
+                    "but only 15% of consumer used clothing is recycled.",
                 style: TextStyle(
                     fontSize: 15, color: const Color.fromRGBO(91, 91, 91, 1.0)),
               ),
-            )
+            ),
+            addVerticalSpace(30),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              const Text("Information source: "),
+              InkWell(
+                  child: const Text(
+                    "https://www.thebalancesmb.com/textile-recycling-facts-and-figures-2878122",
+                    style: TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                  onTap: () => launch('https://www.thebalancesmb.com/textile-recycling-facts-and-figures-2878122'))
+            ])
           ],
         ));
   }
-
-  // double getCarbonFootprint(int userID) {}
 
 }
