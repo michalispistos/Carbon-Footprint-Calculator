@@ -32,6 +32,10 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(vsync: this, length: myTabs.length);
+    _tabController.animateTo(globals.tab);
+
+
   }
 
   final List<Tab> myTabs = <Tab>[
@@ -85,11 +89,15 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
   @override
   Widget build(BuildContext context) {
 
+    _tabController.addListener((){
 
-    _tabController = TabController(vsync: this, length: myTabs.length);
-    final Size size = MediaQuery.of(context).size;
+      if(_tabController.indexIsChanging)
+      {
+        FocusScope.of(context).unfocus();
+      }
+    });
+
     final ThemeData themeData = Theme.of(context);
-    _tabController.animateTo(globals.tab);
 
     return SafeArea(
       top: false,
@@ -188,8 +196,7 @@ class _CheckItemStartState extends State<CheckItemStart> {
 
   @override
   Widget build(BuildContext context) {
-    globals.tab = 0;
-    FocusScope.of(context).unfocus();
+
     final Size size = MediaQuery.of(context).size;
     ThemeData themeData = Theme.of(context);
 

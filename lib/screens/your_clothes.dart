@@ -137,8 +137,6 @@ class _ClothesListState extends State<ClothesList> {
 
   @override
   Widget build(BuildContext context){
-    globals.tab = 1;
-    FocusScope.of(context).unfocus();
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,

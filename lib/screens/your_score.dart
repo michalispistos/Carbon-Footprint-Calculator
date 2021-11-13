@@ -182,8 +182,6 @@ class _YourScoreState extends State<YourScore> {
 
   @override
   Widget build(BuildContext context) {
-    globals.tab = 3;
-    FocusScope.of(context).unfocus();
     ThemeData themeData = Theme.of(context);
     final Size size = MediaQuery.of(context).size;
 
@@ -427,7 +425,6 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
           colors: [Colors.orangeAccent]),
     ]));
   }
-  print(dateClothesMap);
 
   return result;
 }

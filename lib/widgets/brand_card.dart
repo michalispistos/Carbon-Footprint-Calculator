@@ -36,7 +36,6 @@ class _BrandCardState extends State<BrandCard> {
           if (snapshot.hasData) {
             return GestureDetector(
               onTap: () {
-                globals.tab = 2;
                 Navigator.push(
                   context,
                   MaterialPageRoute(

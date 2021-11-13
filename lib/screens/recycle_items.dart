@@ -63,7 +63,7 @@ class _RecycleYourClothesState extends State<RecycleYourClothes> {
 
   @override
   Widget build(BuildContext context) {
-    globals.tab = 4;
+
     return
       SingleChildScrollView(
         child: Column(
