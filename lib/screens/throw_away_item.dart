@@ -1,9 +1,17 @@
+import 'package:carbon_footprint_calculator/screens/recycle_items.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:carbon_footprint_calculator/screens/check_item.dart';
+import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
+import 'package:carbon_footprint_calculator/screens/your_score.dart';
+import 'package:http/http.dart' as http;
 
 class ThrowAwayItem extends StatelessWidget {
+  final Clothing clothing;
+  ThrowAwayItem(this.clothing);
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -64,11 +72,13 @@ class ThrowAwayItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(18.0)),
               color: const Color(0xfffffaca),
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //       builder: (context) => const ItemInfoPage()),
-                // );
+                globals.tab = 4;
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ItemCalculationStart()),
+                  (Route<dynamic> route) => false,
+                );
               },
               child: const Text('Find a recycling centre near you',
                   style: TextStyle(
@@ -81,10 +91,13 @@ class ThrowAwayItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(18.0)),
               color: const Color(0xfffffaca),
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => const ItemInfoPage()),
-                // );
+                globals.tab = 4;
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ItemCalculationStart()),
+                  (Route<dynamic> route) => false,
+                );
               },
               child: const Text('Find a donation centre near you',
                   style: TextStyle(
@@ -95,12 +108,9 @@ class ThrowAwayItem extends StatelessWidget {
             FlatButton(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0)),
-              color: const Color(0xfff82d2d),
+              color: const Color.fromRGBO(254, 96, 79, 1),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ThrowAwayItem()),
-                );
+                removeClothes(context);
               },
               child: const Text('Throw away item',
                   style: TextStyle(
@@ -125,5 +135,22 @@ class ThrowAwayItem extends StatelessWidget {
                         'https://www.ecofriendlyhabits.com/textile-and-fashion-waste-statistics/'))),
           ],
         )));
+  }
+
+  void removeClothes(context) async {
+    await http.delete(
+        Uri.parse(
+            "https://footprintcalculator.herokuapp.com/clothes/${clothing.id}/throw-away"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        }).then((val) => {
+          globals.tab = 1,
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const ItemCalculationStart()),
+            (Route<dynamic> route) => false,
+          )
+        });
   }
 }

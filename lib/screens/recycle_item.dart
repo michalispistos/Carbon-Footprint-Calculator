@@ -2,8 +2,17 @@ import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:carbon_footprint_calculator/screens/check_item.dart';
+import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
+import 'package:carbon_footprint_calculator/screens/your_score.dart';
+import 'package:carbon_footprint_calculator/screens/recycle_items.dart';
+import 'package:http/http.dart' as http;
 
 class RecycleItem extends StatelessWidget {
+  final Clothing clothing;
+
+  RecycleItem(this.clothing);
+
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
@@ -13,7 +22,7 @@ class RecycleItem extends StatelessWidget {
         appBar: AppBar(
             title: const Flexible(
           child: Padding(
-              padding: EdgeInsets.fromLTRB(75, 0, 0, 0),
+              padding: EdgeInsets.fromLTRB(80, 0, 0, 0),
               child: Text(
                 'Recycle',
                 style: TextStyle(
@@ -55,19 +64,44 @@ class RecycleItem extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
             child: Text("Information source: "),
           ),
-        Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-            child:
-          InkWell(
-              child: const Text(
-                "https://www.thebalancesmb.com/textile-recycling-facts-and-figures-2878122",
-                style: TextStyle(
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
-                ),
-              ),
-              onTap: () => launch(
-                  'https://www.thebalancesmb.com/textile-recycling-facts-and-figures-2878122'))
-        )]));
+          Padding(
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: InkWell(
+                  child: const Text(
+                    "https://www.thebalancesmb.com/textile-recycling-facts-and-figures-2878122",
+                    style: TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                  onTap: () => launch(
+                      'https://www.thebalancesmb.com/textile-recycling-facts-and-figures-2878122'))),
+          MaterialButton(
+              color: Colors.blue,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0)),
+              elevation: 5.0,
+              child: const Text("DONE"),
+              onPressed: () {
+                removeClothes(context);
+              })
+        ]));
+  }
+
+  void removeClothes(context) async {
+    await http.delete(
+        Uri.parse(
+            "https://footprintcalculator.herokuapp.com/clothes/${clothing.id}/recycle"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        }).then((val) => {
+          globals.tab = 1,
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const ItemCalculationStart()),
+            (Route<dynamic> route) => false,
+          )
+        });
   }
 }

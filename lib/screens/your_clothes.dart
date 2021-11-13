@@ -110,7 +110,7 @@ class _ClothesListState extends State<ClothesList> {
                           IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () {
-                              removeClothes(clothing);
+                              createWayOfRemovingClothesDialog(context,clothing);
                             },
                           )
                         ],
@@ -238,26 +238,7 @@ class _ClothesListState extends State<ClothesList> {
     );
   }
 
-   void removeClothes(Clothing clothing){
-    createWayOfRemovingClothesDialog(context).then((toBeRemoved) async => {
-          if (toBeRemoved)
-            {
-              await http.delete(
-                  Uri.parse(
-                      "https://footprintcalculator.herokuapp.com/clothes/${clothing.id}"),
-                  headers: <String, String>{
-                    'Content-Type': 'application/json; charset=UTF-8',
-                  }),
-              setState(() {
-                allClothes = List.from(allClothes)
-                  ..removeWhere(
-                          (c) => c.id == clothing.id);
-              }),
-            }
-        });
-  }
-
-  Future createWayOfRemovingClothesDialog(BuildContext context) {
+  Future createWayOfRemovingClothesDialog(BuildContext context, Clothing clothing) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -308,17 +289,23 @@ class _ClothesListState extends State<ClothesList> {
                   if(removeDropDownValue == "Recycle"){
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => RecycleItem()),
+                      MaterialPageRoute(
+                          builder: (context) =>
+                          RecycleItem(clothing)),
                     );
                   } else if (removeDropDownValue == "Sell/Donate") {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => GiveAwayItem()),
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              GiveAwayItem(clothing)),
                     );
                   } else if (removeDropDownValue == "Throw away") {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ThrowAwayItem()),
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ThrowAwayItem(clothing)),
                     );
                   }
                 },
@@ -330,7 +317,7 @@ class _ClothesListState extends State<ClothesList> {
                 elevation: 5.0,
                 child: const Text("CLOSE"),
                 onPressed: () {
-                  Navigator.of(context).pop(false);
+                  Navigator.of(context).pop();
                   setState(() {
                     removeDropDownValue = "Recycle";
                   });

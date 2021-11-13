@@ -30,9 +30,6 @@ class _BrandsGridState extends State<BrandsGrid>
 
   @override
   Widget build(BuildContext context) {
-    // if(globals.unfocus){
-    //   FocusScope.of(context).unfocus();
-    // }
     return Scaffold(
       body: FutureBuilder<List<TopPicks>>(
         future: futureTopPicks,

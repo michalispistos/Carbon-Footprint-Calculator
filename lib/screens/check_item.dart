@@ -141,10 +141,10 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
                     Expanded(
                         child:
                             TabBarView(controller: _tabController, children: [
-                      CheckItemStart(),
-                      ClothesList(),
-                      BrandsGrid(),
-                      YourScore(),
+                      const CheckItemStart(),
+                      const ClothesList(),
+                      const BrandsGrid(),
+                      const YourScore(),
                       RecycleYourClothes(),
                     ])),
                   ],
@@ -155,9 +155,7 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
     );
   }
 
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => throw UnimplementedError();
+
 }
 
 class CircleBackgroundPainter extends CustomPainter {

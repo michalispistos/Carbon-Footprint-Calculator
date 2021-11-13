@@ -1,9 +1,18 @@
+import 'package:carbon_footprint_calculator/screens/your_score.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:carbon_footprint_calculator/screens/check_item.dart';
+import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
+import 'package:http/http.dart' as http;
 
 class GiveAwayItem extends StatelessWidget {
+
+  final Clothing clothing;
+
+  GiveAwayItem(this.clothing);
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -69,8 +78,34 @@ class GiveAwayItem extends StatelessWidget {
                       ),
                     ),
                     onTap: () => launch(
-                        'https://www.ecofriendlyhabits.com/textile-and-fashion-waste-statistics/')))
+                        'https://www.ecofriendlyhabits.com/textile-and-fashion-waste-statistics/'))),
+            MaterialButton(
+                color: Colors.blue,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0)),
+                elevation: 5.0,
+                child: const Text("DONE"),
+                onPressed: () {
+                  removeClothes(context);
+                })
           ],
         ));
+  }
+
+  void removeClothes(context) async {
+    await http.delete(
+        Uri.parse(
+            "https://footprintcalculator.herokuapp.com/clothes/${clothing.id}/give-away"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        }).then((val) => {
+      globals.tab = 1,
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const ItemCalculationStart()),
+            (Route<dynamic> route) => false,
+      )
+    });
   }
 }
