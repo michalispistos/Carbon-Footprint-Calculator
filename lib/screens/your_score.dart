@@ -1,16 +1,4 @@
 
-// Future<double> fetchCarbonScore() async {
-//   final response = await http.get(Uri.parse(
-//       "https://footprintcalculator.herokuapp.com/users/carbon-score/1"));
-//   if (response.statusCode == 200) {
-//     return jsonDecode(response.body)["carbon_score"];
-//   } else {
-//     throw Exception('Failed to load clothes list');
-//   }
-// }
-
-
-
   //   return FutureBuilder<double>(
   //       future: carbonScoreInv,
   //       builder: (context, snapshot) {
@@ -93,6 +81,37 @@ Future<List<Clothing>> fetchClothesInventory() async {
     throw Exception('Failed to load clothes list');
   }
 }
+
+
+  Future<double> fetchCarbonScore() async {
+    final response = await http.get(Uri.parse(
+        "https://footprintcalculator.herokuapp.com/users/carbon-score/1"));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)["carbon_score"];
+    } else {
+      throw Exception('Failed to load clothes list');
+    }
+  }
+
+  FutureBuilder calculateNewUsersCarbonScore(double add, bool decrease) {
+    return FutureBuilder<double>(
+        future: fetchCarbonScore(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var themeData = Theme.of(context);
+            double totalScore =
+            snapshot.data!;
+            return Text((totalScore+add).toStringAsFixed(2),
+                style: themeData.textTheme.headline3!
+                    .copyWith(color: decrease ? Colors.green : Color.fromRGBO(254, 96, 79, 1)));
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
+
+          // By default, show a loading spinner.
+          return const CircularProgressIndicator();
+        });
+  }
 
 class YourScore extends StatefulWidget {
   const YourScore({Key? key}) : super(key: key);

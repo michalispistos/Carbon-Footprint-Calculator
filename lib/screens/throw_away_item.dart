@@ -47,10 +47,22 @@ class ThrowAwayItem extends StatelessWidget {
             addVerticalSpace(40),
             Padding(
                 padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-                child: Text(
-                    "Throwing away this item would increase your carbon footprint by 2. Carbon score: " +
-                        2.toString(),
-                    style: themeData.textTheme.headline3)),
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    text: "Throwing way this item will increase your carbon footprint by: ",
+                    style: themeData.textTheme.headline3,
+                    children: <TextSpan>[
+                      TextSpan(
+                          text:
+                          clothing.carbonScore.toStringAsFixed(2),
+                          style: themeData.textTheme.headline3!
+                              .copyWith(color: Color.fromRGBO(254, 96, 79, 1))),
+                      TextSpan(text: "! New carbon  will be:"),
+                    ],
+                  ),
+                )),
+            calculateNewUsersCarbonScore(clothing.carbonScore, false),
             addVerticalSpace(30),
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -62,6 +74,7 @@ class ThrowAwayItem extends StatelessWidget {
                 "plastic and chemicals while decomposing. "
                 "Instead of throwing away your clothes, why not recycle or give "
                 "them to those who need them?",
+                textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 15, color: const Color.fromRGBO(91, 91, 91, 1.0)),
               ),
@@ -86,25 +99,25 @@ class ThrowAwayItem extends StatelessWidget {
                   )),
             ),
             addVerticalSpace(20),
-            FlatButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0)),
-              color: const Color(0xfffffaca),
-              onPressed: () {
-                globals.tab = 4;
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ItemCalculationStart()),
-                  (Route<dynamic> route) => false,
-                );
-              },
-              child: const Text('Find a donation centre near you',
-                  style: TextStyle(
-                    fontSize: 17,
-                  )),
-            ),
-            addVerticalSpace(20),
+            // FlatButton(
+            //   shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(18.0)),
+            //   color: const Color(0xfffffaca),
+            //   onPressed: () {
+            //     globals.tab = 4;
+            //     Navigator.pushAndRemoveUntil(
+            //       context,
+            //       MaterialPageRoute(
+            //           builder: (context) => const ItemCalculationStart()),
+            //       (Route<dynamic> route) => false,
+            //     );
+            //   },
+            //   child: const Text('Find a donation centre near you',
+            //       style: TextStyle(
+            //         fontSize: 17,
+            //       )),
+            // ),
+            // addVerticalSpace(20),
             FlatButton(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0)),
@@ -126,6 +139,7 @@ class ThrowAwayItem extends StatelessWidget {
                 child: InkWell(
                     child: const Text(
                       "https://www.ecofriendlyhabits.com/textile-and-fashion-waste-statistics/",
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.blue,
                         decoration: TextDecoration.underline,

@@ -8,7 +8,6 @@ import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 
 class GiveAwayItem extends StatelessWidget {
-
   final Clothing clothing;
 
   GiveAwayItem(this.clothing);
@@ -34,7 +33,8 @@ class GiveAwayItem extends StatelessWidget {
                 overflow: TextOverflow.fade,
               )),
         )),
-        body: Column(
+        body: SingleChildScrollView(
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             addVerticalSpace(75),
@@ -47,10 +47,22 @@ class GiveAwayItem extends StatelessWidget {
             addVerticalSpace(40),
             Padding(
                 padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-                child: Text(
-                    "You've lowered your carbon footprint! Carbon score: " +
-                        2.toString(),
-                    style: themeData.textTheme.headline3)),
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    text: "Giving away this item would lower your carbon footprint by: ",
+                    style: themeData.textTheme.headline3,
+                    children: <TextSpan>[
+                      TextSpan(
+                          text:
+                          (clothing.carbonScore).toStringAsFixed(2),
+                          style: themeData.textTheme.headline3!
+                              .copyWith(color: Colors.green)),
+                      TextSpan(text: "! New carbon sore will be:"),
+                    ],
+                  ),
+                )),
+            calculateNewUsersCarbonScore(-clothing.carbonScore, true),
             addVerticalSpace(30),
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -59,6 +71,7 @@ class GiveAwayItem extends StatelessWidget {
                 "instead of giving away or donating to those who need them. "
                 "This results in 64% of the total amount of garments "
                 "produced each year ending up in landfills.",
+                textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 15, color: const Color.fromRGBO(91, 91, 91, 1.0)),
               ),
@@ -72,6 +85,7 @@ class GiveAwayItem extends StatelessWidget {
                 child: InkWell(
                     child: const Text(
                       "https://www.ecofriendlyhabits.com/textile-and-fashion-waste-statistics/",
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.blue,
                         decoration: TextDecoration.underline,
@@ -89,7 +103,7 @@ class GiveAwayItem extends StatelessWidget {
                   removeClothes(context);
                 })
           ],
-        ));
+        )));
   }
 
   void removeClothes(context) async {
@@ -99,13 +113,13 @@ class GiveAwayItem extends StatelessWidget {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         }).then((val) => {
-      globals.tab = 1,
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const ItemCalculationStart()),
+          globals.tab = 1,
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const ItemCalculationStart()),
             (Route<dynamic> route) => false,
-      )
-    });
+          )
+        });
   }
 }
