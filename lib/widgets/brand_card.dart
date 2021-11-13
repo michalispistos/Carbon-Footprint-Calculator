@@ -28,6 +28,7 @@ class _BrandCardState extends State<BrandCard> {
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
+
     return Center(
       child: FutureBuilder<BrandInfo>(
         future: futureBrandInfo,

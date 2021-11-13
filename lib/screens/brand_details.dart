@@ -116,7 +116,7 @@ class BrandDetails extends StatelessWidget {
                       data: brandInfo.ethicalInfo2,
                       style:{
                         "body": Style(
-                          color: const Color.fromRGBO(91, 91, 91, 1),
+                          color: const Color.fromRGBO(91, 91, 91, 1.0),
                         )
                       }
 

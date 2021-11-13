@@ -26,9 +26,13 @@ class _BrandsGridState extends State<BrandsGrid>
     super.initState();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    globals.tab = 2;
+    // if(globals.unfocus){
+    //   FocusScope.of(context).unfocus();
+    // }
     return Scaffold(
       body: FutureBuilder<List<TopPicks>>(
         future: futureTopPicks,

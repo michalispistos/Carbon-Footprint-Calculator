@@ -1,4 +1,9 @@
 import 'package:carbon_footprint_calculator/screens/throw_away_item.dart';
+
+import 'dart:collection';
+import 'dart:convert';
+
+
 import 'package:carbon_footprint_calculator/screens/your_score.dart';
 import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
@@ -131,8 +136,9 @@ class _ClothesListState extends State<ClothesList> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     globals.tab = 1;
+    FocusScope.of(context).unfocus();
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,

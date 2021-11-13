@@ -1,4 +1,5 @@
 import 'package:carbon_footprint_calculator/screens/item_details.dart';
+import 'package:carbon_footprint_calculator/screens/recycle_item.dart';
 import 'package:carbon_footprint_calculator/screens/your_clothes.dart';
 import 'package:carbon_footprint_calculator/screens/your_score.dart';
 import 'package:carbon_footprint_calculator/themes/default_theme.dart';
@@ -7,6 +8,7 @@ import 'package:carbon_footprint_calculator/widgets/brands_grid.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
+import 'package:carbon_footprint_calculator/screens/recycle_items.dart';
 import 'package:carbon_footprint_calculator/data/item.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:carbon_footprint_calculator/data/item.dart';
@@ -17,8 +19,9 @@ import 'package:carbon_footprint_calculator/screens/check_item.dart';
 import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 
 class ItemCalculationStart extends StatefulWidget {
-
-  const ItemCalculationStart({Key? key,}) : super(key: key);
+  const ItemCalculationStart({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _ItemCalculationStartState createState() => _ItemCalculationStartState();
@@ -26,8 +29,6 @@ class ItemCalculationStart extends StatefulWidget {
 
 class _ItemCalculationStartState extends State<ItemCalculationStart>
     with TickerProviderStateMixin {
-
-
   @override
   void initState() {
     super.initState();
@@ -67,13 +68,24 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
         addHorizontalSpace(30)
       ],
     )),
+    Tab(
+        child: Row(
+      children: [
+        addHorizontalSpace(30),
+        const Text("Recycle Your Clothes"),
+        addHorizontalSpace(30)
+      ],
+    )),
     // ChoiceOption(text: "Your Score")
   ];
 
   late TabController _tabController;
 
+
   @override
   Widget build(BuildContext context) {
+
+
     _tabController = TabController(vsync: this, length: myTabs.length);
     final Size size = MediaQuery.of(context).size;
     final ThemeData themeData = Theme.of(context);
@@ -83,64 +95,69 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
       top: false,
       bottom: false,
       child: DefaultTabController(
-        length: 4,
-        child: Scaffold(
-          // TODO: Implement drawer functionality.
-          endDrawer: Drawer(),
-          body: Stack(children: <Widget>[
-            CustomPaint(
-                size: Size.infinite, painter: CircleBackgroundPainter()),
-            Column(
-              children: [
-                addVerticalSpace(60),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
+          length: 4,
+            child: Scaffold(
+              // TODO: Implement drawer functionality.
+              resizeToAvoidBottomInset: false,
+              endDrawer: Drawer(),
+              body: Stack(children: <Widget>[
+                CustomPaint(
+                    size: Size.infinite, painter: CircleBackgroundPainter()),
+                Column(
+                  children: [
+                    addVerticalSpace(60),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            BorderIcon(
-                                height: 40,
-                                width: 40,
-                                bgColor: const Color(0xffffe8ec),
-                                child: Image.asset('images/leaf.png')),
-                            addHorizontalSpace(10),
-                            //TODO: login system xd
-                            Text("Hi, User",
-                                style: themeData.textTheme.headline4),
-                          ],
-                        ),
-                        const Icon(Icons.menu, color: CustomTheme.COLOR_BLACK)
-                      ]),
-                ),
-                addVerticalSpace(15),
-                TabBar(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  labelColor: Colors.white,
-                  unselectedLabelColor: Colors.black,
-                  isScrollable: true,
-                  controller: _tabController,
-                  tabs: myTabs,
-                ),
-                addVerticalSpace(15),
-                Expanded(
-                    child: TabBarView(
-                        controller: _tabController,
-                        children: const [
+                            Row(
+                              children: [
+                                BorderIcon(
+                                    height: 40,
+                                    width: 40,
+                                    bgColor: const Color(0xffffe8ec),
+                                    child: Image.asset('images/leaf.png')),
+                                addHorizontalSpace(10),
+                                //TODO: login system xd
+                                Text("Hi, User",
+                                    style: themeData.textTheme.headline4),
+                              ],
+                            ),
+                            const Icon(Icons.menu,
+                                color: CustomTheme.COLOR_BLACK)
+                          ]),
+                    ),
+                    addVerticalSpace(15),
+                    TabBar(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      labelColor: Colors.white,
+                      unselectedLabelColor: Colors.black,
+                      isScrollable: true,
+                      controller: _tabController,
+                      tabs: myTabs,
+                    ),
+                    addVerticalSpace(15),
+                    Expanded(
+                        child:
+                            TabBarView(controller: _tabController, children: [
                       CheckItemStart(),
                       ClothesList(),
                       BrandsGrid(),
-                      YourScore()
+                      YourScore(),
+                      RecycleYourClothes(),
                     ])),
-              ],
-            )
-          ]),
-        ),
-      ),
+                  ],
+                )
+              ]),
+            ),
+          ),
     );
   }
 
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => throw UnimplementedError();
 }
 
 class CircleBackgroundPainter extends CustomPainter {
@@ -168,11 +185,15 @@ class CheckItemStart extends StatefulWidget {
 
 class _CheckItemStartState extends State<CheckItemStart> {
 
+
+
+
   @override
   Widget build(BuildContext context) {
+    globals.tab = 0;
+    FocusScope.of(context).unfocus();
     final Size size = MediaQuery.of(context).size;
     ThemeData themeData = Theme.of(context);
-    globals.tab = 0;
 
     return Column(children: [
       Padding(

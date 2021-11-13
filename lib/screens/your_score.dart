@@ -29,9 +29,9 @@ Future<List<Clothing>> fetchClothesInventory() async {
   //     }));
   // print(test.statusCode);
   if (response.statusCode == 200) {
-    print(response.body);
+    // print(response.body);
     List<Clothing> result = parseClothes(response.body);
-    print(result);
+    // print(result);
     return result;
     // If the server did return a 200 OK response,
     // then parse the JSON.
@@ -39,6 +39,16 @@ Future<List<Clothing>> fetchClothesInventory() async {
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
+    throw Exception('Failed to load clothes list');
+  }
+}
+
+Future<double> fetchCarbonScore() async {
+  final response = await http.get(Uri.parse(
+      "https://footprintcalculator.herokuapp.com/users/carbon-score/1"));
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body)["carbon_score"];
+  } else {
     throw Exception('Failed to load clothes list');
   }
 }
@@ -52,21 +62,40 @@ class YourScore extends StatefulWidget {
 
 class _YourScoreState extends State<YourScore> {
   late Future<List<Clothing>> clothesInventory;
+  late Future<double> carbonScoreInv;
 
   @override
   void initState() {
     super.initState();
     clothesInventory = fetchClothesInventory();
+    carbonScoreInv = fetchCarbonScore();
   }
 
   FutureBuilder calculateLifetimeCarbonScore() {
-    return FutureBuilder<List<Clothing>>(
-        future: clothesInventory,
+    // return FutureBuilder<List<Clothing>>(
+    //     future: clothesInventory,
+    //     builder: (context, snapshot) {
+    //       if (snapshot.hasData) {
+    //         var themeData = Theme.of(context);
+    //         double totalScore =
+    //             snapshot.data!.fold(0, (prev, curr) => prev + curr.carbonScore);
+    //         return Text(totalScore.toStringAsFixed(2),
+    //             style: themeData.textTheme.headline1!
+    //                 .copyWith(color: Colors.green));
+    //       } else if (snapshot.hasError) {
+    //         return Text('${snapshot.error}');
+    //       }
+    //
+    //       // By default, show a loading spinner.
+    //       return const CircularProgressIndicator();
+    //     });
+    return FutureBuilder<double>(
+        future: carbonScoreInv,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var themeData = Theme.of(context);
-            double totalScore =
-                snapshot.data!.fold(0, (prev, curr) => prev + curr.carbonScore);
+            var totalScore =
+                snapshot.data!;
             return Text(totalScore.toStringAsFixed(2),
                 style: themeData.textTheme.headline1!
                     .copyWith(color: Colors.green));
@@ -74,10 +103,10 @@ class _YourScoreState extends State<YourScore> {
             return Text('${snapshot.error}');
           }
 
-
           // By default, show a loading spinner.
           return const CircularProgressIndicator();
         });
+
   }
 
   FutureBuilder calculateLifetimeAverageCarbonScore() {
@@ -104,12 +133,12 @@ class _YourScoreState extends State<YourScore> {
   @override
   Widget build(BuildContext context) {
     globals.tab = 3;
+    FocusScope.of(context).unfocus();
     ThemeData themeData = Theme.of(context);
     final Size size = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
-      child:
-      Column(children: [
+        child: Column(children: [
       Card(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -257,7 +286,7 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
         ]));
       }
   }
-  print(dateClothesMap);
+  // print(dateClothesMap);
 
   return result;
 }

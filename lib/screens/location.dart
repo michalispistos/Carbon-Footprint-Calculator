@@ -13,6 +13,7 @@ void main() => {
       title: "Carbon Footprint Calculator",
       home: DashboardScreen()))
 };
+
 class DashboardScreen extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
@@ -21,6 +22,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardState extends State<DashboardScreen> {
   late Position _currentPosition = Position(longitude: 2, latitude: 2, timestamp: DateTime(2020), accuracy: 2, altitude: 2, heading: 2, speed: 2, speedAccuracy: 2);
   String _currentAddress = "";
+  String postCode = "";
 
   @override
   void initState() {
@@ -88,9 +90,10 @@ class _DashboardState extends State<DashboardScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                'Location',
+                                'PostCode',
                                 style: Theme.of(context).textTheme.caption,
                               ),
+
                               if (_currentPosition != null &&
                                   _currentAddress != null)
                                 Text(_currentAddress,
