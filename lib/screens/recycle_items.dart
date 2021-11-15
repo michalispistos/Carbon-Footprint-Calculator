@@ -189,7 +189,7 @@ class _RecycleYourClothesState extends State<RecycleYourClothes> {
                                     borderRadius: BorderRadius.circular(18.0)),
                                 elevation: 5.0,
                                 child:
-                                    const Text("Open google maps",
+                                    const Text("Open in Google maps",
                                         style: TextStyle(
                                           fontSize: 16,
                                           color: Colors.black,
