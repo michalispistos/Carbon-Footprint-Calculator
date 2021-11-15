@@ -58,7 +58,7 @@ class GiveAwayItem extends StatelessWidget {
                           (clothing.carbonScore).toStringAsFixed(2),
                           style: themeData.textTheme.headline3!
                               .copyWith(color: Colors.green)),
-                      TextSpan(text: "! New carbon sore will be:"),
+                      TextSpan(text: "! New carbon score will be:"),
                     ],
                   ),
                 )),

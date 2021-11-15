@@ -58,7 +58,7 @@ class ThrowAwayItem extends StatelessWidget {
                           clothing.carbonScore.toStringAsFixed(2),
                           style: themeData.textTheme.headline3!
                               .copyWith(color: Color.fromRGBO(254, 96, 79, 1))),
-                      TextSpan(text: "! New carbon  will be:"),
+                      TextSpan(text: "! New carbon score will be:"),
                     ],
                   ),
                 )),

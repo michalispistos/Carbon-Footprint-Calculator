@@ -10,6 +10,8 @@ import 'package:http/http.dart';
 import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 import 'dart:core';
 
+import 'package:url_launcher/url_launcher.dart';
+
 class RecycleYourClothes extends StatefulWidget {
   @override
   _RecycleYourClothesState createState() => _RecycleYourClothesState();
@@ -26,7 +28,7 @@ class _RecycleYourClothesState extends State<RecycleYourClothes> {
       speed: 2,
       speedAccuracy: 2);
   TextEditingController postCodeController = TextEditingController();
-  late List<RecyclingCentre> recyclingCentres;
+  late List<RecyclingCentre> recyclingCentres = [];
 
   @override
   void initState() {
@@ -63,9 +65,7 @@ class _RecycleYourClothesState extends State<RecycleYourClothes> {
 
   @override
   Widget build(BuildContext context) {
-
-    return
-      SingleChildScrollView(
+    return SingleChildScrollView(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -86,14 +86,12 @@ class _RecycleYourClothesState extends State<RecycleYourClothes> {
         Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
             child: TextField(
-
                 controller: postCodeController,
                 cursorColor: Colors.black,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   focusedBorder: OutlineInputBorder(),
                   contentPadding: EdgeInsets.all(10.0),
-
                   hintText: "i.e SW7 1BA",
                 ))),
         addVerticalSpace(20),
@@ -126,6 +124,13 @@ class _RecycleYourClothesState extends State<RecycleYourClothes> {
             getClosestRecyclingCentres();
           },
         ),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Expanded(
+              child: SizedBox(
+                  width: 1000,
+                  height: 300,
+                  child: _displayRecyclingCenters())),
+        ])
       ],
     ));
   }
@@ -140,6 +145,68 @@ class _RecycleYourClothesState extends State<RecycleYourClothes> {
         recyclingCentres = parseRecyclingCenter(response.body);
       });
     }
+  }
+
+  Widget _displayRecyclingCenters() {
+    return ListView.builder(
+      itemCount: recyclingCentres.length,
+      itemBuilder: (BuildContext context, int index) {
+        RecyclingCentre centre = recyclingCentres.elementAt(index);
+        return Column(
+          children: <Widget>[
+            SizedBox(
+                width: 350,
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Expanded(
+                      child: Container(
+                          margin: const EdgeInsets.only(
+                            left: 10,
+                            right: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: ListTile(
+                            title: Column(children: [
+                              Text("${centre.name}",
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold)),
+                              Text("${centre.address}",
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                  )),
+                              addVerticalSpace(5),
+                              Text("Distance: ${centre.distance} miles",
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                  )),
+                              MaterialButton(
+                                color: Color(0xfffffaca),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0)),
+                                elevation: 5.0,
+                                child:
+                                    const Text("Open google maps",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                        )),
+                                onPressed: ()async {
+                                  await launch('https://www.google.com/maps/dir/${postCodeController.text}/${centre.address}/');
+                                },
+                              ),
+                            ]),
+                          ))),
+                  // Text("${centre.distance}"),
+                ])),
+            const SizedBox(height: 10)
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -174,8 +241,6 @@ Future createErrorDialog(BuildContext context, String errorMessage) {
 List<RecyclingCentre> parseRecyclingCenter(String responseBody) {
   final parsed = jsonDecode(responseBody)["items"].cast<Map<String, dynamic>>();
 
-
-  print(parsed);
   List<RecyclingCentre> result = parsed
       .where((json) => json["address"] != null)
       .where((json) => json["name"] != null)
@@ -183,57 +248,11 @@ List<RecyclingCentre> parseRecyclingCenter(String responseBody) {
       .map<RecyclingCentre>((json) => RecyclingCentre.fromJson(json))
       .toList();
 
-  result = result.where((element) => result.indexOf(element) <15).toList();
+  result = result.where((element) => result.indexOf(element) < 15).toList();
+  print(result);
 
   return result;
 }
-
-//   Widget _displayRecyclingCenters() {
-//     return ListView.builder(
-//       itemCount: materialsToPercentages.length,
-//       itemBuilder: (BuildContext context, int index) {
-//         String key = materialsToPercentages.keys.elementAt(index);
-//         return Column(
-//           children: <Widget>[
-//             SizedBox(
-//                 width: 260,
-//                 child:
-//                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-//                   Expanded(
-//                       child: Container(
-//                         margin: const EdgeInsets.only(
-//                           left: 40,
-//                         ),
-//                         decoration: BoxDecoration(
-//                           color: Colors.green,
-//                           borderRadius: BorderRadius.circular(20),
-//                         ),
-//                         child: ListTile(
-//                           title: Text("$key: ${materialsToPercentages[key]}%",
-//                               style: const TextStyle(
-//                                 fontSize: 15,
-//                               )),
-//                         ),
-//                       )),
-//                   IconButton(
-//                     icon: const Icon(Icons.delete),
-//                     onPressed: () {
-//                       setState(() {
-//                         materials.add(key);
-//                         materials.sort();
-//                         materialsToPercentages.remove(key);
-//                       });
-//                     },
-//                   )
-//                 ])),
-//             const SizedBox(height: 10)
-//           ],
-//         );
-//       },
-//     );
-//   }
-//
-//   }
 
 class RecyclingCentre {
   final String name;
@@ -244,8 +263,7 @@ class RecyclingCentre {
     required this.name,
     required this.address,
     required this.distance,
-  }
-  );
+  });
 
   factory RecyclingCentre.fromJson(Map<String, dynamic> json) {
     return RecyclingCentre(
