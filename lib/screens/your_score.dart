@@ -32,7 +32,7 @@ List<Clothing> parseClothes(String responseBody) {
 
 Future<List<Clothing>> fetchClothesInventory() async {
   final response = await http.get(Uri.parse(
-      "https://footprintcalculator.herokuapp.com/users/your-clothes/1"));
+      "https://footprintcalculator.herokuapp.com/users/your-clothes/${globals.userid}"));
   // final test = await http.post(
   //     Uri.parse("https://footprintcalculator.herokuapp.com/clothes"),
   //     headers: <String, String>{

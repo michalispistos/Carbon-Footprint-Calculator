@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "229435190070",
+    "project_id": "carbon-footprint-calcula-8e0f7",
+    "storage_bucket": "carbon-footprint-calcula-8e0f7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:229435190070:android:e91439888af137251d2197",
+        "android_client_info": {
+          "package_name": "com.example.carbon_footprint_calculator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "229435190070-hj8603qoontodpao2a037hcpuphol00c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.carbon_footprint_calculator",
+            "certificate_hash": "f23894ae0276e29899b0bf5dcbd98b541b10398d"
+          }
+        },
+        {
+          "client_id": "229435190070-a4ibepghjspbuigmvmdic2j3srcms21q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrpPFIX8cpBIyh2KpS8KlaMbrKA1Mty9A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "229435190070-a4ibepghjspbuigmvmdic2j3srcms21q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

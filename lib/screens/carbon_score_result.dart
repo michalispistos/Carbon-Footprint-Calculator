@@ -150,6 +150,7 @@ class CarbonScoreResult extends StatelessWidget {
   }
 
   void addClothes(String itemName, Item item) async {
+    print(globals.userid);
     final test = await http.post(
         Uri.parse("https://footprintcalculator.herokuapp.com/clothes"),
         headers: <String, String>{
@@ -159,7 +160,7 @@ class CarbonScoreResult extends StatelessWidget {
           'name': itemName,
           'type': item.type,
           'carbon_score': carbonFootprint.getFootprint(item),
-          'owner': 1
+          'owner': globals.userid
         }));
 
 

@@ -16,9 +16,13 @@ import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
 import 'package:carbon_footprint_calculator/screens/check_item.dart';
 import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 
+import 'login.dart';
+
 class ItemCalculationStart extends StatefulWidget {
 
-  const ItemCalculationStart({Key? key,}) : super(key: key);
+  const ItemCalculationStart({Key? key}) : super(key: key);
+
+
 
   @override
   _ItemCalculationStartState createState() => _ItemCalculationStartState();
@@ -86,7 +90,31 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
         length: 4,
         child: Scaffold(
           // TODO: Implement drawer functionality.
-          endDrawer: Drawer(),
+          endDrawer: Drawer(child: ListView(
+            // Important: Remove any padding from the ListView.
+            padding: EdgeInsets.zero,
+            children: [
+              const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Text('Menu'),
+              ),
+              ListTile(
+                title: const Text('Log Out'),
+                onTap: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    //  change tab to Your Clothes. fix this.
+                    MaterialPageRoute(
+                        builder: (context) =>
+                        const LoginPage(signOut: true)),
+                        (Route<dynamic> route) => false,
+                  );
+                },
+              ),
+            ],
+          ),),
           body: Stack(children: <Widget>[
             CustomPaint(
                 size: Size.infinite, painter: CircleBackgroundPainter()),
@@ -107,7 +135,7 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
                                 child: Image.asset('images/leaf.png')),
                             addHorizontalSpace(10),
                             //TODO: login system xd
-                            Text("Hi, User",
+                            Text("Hi, ${globals.currentUser?.displayName}",
                                 style: themeData.textTheme.headline4),
                           ],
                         ),

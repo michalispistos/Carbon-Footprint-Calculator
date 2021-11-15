@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 
+import 'screens/login.dart';
+
 void main() => {
       WidgetsFlutterBinding.ensureInitialized(),
       SystemChrome.setPreferredOrientations(
@@ -12,5 +14,5 @@ void main() => {
           debugShowCheckedModeBanner: false,
           title: "Carbon Footprint Calculator",
           theme: CustomTheme.lightTheme,
-          home: const ItemCalculationStart()))
+          home: const LoginPage(signOut: false)))
     };
