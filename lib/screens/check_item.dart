@@ -1,24 +1,22 @@
+import 'package:carbon_footprint_calculator/data/item.dart';
+import 'package:carbon_footprint_calculator/screens/achievements.dart';
+import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
 import 'package:carbon_footprint_calculator/screens/item_details.dart';
 import 'package:carbon_footprint_calculator/screens/your_clothes.dart';
 import 'package:carbon_footprint_calculator/screens/your_score.dart';
 import 'package:carbon_footprint_calculator/themes/default_theme.dart';
+import 'package:carbon_footprint_calculator/utils/barcode_items_sample_data.dart';
+import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/brands_grid.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
-import 'package:carbon_footprint_calculator/data/item.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:carbon_footprint_calculator/data/item.dart';
-import 'package:carbon_footprint_calculator/utils/barcode_items_sample_data.dart';
-import 'package:flutter/material.dart';
-import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
-import 'package:carbon_footprint_calculator/screens/check_item.dart';
-import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 
 class ItemCalculationStart extends StatefulWidget {
-
-  const ItemCalculationStart({Key? key,}) : super(key: key);
+  const ItemCalculationStart({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _ItemCalculationStartState createState() => _ItemCalculationStartState();
@@ -26,8 +24,6 @@ class ItemCalculationStart extends StatefulWidget {
 
 class _ItemCalculationStartState extends State<ItemCalculationStart>
     with TickerProviderStateMixin {
-
-
   @override
   void initState() {
     super.initState();
@@ -85,8 +81,27 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
       child: DefaultTabController(
         length: 4,
         child: Scaffold(
-          // TODO: Implement drawer functionality.
-          endDrawer: Drawer(),
+          endDrawerEnableOpenDragGesture: false,
+          endDrawer: Drawer(
+            child: ListView(padding: EdgeInsets.zero, children: [
+              DrawerHeader(
+                decoration: const BoxDecoration(color: Color(0xffe7f6ff)),
+                  child: Text('Unnamed Carbon Footprint Calculator',
+                      style: themeData.textTheme.headline1)),
+              ListTile(
+                  leading: const Icon(Icons.emoji_events),
+                  title: Text('Achievements',
+                      style: themeData.textTheme.headline3),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AchievementsPage()),
+                    );
+                  }),
+            ]),
+          ),
           body: Stack(children: <Widget>[
             CustomPaint(
                 size: Size.infinite, painter: CircleBackgroundPainter()),
@@ -111,7 +126,14 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
                                 style: themeData.textTheme.headline4),
                           ],
                         ),
-                        const Icon(Icons.menu, color: CustomTheme.COLOR_BLACK)
+                        Builder(builder: (context) {
+                          return IconButton(
+                              icon: const Icon(Icons.menu,
+                                  color: CustomTheme.COLOR_BLACK),
+                              onPressed: () {
+                                Scaffold.of(context).openEndDrawer();
+                              });
+                        })
                       ]),
                 ),
                 addVerticalSpace(15),
@@ -140,7 +162,6 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
       ),
     );
   }
-
 }
 
 class CircleBackgroundPainter extends CustomPainter {
@@ -167,7 +188,6 @@ class CheckItemStart extends StatefulWidget {
 }
 
 class _CheckItemStartState extends State<CheckItemStart> {
-
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
