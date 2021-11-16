@@ -90,36 +90,41 @@ class LoginPageState extends State<LoginPage> {
         CustomPaint(size: Size.infinite, painter: CircleBackgroundPainter()),
         Column(
           children: <Widget>[
-            addVerticalSpace(150),
-            Center(
-                child: Text("Welcome to",
-                    textAlign: TextAlign.center,
+            addVerticalSpace(100),
+            // Text("Welcome to Carbon Footprint Calculator",
+            //          textAlign: TextAlign.center,
+            //          style: TextStyle(
+            //            color: Colors.black,
+            //            fontWeight: FontWeight.bold,
+            //            fontSize: 20,
+            //          )),
+            //
+            //      // child: Text("Carbon Footprint Calculator",
+            //      //     textAlign: TextAlign.center,
+            //      //     style: TextStyle(
+            //      //       color: Colors.black,
+            //      //       fontWeight: FontWeight.bold,
+            //      //       fontSize: 20,
+            //      //     ))),
+            //  addVerticalSpace(50),
+            Padding(
+                padding: EdgeInsets.fromLTRB(15, 0, 100, 0),
+                child: Text("Buy smart and save the environment",
+                    textAlign: TextAlign.left,
                     style: TextStyle(
+                      height: 1.2,
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: 30,
                     ))),
-            Center(
-                child: Text("Carbon Footprint Calculator",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ))),
-            addVerticalSpace(50),
-            Container(
-                width: 225.0,
-                height: 225.0,
-                decoration: new BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: new DecorationImage(
-                        fit: BoxFit.fill,
-                        image: new NetworkImage(
-                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQgGg42PBbQf8Rewgg1MoI7Gg761b0pXt7IA&usqp=CAU")
-                    )
-                )),
-            addVerticalSpace(50),
+            addVerticalSpace(75),
+            Padding(
+                padding: EdgeInsets.fromLTRB(50, 0, 0, 0),
+                child: Container(
+                    width: 225.0,
+                    height: 225.0,
+                    child: Image.asset('images/leaf.png'))),
+            addVerticalSpace(65),
             ElevatedButton(
               child: const Text('SIGN IN',
                   style: TextStyle(

@@ -155,8 +155,7 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
                                     bgColor: const Color(0xffffe8ec),
                                     child: Image.asset('images/leaf.png')),
                                 addHorizontalSpace(10),
-                                //TODO: login system xd
-                                Text("Hi, User",
+                                Text("Hi, ${globals.currentUser?.displayName}",
                                     style: themeData.textTheme.headline4),
                               ],
                             ),
