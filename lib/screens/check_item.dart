@@ -18,10 +18,14 @@ import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
 import 'package:carbon_footprint_calculator/screens/check_item.dart';
 import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 
+import 'login.dart';
+
 class ItemCalculationStart extends StatefulWidget {
+
   const ItemCalculationStart({
     Key? key,
   }) : super(key: key);
+
 
   @override
   _ItemCalculationStartState createState() => _ItemCalculationStartState();
@@ -107,7 +111,31 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
             child: Scaffold(
               // TODO: Implement drawer functionality.
               resizeToAvoidBottomInset: false,
-              endDrawer: Drawer(),
+              endDrawer: Drawer(child: ListView(
+            // Important: Remove any padding from the ListView.
+            padding: EdgeInsets.zero,
+            children: [
+              const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Text('Menu'),
+              ),
+              ListTile(
+                title: const Text('Log Out'),
+                onTap: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    //  change tab to Your Clothes. fix this.
+                    MaterialPageRoute(
+                        builder: (context) =>
+                        const LoginPage(signOut: true)),
+                        (Route<dynamic> route) => false,
+                  );
+                },
+              ),
+            ],
+          ),),
               body: Stack(children: <Widget>[
                 CustomPaint(
                     size: Size.infinite, painter: CircleBackgroundPainter()),
@@ -154,6 +182,7 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
                       const BrandsGrid(),
                       const YourScore(),
                       RecycleYourClothes(),
+
                     ])),
                   ],
                 )

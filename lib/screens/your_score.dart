@@ -54,7 +54,7 @@ List<Clothing> parseClothes(String responseBody) {
 
 Future<List<Clothing>> fetchClothesInventory() async {
   final response = await http.get(Uri.parse(
-      "https://footprintcalculator.herokuapp.com/users/your-clothes/1"));
+      "https://footprintcalculator.herokuapp.com/users/your-clothes/${globals.userid}"));
   // final test = await http.post(
   //     Uri.parse("https://footprintcalculator.herokuapp.com/clothes"),
   //     headers: <String, String>{
@@ -378,6 +378,7 @@ class _YourScoreState extends State<YourScore> {
         return "Invalid Date";
     }
   }
+
 }
 
 List<BarChartGroupData> buildBarGroupsFromClothingList(
@@ -388,6 +389,7 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
   switch (viewBy) {
     case 2:
     // Month View
+
       for (Clothing clothing in clothesList) {
         if (clothing.dateTime.month == month &&
             clothing.dateTime.year == year) {
@@ -421,6 +423,7 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
         // Average carbon score for the month
           y: dateClothesMap[k]!.fold(
               0.0, (prev, curr) => (prev as double) + curr.carbonScore) /
+
               dateClothesMap[k]!.length,
           colors: [Colors.orangeAccent]),
     ]));
