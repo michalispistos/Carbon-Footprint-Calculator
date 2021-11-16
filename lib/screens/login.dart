@@ -1,3 +1,4 @@
+import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
@@ -14,7 +15,6 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
     'https://www.googleapis.com/auth/userinfo.profile'
   ],
 );
-
 
 class LoginPage extends StatefulWidget {
   final bool signOut;
@@ -44,10 +44,9 @@ class LoginPageState extends State<LoginPage> {
     _googleSignIn.signInSilently();
   }
 
-
   Future<void> _handleSignIn() async {
     try {
-      _googleSignIn.signIn().then((result){
+      _googleSignIn.signIn().then((result) {
         result!.authentication.then((googleKey) async {
           String body = json.encode({"token": googleKey.idToken});
           http.Response response = await http.post(
@@ -60,20 +59,18 @@ class LoginPageState extends State<LoginPage> {
             globals.headers["cookie"] = cookie;
           }
           globals.userid = json.decode(response.body)["userid"];
-        }).catchError((err){
+        }).catchError((err) {
           print(err);
         });
-      }).catchError((err){
+      }).catchError((err) {
         print(err);
       });
-
     } catch (error) {
       print(error);
     }
   }
 
   Future<void> _handleSignOut() async {
-
     _googleSignIn.disconnect().then((res) async {
       http.Response response = await http.post(
         Uri.parse("http://10.0.2.2:3000/auth/logout"),
@@ -81,8 +78,7 @@ class LoginPageState extends State<LoginPage> {
       );
       globals.headers["cookie"] = "";
       globals.userid = null;
-   });
-
+    });
   }
 
   Widget _buildBody() {
@@ -90,16 +86,51 @@ class LoginPageState extends State<LoginPage> {
     if (user != null) {
       return ItemCalculationStart();
     } else {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          const Text("Welcome to Carbon Footprint Calculator"),
-          ElevatedButton(
-            child: const Text('SIGN IN'),
-            onPressed: _handleSignIn,
-          ),
-        ],
-      );
+      return Stack(children: <Widget>[
+        CustomPaint(size: Size.infinite, painter: CircleBackgroundPainter()),
+        Column(
+          children: <Widget>[
+            addVerticalSpace(150),
+            Center(
+                child: Text("Welcome to",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ))),
+            Center(
+                child: Text("Carbon Footprint Calculator",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ))),
+            addVerticalSpace(50),
+            Container(
+                width: 225.0,
+                height: 225.0,
+                decoration: new BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: new DecorationImage(
+                        fit: BoxFit.fill,
+                        image: new NetworkImage(
+                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQgGg42PBbQf8Rewgg1MoI7Gg761b0pXt7IA&usqp=CAU")
+                    )
+                )),
+            addVerticalSpace(50),
+            ElevatedButton(
+              child: const Text('SIGN IN',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                  )),
+              onPressed: _handleSignIn,
+            ),
+          ],
+        ),
+      ]);
     }
   }
 
@@ -107,8 +138,8 @@ class LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: ConstrainedBox(
-          constraints: const BoxConstraints.expand(),
-          child: _buildBody(),
-        ));
+      constraints: const BoxConstraints.expand(),
+      child: _buildBody(),
+    ));
   }
 }
