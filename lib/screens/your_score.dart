@@ -95,7 +95,7 @@ Future<List<double>> fetchHistoryValues() async {
   final response = await http.get(Uri.parse(
       "https://footprintcalculator.herokuapp.com/users/history-values/${globals.userid}"));
   if (response.statusCode == 200) {
-    return List<double>.from(jsonDecode(response.body)["history_values"]);
+    return List<double>.from(jsonDecode(response.body)["history_values"].map((x) => x.toDouble()).toList());
   } else {
     throw Exception('Failed to load history values');
   }
@@ -165,7 +165,7 @@ FutureBuilder calculateNewUsersCarbonScore(double add, bool decrease) {
         if (snapshot.hasData) {
           var themeData = Theme.of(context);
           double totalScore =
-              snapshot.data!.fold(0, (prev, curr) => prev + curr);
+              snapshot.data!.fold(0, (prev, curr) => (prev as double) + (curr as double));
           return Text((totalScore + add).toStringAsFixed(2),
               style: themeData.textTheme.headline3!.copyWith(
                   color: decrease
