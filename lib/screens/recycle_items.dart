@@ -85,7 +85,7 @@ class _RecycleYourClothesState extends State<RecycleYourClothes> {
         addVerticalSpace(20),
         Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-            child: TextField(
+            child:TextField(
                 controller: postCodeController,
                 cursorColor: Colors.black,
                 decoration: const InputDecoration(

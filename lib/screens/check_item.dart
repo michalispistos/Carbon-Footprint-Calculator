@@ -110,7 +110,7 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
           length: 4,
             child: Scaffold(
               // TODO: Implement drawer functionality.
-              resizeToAvoidBottomInset: false,
+
               endDrawer: Drawer(child: ListView(
             // Important: Remove any padding from the ListView.
             padding: EdgeInsets.zero,
@@ -136,6 +136,7 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
               ),
             ],
           ),),
+              resizeToAvoidBottomInset: false,
               body: Stack(children: <Widget>[
                 CustomPaint(
                     size: Size.infinite, painter: CircleBackgroundPainter()),

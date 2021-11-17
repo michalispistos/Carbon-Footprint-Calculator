@@ -84,7 +84,7 @@ class LoginPageState extends State<LoginPage> {
   Widget _buildBody() {
     GoogleSignInAccount? user = _currentUser;
     if (user != null) {
-      return ItemCalculationStart();
+      return const ItemCalculationStart();
     } else {
       return Stack(children: <Widget>[
         CustomPaint(size: Size.infinite, painter: CircleBackgroundPainter()),
