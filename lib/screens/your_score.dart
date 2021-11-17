@@ -612,101 +612,39 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
       break;
   }
 
-  for (var k in dateValuesMap.keys) {
+  for (var k in averageDateValuesMap.keys) {
     // Total carbon score for the month
-    var totalCarbonBar = BarChartRodData(
-        y: dateValuesMap[k]!.fold(0, (prev, curr) => prev + curr));
+    var averageCarbonFromUsersBar = BarChartRodData(
+        y: averageDateValuesMap[k]!
+                .fold(0.0, (prev, curr) => (prev as double) + curr) /
+            allHistoryValues.length,
+        colors: [Color(0xfffb6f92)]);
 
-    var averageCarbonPerItemBar;
-    if(dateClothesMap.keys.contains(k)) {
-      averageCarbonPerItemBar = BarChartRodData(
+    var totalCarbonBar = BarChartRodData(y: 0);
+    var averageCarbonPerItemBar = BarChartRodData(
         // Average carbon score for the month per item
-          y: dateClothesMap[k]!.fold(
-              0.0, (prev, curr) => (prev as double) + curr.carbonScore) /
-              dateClothesMap[k]!.length,
-          colors: [Colors.orangeAccent]);
-    }
-    var averageCarbonFromUsersBar;
-    if(averageDateValuesMap.keys.contains(k)){
-      averageCarbonFromUsersBar = BarChartRodData(
-        // Average carbon score for the month per item
-          y: averageDateValuesMap[k]!
-              .fold(0.0, (prev, curr) => (prev as double) + curr) /
-              allHistoryValues.length,
-          colors: [Color(0xfffb6f92)]);
-    }
+        y: 0,
+        colors: [Colors.orangeAccent]);
+    if (dateValuesMap.keys.contains(k)) {
+      totalCarbonBar = BarChartRodData(
+          y: dateValuesMap[k]!.fold(0, (prev, curr) => prev + curr));
 
-    if(averageDateValuesMap.keys.contains(k) && dateClothesMap.keys.contains(k)){
-      result.add(BarChartGroupData(x: k, barRods: [
-        totalCarbonBar,averageCarbonPerItemBar,averageCarbonFromUsersBar
-      ]));
-    }else if(averageDateValuesMap.keys.contains(k)){
-      result.add(BarChartGroupData(x: k, barRods: [
-        totalCarbonBar,averageCarbonFromUsersBar
-      ]));
-    }else if(dateClothesMap.keys.contains(k)){
-      result.add(BarChartGroupData(x: k, barRods: [
-        totalCarbonBar,averageCarbonPerItemBar
-      ]));
-    }else{
-      result.add(BarChartGroupData(x: k, barRods: [
-        totalCarbonBar
-      ]));
-    }
-
-  }
-
-  for (var k in dateClothesMap.keys) {
-    if(!dateValuesMap.containsKey(k)) {
-      // Total carbon score for the month
-
-      var averageCarbonPerItemBar = BarChartRodData(
-          // Average carbon score for the month per item
+      if (dateClothesMap.keys.contains(k)) {
+        averageCarbonPerItemBar = BarChartRodData(
+            // Average carbon score for the month per item
             y: dateClothesMap[k]!.fold(
-                0.0, (prev, curr) => (prev as double) + curr.carbonScore) /
+                    0.0, (prev, curr) => (prev as double) + curr.carbonScore) /
                 dateClothesMap[k]!.length,
             colors: [Colors.orangeAccent]);
-
-      var averageCarbonFromUsersBar;
-      if (averageDateValuesMap.keys.contains(k)) {
-        averageCarbonFromUsersBar = BarChartRodData(
-          // Average carbon score for the month per item
-            y: averageDateValuesMap[k]!
-                .fold(0.0, (prev, curr) => (prev as double) + curr) /
-                allHistoryValues.length,
-            colors: [Color(0xfffb6f92)]);
-      }
-
-      if (averageDateValuesMap.keys.contains(k)){
-        result.add(BarChartGroupData(x: k, barRods: [
-          averageCarbonPerItemBar, averageCarbonFromUsersBar
-        ]));
-      }else{
-        result.add(BarChartGroupData(x: k, barRods: [
-          averageCarbonPerItemBar
-        ]));
       }
     }
 
+    result.add(BarChartGroupData(x: k, barRods: [
+      totalCarbonBar,
+      averageCarbonPerItemBar,
+      averageCarbonFromUsersBar
+    ]));
   }
-
-  for (var k in averageDateValuesMap.keys) {
-    if(!dateValuesMap.containsKey(k) && !dateClothesMap.containsKey(k)) {
-      // Total carbon score for the month
-
-      var averageCarbonFromUsersBar = BarChartRodData(
-          // Average carbon score for the month per item
-            y: averageDateValuesMap[k]!
-                .fold(0.0, (prev, curr) => (prev as double) + curr) /
-                allHistoryValues.length,
-            colors: [Color(0xfffb6f92)]);
-
-        result.add(BarChartGroupData(x: k, barRods: [
-          averageCarbonFromUsersBar
-        ]));
-      }
-    }
-
 
   return result;
 }
