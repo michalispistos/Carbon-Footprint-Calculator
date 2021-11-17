@@ -85,7 +85,7 @@ class _RecycleYourClothesState extends State<RecycleYourClothes> {
         addVerticalSpace(20),
         Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-            child:TextField(
+            child: TextField(
                 controller: postCodeController,
                 cursorColor: Colors.black,
                 decoration: const InputDecoration(
@@ -93,7 +93,8 @@ class _RecycleYourClothesState extends State<RecycleYourClothes> {
                   focusedBorder: OutlineInputBorder(),
                   contentPadding: EdgeInsets.all(10.0),
                   hintText: "i.e SW7 1BA",
-                ))),
+                ),
+                style: const TextStyle(fontSize: 15.0, color: Colors.black))),
         addVerticalSpace(20),
         MaterialButton(
           color: Colors.blue,
@@ -127,9 +128,7 @@ class _RecycleYourClothesState extends State<RecycleYourClothes> {
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Expanded(
               child: SizedBox(
-                  width: 1000,
-                  height: 300,
-                  child: _displayRecyclingCenters())),
+                  width: 1000, height: 300, child: _displayRecyclingCenters())),
         ])
       ],
     ));
@@ -188,14 +187,14 @@ class _RecycleYourClothesState extends State<RecycleYourClothes> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(18.0)),
                                 elevation: 5.0,
-                                child:
-                                    const Text("Open in Google maps",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                        )),
-                                onPressed: ()async {
-                                  await launch('https://www.google.com/maps/dir/${postCodeController.text}/${centre.address}/');
+                                child: const Text("Open in Google maps",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                    )),
+                                onPressed: () async {
+                                  await launch(
+                                      'https://www.google.com/maps/dir/${postCodeController.text}/${centre.address}/');
                                 },
                               ),
                             ]),
