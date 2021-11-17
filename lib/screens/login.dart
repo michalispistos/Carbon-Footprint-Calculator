@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import "package:http/http.dart" as http;
 import 'dart:async';
 import 'dart:convert' show json;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'check_item.dart';
 
@@ -33,12 +34,16 @@ class LoginPageState extends State<LoginPage> {
     if (widget.signOut) {
       _handleSignOut();
     }
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) async {
       setState(() {
         _currentUser = account;
       });
       if (_currentUser != null) {
         globals.currentUser = _currentUser;
+        final prefs = await SharedPreferences.getInstance();
+        globals.headers["cookie"] = prefs.getString("cookie")!;
+        globals.userid = prefs.getInt("userid");
+        print(globals.userid);
       }
     });
     _googleSignIn.signInSilently();
@@ -58,7 +63,11 @@ class LoginPageState extends State<LoginPage> {
           if (cookie!.isNotEmpty) {
             globals.headers["cookie"] = cookie;
           }
-          globals.userid = json.decode(response.body)["userid"];
+          int userid = json.decode(response.body)["userid"];
+          globals.userid = userid;
+          final prefs = await SharedPreferences.getInstance();
+          prefs.setString("cookie", cookie);
+          prefs.setInt("userid", userid);
         }).catchError((err) {
           print(err);
         });
@@ -73,8 +82,8 @@ class LoginPageState extends State<LoginPage> {
   Future<void> _handleSignOut() async {
     _googleSignIn.disconnect().then((res) async {
       http.Response response = await http.post(
-        Uri.parse("http://10.0.2.2:3000/auth/logout"),
-        headers: {"Content-Type": "application/json"},
+        Uri.parse("http://footprintcalculator.herokuapp.com/auth/logout"),
+        headers: globals.headers,
       );
       globals.headers["cookie"] = "";
       globals.userid = null;
