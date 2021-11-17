@@ -95,7 +95,14 @@ Future<List<double>> fetchHistoryValues() async {
   final response = await http.get(Uri.parse(
       "https://footprintcalculator.herokuapp.com/users/history-values/${globals.userid}"));
   if (response.statusCode == 200) {
-    return List<double>.from(jsonDecode(response.body)["history_values"].map((x) => x.toDouble()).toList());
+    List<dynamic> list;
+    if(jsonDecode(response.body)["history_values"] == null){
+      list = [];
+    }else{
+      list = jsonDecode(response.body)["history_values"];
+    }
+
+    return List<double>.from(list.map((x) => x.toDouble()).toList());
   } else {
     throw Exception('Failed to load history values');
   }
@@ -105,10 +112,16 @@ Future<List<List<double>>> fetchAllHistoryValues() async {
   final response = await http.get(Uri.parse(
       "https://footprintcalculator.herokuapp.com/users/all-history-values/all"));
   if (response.statusCode == 200) {
-    List<dynamic> list = jsonDecode(response.body);
+    List<dynamic> list ;
+    if(jsonDecode(response.body) == null){
+      list = [];
+    }else {
+      list = jsonDecode(response.body);
+    }
     List<List<double>> res = list
         .map((val) => List<double>.from(
-            val["history_values"].map((x) => x.toDouble()).toList()))
+        ((val["history_values"]) == null ? [] :val["history_values"]).map((x) => x.toDouble()).toList())
+    )
         .toList();
     return res;
   } else {
@@ -120,7 +133,12 @@ Future<List<List<DateTime>>> fetchAllHistoryDates() async {
   final response = await http.get(Uri.parse(
       "https://footprintcalculator.herokuapp.com/users/all-history-dates/all"));
   if (response.statusCode == 200) {
-    List<dynamic> allHistoryDates = jsonDecode(response.body);
+    List<dynamic> allHistoryDates;
+    if(jsonDecode(response.body) == null){
+      allHistoryDates = [];
+    }else {
+      allHistoryDates = jsonDecode(response.body);
+    }
     List<dynamic> list =
         allHistoryDates.map((val) => val["history_dates"]).toList();
     List<List<DateTime>> res = list.map((val) => parseDate(val)).toList();
@@ -131,7 +149,7 @@ Future<List<List<DateTime>>> fetchAllHistoryDates() async {
 }
 
 List<DateTime> parseDate(val) {
-  if (val.length == 0) {
+  if (val == null || val.length == 0) {
     return <DateTime>[];
   }
 
@@ -146,7 +164,12 @@ Future<List<DateTime>> fetchHistoryDates() async {
   final response = await http.get(Uri.parse(
       "https://footprintcalculator.herokuapp.com/users/history-dates/${globals.userid}"));
   if (response.statusCode == 200) {
-    List<dynamic> list = jsonDecode(response.body)["history_dates"];
+    List<dynamic> list;
+    if(jsonDecode(response.body)["history_dates"] == null){
+      list = [];
+    }else {
+      list = jsonDecode(response.body)["history_dates"];
+    }
     if (list.length == 0) {
       return <DateTime>[];
     }

@@ -69,6 +69,11 @@ class _ItemDetailsState extends State<ItemDetails> {
       throw Exception("Invalid weight");
     }
 
+    if (double.tryParse(itemWeightController.text) == 0) {
+      createErrorDialog(context, "Invalid weight");
+      throw Exception("Invalid weight");
+    }
+
     double itemWeight = double.parse(itemWeightController.text);
     Item item = Item(materialsToPercentages, typeDropdownValue, itemWeight);
 

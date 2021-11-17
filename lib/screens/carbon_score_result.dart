@@ -103,8 +103,43 @@ class CarbonScoreResult extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pop();
                   itemName = controller.text.toString();
-                  addClothes(itemName, item);
-                  createItemAddedDialog(context);
+                  if(itemName == ""){
+                    createErrorDialog(context, "Complete item's name");
+                  }else {
+                    addClothes(itemName, item);
+                    createItemAddedDialog(context);
+                  }
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  Future createErrorDialog(BuildContext context, String errorMessage) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Error",
+                style: TextStyle(
+                  fontSize: 17,
+                )),
+            content: SizedBox(
+                height: 20,
+                child: Text(errorMessage,
+                    style: const TextStyle(
+                      fontSize: 15,
+                    ))),
+            actions: <Widget>[
+              MaterialButton(
+                color: const Color.fromRGBO(254, 96, 79, 1),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0)),
+                elevation: 5.0,
+                child: const Text("CLOSE"),
+                onPressed: () {
+                  Navigator.of(context).pop();
                 },
               )
             ],
