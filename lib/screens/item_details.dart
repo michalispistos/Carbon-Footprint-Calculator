@@ -38,7 +38,7 @@ class _ItemDetailsState extends State<ItemDetails> {
   TextEditingController itemWeightController = TextEditingController();
   Map<String, double> materialsToPercentages = HashMap();
   String materialDropdownValue = 'Acrylic';
-  String typeDropdownValue = 'Top';
+  String typeDropdownValue = 'Tops';
   List<String> materials = [
     'Acrylic',
     'Cotton',

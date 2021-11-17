@@ -96,9 +96,9 @@ Future<List<double>> fetchHistoryValues() async {
       "https://footprintcalculator.herokuapp.com/users/history-values/${globals.userid}"));
   if (response.statusCode == 200) {
     List<dynamic> list;
-    if(jsonDecode(response.body)["history_values"] == null){
+    if (jsonDecode(response.body)["history_values"] == null) {
       list = [];
-    }else{
+    } else {
       list = jsonDecode(response.body)["history_values"];
     }
 
@@ -112,16 +112,17 @@ Future<List<List<double>>> fetchAllHistoryValues() async {
   final response = await http.get(Uri.parse(
       "https://footprintcalculator.herokuapp.com/users/all-history-values/all"));
   if (response.statusCode == 200) {
-    List<dynamic> list ;
-    if(jsonDecode(response.body) == null){
+    List<dynamic> list;
+    if (jsonDecode(response.body) == null) {
       list = [];
-    }else {
+    } else {
       list = jsonDecode(response.body);
     }
     List<List<double>> res = list
         .map((val) => List<double>.from(
-        ((val["history_values"]) == null ? [] :val["history_values"]).map((x) => x.toDouble()).toList())
-    )
+            ((val["history_values"]) == null ? [] : val["history_values"])
+                .map((x) => x.toDouble())
+                .toList()))
         .toList();
     return res;
   } else {
@@ -134,9 +135,9 @@ Future<List<List<DateTime>>> fetchAllHistoryDates() async {
       "https://footprintcalculator.herokuapp.com/users/all-history-dates/all"));
   if (response.statusCode == 200) {
     List<dynamic> allHistoryDates;
-    if(jsonDecode(response.body) == null){
+    if (jsonDecode(response.body) == null) {
       allHistoryDates = [];
-    }else {
+    } else {
       allHistoryDates = jsonDecode(response.body);
     }
     List<dynamic> list =
@@ -165,9 +166,9 @@ Future<List<DateTime>> fetchHistoryDates() async {
       "https://footprintcalculator.herokuapp.com/users/history-dates/${globals.userid}"));
   if (response.statusCode == 200) {
     List<dynamic> list;
-    if(jsonDecode(response.body)["history_dates"] == null){
+    if (jsonDecode(response.body)["history_dates"] == null) {
       list = [];
-    }else {
+    } else {
       list = jsonDecode(response.body)["history_dates"];
     }
     if (list.length == 0) {
@@ -187,8 +188,8 @@ FutureBuilder calculateNewUsersCarbonScore(double add, bool decrease) {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           var themeData = Theme.of(context);
-          double totalScore =
-              snapshot.data!.fold(0, (prev, curr) => (prev as double) + (curr as double));
+          double totalScore = snapshot.data!
+              .fold(0, (prev, curr) => (prev as double) + (curr as double));
           return Text((totalScore + add).toStringAsFixed(2),
               style: themeData.textTheme.headline3!.copyWith(
                   color: decrease
@@ -477,40 +478,36 @@ class _YourScoreState extends State<YourScore> {
         ),
       ]),
       Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: Text(
-                "Your score is measured in kg of CO2 produced.",
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+          child: Text(
+            "Your score is measured in kg of CO2 produced.",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 15, color: Colors.black),
+          )),
+      Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+          child: Text(
+            "The average passenger vehicle emits about 0.65 kg of CO2 per km.",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 15, color: Colors.black),
+          )),
+      Padding(
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Text("Information source: "),
+      ),
+      Padding(
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+          child: InkWell(
+              child: const Text(
+                "https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black),
-              )),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: Text(
-                "The average passenger vehicle emits about 0.65 kg of CO2 per km.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black),
-              )),
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-            child: Text("Information source: "),
-          ),
-          Padding(
-              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: InkWell(
-                  child: const Text(
-                    "https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                  onTap: () => launch(
-                      'https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle'))),
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+              onTap: () => launch(
+                  'https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle'))),
     ]));
   }
 
@@ -614,18 +611,27 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
       }
       break;
   }
-
   for (var k in dateValuesMap.keys) {
     result.add(BarChartGroupData(x: k, barRods: [
       BarChartRodData(
           // Total carbon score for the month
           y: dateValuesMap[k]!.fold(0, (prev, curr) => prev + curr)),
+    ]));
+  }
+
+  for (var k in dateClothesMap.keys) {
+    result.add(BarChartGroupData(x: k, barRods: [
       BarChartRodData(
           // Average carbon score for the month per item
           y: dateClothesMap[k]!.fold(
                   0.0, (prev, curr) => (prev as double) + curr.carbonScore) /
               dateClothesMap[k]!.length,
           colors: [Colors.orangeAccent]),
+    ]));
+  }
+
+  for (var k in averageDateValuesMap.keys) {
+    result.add(BarChartGroupData(x: k, barRods: [
       BarChartRodData(
           // Average carbon score for the month per item
           y: averageDateValuesMap[k]!
