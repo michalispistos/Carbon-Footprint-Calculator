@@ -1,5 +1,6 @@
 import 'package:carbon_footprint_calculator/data/item.dart';
 import 'package:carbon_footprint_calculator/screens/achievements.dart';
+import 'package:carbon_footprint_calculator/screens/history.dart';
 import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
 import 'package:carbon_footprint_calculator/screens/item_details.dart';
 import 'package:carbon_footprint_calculator/screens/recycle_item.dart';
@@ -134,6 +135,18 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
                         context,
                         MaterialPageRoute(
                             builder: (context) => const AchievementsPage()),
+                      );
+                    }),
+                ListTile(
+                    leading: const Icon(Icons.history),
+                    title: Text('History',
+                        style: themeData.textTheme.headline3),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HistoryPage()),
                       );
                     })
               ],
