@@ -5,6 +5,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:ui';
 import 'package:intl/intl.dart';
+import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 
 import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
@@ -21,9 +22,27 @@ class HistoryPage extends StatefulWidget {
   _HistoryPageState createState() => _HistoryPageState();
 }
 
+Future<List<String>> fetchHistoryActions() async {
+  final response = await http.get(Uri.parse(
+      "https://footprintcalculator.herokuapp.com/users/history-actions/${globals.userid}"));
+  if (response.statusCode == 200) {
+    List<dynamic> list;
+    if (jsonDecode(response.body)["history_actions"] == null) {
+      list = [];
+    } else {
+      list = jsonDecode(response.body)["history_actions"];
+    }
+
+    return List<String>.from(list.map((x) => x.toString()).toList());
+  } else {
+    throw Exception('Failed to load history actions');
+  }
+}
+
 class _HistoryPageState extends State<HistoryPage> {
   List<double> historyValues = [];
   List<DateTime> historyDates = [];
+  List<String> historyActions = [];
 
   @override
   void initState() {
@@ -34,74 +53,124 @@ class _HistoryPageState extends State<HistoryPage> {
     fetchHistoryDates().then((value) => setState(() {
           historyDates = value;
         }));
+    fetchHistoryActions().then((value) => setState(() {
+          historyActions = value;
+        }));
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        appBar: AppBar(
-            backgroundColor: const Color(0xffe7f6ff),
-            title: const Text("History")),
-        body: Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 10),
-    child: _displayClothes(),
-    ));
+      appBar: AppBar(
+          backgroundColor: const Color(0xffe7f6ff),
+          title: const Text("History", style: TextStyle(fontSize: 20))),
+      body: Column(children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 25, right: 30, top: 15),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            const Text("Action   ",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                )),
+            const Text("Score",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                )),
+          ]),
+        ),
+        Expanded(child: _displayHistory())
+      ]),
+    );
   }
 
-  Widget _displayClothes() {
+  Widget _displayHistory() {
+    if(historyValues.length == 0 || historyDates.length == 0 || historyActions.length == 0){
+      return Column();
+    }
     return ListView.builder(
       padding: const EdgeInsets.only(top: 5),
       itemCount: historyValues.length,
       itemBuilder: (BuildContext context, int index) {
         // Clothing clothing = clothes.elementAt(index);
-        // String iconPath = "images/top.png";
-        // if (clothing.type == "Bottoms") {
-        //   iconPath = "images/bottom.png";
-        // }
-        // if (clothing.type == "Shoes") {
-        //   iconPath = "images/shoes.png";
-        // }
-        double historyValue = historyValues.elementAt(historyValues.length -1 - index);
-        DateTime historyDate = historyDates.elementAt(historyValues.length -1 - index);
-        String action = "Recycle";
-        return Column(
-          children: <Widget>[
-            Row(mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(DateFormat('dd-MM-yyyy').format(historyDate))
-              ],
-            ),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              // BorderIcon(
-              //     height: 40,
-              //     width: 40,
-              //     bgColor: const Color(0xffffe8ec),
-              //     child: Image.asset(iconPath)),
-              // addHorizontalSpace(10),
-              Expanded(
-                  child: ListTile(
-                title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                          child: Text(action,
-                              style: const TextStyle(
-                                fontSize: 16,
-                              ))),
-                      Row(
+
+        double historyValue =
+            historyValues?.elementAt(historyValues.length - 1 - index) ?? 0.0;
+        DateTime historyDate =
+            historyDates?.elementAt(historyDates.length - 1 - index) ?? DateTime.now();
+        String action =
+            historyActions?.elementAt(historyActions.length - 1 - index) ?? "";
+        String image = "images/recycling_symbol.png";
+        if (action == "New item") {
+          image = "images/shop.png";
+        } else if (action == "Throw away") {
+          image = "images/bin.png";
+        } else if (action == "Give away") {
+          image = "images/give_away_clothes.jpg";
+        }
+
+        Color scoreColor = Colors.green;
+        if (historyValue < 0) {
+          scoreColor = Color.fromRGBO(254, 96, 79, 1);
+        }
+
+        return Padding(
+            padding: EdgeInsets.only(left: 20, right: 15),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(DateFormat('dd-MM-yyyy').format(historyDate))
+                  ],
+                ),
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  // BorderIcon(
+                  //     height: 40,
+                  //     width: 40,
+                  //     bgColor: const Color(0xffffe8ec),
+                  //     child: Image.asset(iconPath)),
+                  // addHorizontalSpace(10),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    BorderIcon(
+                        height: 40,
+                        width: 40,
+                        bgColor: const Color(0xffffe8ec),
+                        child: Image.asset(image)),
+                    const SizedBox(width: 10)
+                  ]),
+                  Expanded(
+                      child: ListTile(
+                    title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(historyValue.toStringAsFixed(2),
-                              style: const TextStyle(fontSize: 16)),
-                        ],
-                      ),
-                    ]),
-              )),
-            ]),
-            const SizedBox(height: 5),
-            const Divider(color: Colors.black),
-          ],
-        );
+                          Flexible(
+                              child: Text(action,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  ))),
+                          const SizedBox(width: 100),
+                          Row(
+                            children: [
+                              Text(
+                                historyValue.toStringAsFixed(2),
+                                style: TextStyle(
+                                    fontSize: 16, color: scoreColor),
+                              ),
+                            ],
+                          ),
+                        ]),
+                  )),
+                ]),
+                const SizedBox(height: 5),
+                const Divider(color: Colors.black),
+              ],
+            ));
       },
     );
   }

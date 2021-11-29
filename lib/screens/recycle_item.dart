@@ -22,7 +22,7 @@ class RecycleItem extends StatelessWidget {
         appBar: AppBar(
             title: const Flexible(
           child: Padding(
-              padding: EdgeInsets.fromLTRB(80, 0, 0, 0),
+              padding: EdgeInsets.fromLTRB(75, 0, 0, 0),
               child: Text(
                 'Recycle',
                 style: TextStyle(
