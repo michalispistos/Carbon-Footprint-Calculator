@@ -100,11 +100,11 @@ class _HistoryPageState extends State<HistoryPage> {
         // Clothing clothing = clothes.elementAt(index);
 
         double historyValue =
-            historyValues?.elementAt(historyValues.length - 1 - index) ?? 0.0;
+            historyValues.elementAt(historyValues.length - 1 - index);
         DateTime historyDate =
-            historyDates?.elementAt(historyDates.length - 1 - index) ?? DateTime.now();
+            historyDates.elementAt(historyDates.length - 1 - index);
         String action =
-            historyActions?.elementAt(historyActions.length - 1 - index) ?? "";
+            historyActions.elementAt(historyActions.length - 1 - index);
         String image = "images/recycling_symbol.png";
         if (action == "New item") {
           image = "images/shop.png";
