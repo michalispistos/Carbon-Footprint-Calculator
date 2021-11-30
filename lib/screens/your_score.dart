@@ -636,20 +636,24 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
       // Year View
 
       for (Clothing clothing in clothesList) {
-        if (dateClothesMap.containsKey(clothing.dateTime.month)) {
-          dateClothesMap[clothing.dateTime.month]!.add(clothing);
-        } else {
-          dateClothesMap[clothing.dateTime.month] = [clothing];
+        if (clothing.dateTime.year == year) {
+          if (dateClothesMap.containsKey(clothing.dateTime.month)) {
+            dateClothesMap[clothing.dateTime.month]!.add(clothing);
+          } else {
+            dateClothesMap[clothing.dateTime.month] = [clothing];
+          }
         }
       }
 
       for (var i = 0; i < historyValues.length; i++) {
         DateTime date = historyDates[i];
         double value = historyValues[i];
-        if (dateValuesMap.containsKey(date.month)) {
-          dateValuesMap[date.month]!.add(value);
-        } else {
-          dateValuesMap[date.month] = [value];
+        if (date.year == year) {
+          if (dateValuesMap.containsKey(date.month)) {
+            dateValuesMap[date.month]!.add(value);
+          } else {
+            dateValuesMap[date.month] = [value];
+          }
         }
       }
 
@@ -657,10 +661,12 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
         for (var j = 0; j < allHistoryValues[i].length; j++) {
           DateTime date = allHistoryDates[i][j];
           double value = allHistoryValues[i][j];
-          if (averageDateValuesMap.containsKey(date.month)) {
-            averageDateValuesMap[date.month]!.add(value);
-          } else {
-            averageDateValuesMap[date.month] = [value];
+          if (date.year == year) {
+            if (averageDateValuesMap.containsKey(date.month)) {
+              averageDateValuesMap[date.month]!.add(value);
+            } else {
+              averageDateValuesMap[date.month] = [value];
+            }
           }
         }
       }
