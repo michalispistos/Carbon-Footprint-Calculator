@@ -532,26 +532,26 @@ class _YourScoreState extends State<YourScore> {
               )),
         ),
       ]),
-      Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+      const Padding(
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: Text(
             "Your score is measured in kg of CO2 produced.",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 15, color: Colors.black),
           )),
-      Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+      const Padding(
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: Text(
             "The average passenger vehicle emits about 0.65 kg of CO2 per km.",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 15, color: Colors.black),
           )),
-      Padding(
+      const Padding(
         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Text("Information source: "),
       ),
       Padding(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: InkWell(
               child: const Text(
                 "https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle",
