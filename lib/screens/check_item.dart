@@ -102,27 +102,17 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
       child: DefaultTabController(
         length: 4,
         child: Scaffold(
-          // TODO: Implement drawer functionality.
           endDrawerEnableOpenDragGesture: false,
           endDrawer: Drawer(
             child: ListView(
               // Important: Remove any padding from the ListView.
               padding: EdgeInsets.zero,
               children: [
-                DrawerHeader(
-                    decoration: const BoxDecoration(color: Color(0xffe7f6ff)),
-                    child: Text('Menu', style: themeData.textTheme.headline1)),
-                ListTile(
-                  title: const Text('Log Out'),
-                  onTap: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      //  change tab to Your Clothes. fix this.
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage(signOut: true)),
-                      (Route<dynamic> route) => false,
-                    );
-                  },
+                SizedBox(
+                  height: 120,
+                  child: DrawerHeader(
+                      decoration: const BoxDecoration(color: Color(0xffe7f6ff)),
+                      child: Text('Menu', style: themeData.textTheme.headline1)),
                 ),
                 ListTile(
                     leading: const Icon(Icons.emoji_events),
@@ -135,7 +125,20 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
                         MaterialPageRoute(
                             builder: (context) => const AchievementsPage()),
                       );
-                    })
+                    }),
+                ListTile(
+                  leading: const Icon(Icons.logout),
+                  title: Text('Log Out', style: themeData.textTheme.headline3),
+                  onTap: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      //  change tab to Your Clothes. fix this.
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage(signOut: true)),
+                      (Route<dynamic> route) => false,
+                    );
+                  },
+                )
               ],
             ),
           ),
