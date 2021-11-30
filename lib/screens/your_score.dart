@@ -333,10 +333,65 @@ class _YourScoreState extends State<YourScore> {
         ),
       ),
       addVerticalSpace(10),
-      Column(children: [
-        Text("Viewing data for", style: themeData.textTheme.headline6),
-        Text(currentGraphPeriod(), style: themeData.textTheme.headline5)
-      ]),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+              decoration:
+                  // Might want a color here later
+                  const BoxDecoration(
+                      color: Colors.transparent, shape: BoxShape.circle),
+              child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      switch (viewBy) {
+                        case 2:
+                          if (selectedMonth == 1) {
+                            selectedMonth = 12;
+                            selectedYear--;
+                          } else {
+                            selectedMonth--;
+                          }
+                          break;
+                        case 3:
+                          selectedYear--;
+                          break;
+                      }
+                    });
+                  },
+                  icon: const Icon(Icons.arrow_back))),
+          addHorizontalSpace(15),
+          Column(children: [
+            Text("Viewing data for", style: themeData.textTheme.headline6),
+            Text(currentGraphPeriod(), style: themeData.textTheme.headline5)
+          ]),
+          addHorizontalSpace(15),
+          Container(
+              decoration:
+                  // Might want a color here later
+                  const BoxDecoration(
+                      color: Colors.transparent, shape: BoxShape.circle),
+              child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      switch (viewBy) {
+                        case 2:
+                          if (selectedMonth == 12) {
+                            selectedMonth = 1;
+                            selectedYear++;
+                          } else {
+                            selectedMonth++;
+                          }
+                          break;
+                        case 3:
+                          selectedYear++;
+                          break;
+                      }
+                    });
+                  },
+                  icon: const Icon(Icons.arrow_forward)))
+        ],
+      ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
         child: SizedBox(
