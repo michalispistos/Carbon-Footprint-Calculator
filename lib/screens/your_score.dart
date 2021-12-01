@@ -29,6 +29,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 const months = <String>[
   'January',
@@ -44,6 +45,7 @@ const months = <String>[
   'November',
   'December'
 ];
+
 
 List<Clothing> parseClothes(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
@@ -220,6 +222,7 @@ class _YourScoreState extends State<YourScore> {
   late int viewBy;
   late int selectedMonth;
   late int selectedYear;
+  double lifetimeScore = 0;
 
   @override
   void initState() {
@@ -233,6 +236,11 @@ class _YourScoreState extends State<YourScore> {
     historyValuesInventory = fetchHistoryValues();
     allHistoryDatesInventory = fetchAllHistoryDates();
     allHistoryValuesInventory = fetchAllHistoryValues();
+    fetchHistoryValues().then((data) => {
+      setState(() {
+        lifetimeScore = data.fold(0, (prev, curr) => (prev) + (curr));
+      })
+    });
   }
 
   // FutureBuilder calculateLifetimeCarbonScore() {
@@ -477,21 +485,77 @@ class _YourScoreState extends State<YourScore> {
               )),
         ),
       ]),
-      Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+      const Padding(
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: Text(
             "Your score is measured in kg of CO2 produced.",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 15, color: Colors.black),
           )),
-      Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+      const Padding(
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: Text(
-            "The average passenger vehicle emits about 0.65 kg of CO2 per km.",
+            "Swipe to see your score in perspective!",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 15, color: Colors.black),
           )),
       Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+          child: CarouselSlider(
+            options: CarouselOptions(height: 400.0),
+            items: [
+              ["car.gif", "The average passenger vehicle emits about 0.65 kg of CO2 per km. Your clothes carbon footprint is equivalent to a ${(lifetimeScore / 0.65).toStringAsFixed(2)} km car journey!"],
+              ["plane.gif", "A Boeing 737 plane emits 90 kg CO2 per hour per passenger. Your clothes carbon footprint is equivalent to a ${(lifetimeScore / 1.5).toStringAsFixed(2)} minute plane journey!"],
+              ["tree.gif", "The average fully mature tree can absorb 21.77 kg of C02 per year. Your clothes carbon footprint will need ${(lifetimeScore / 21.77).toStringAsFixed(2)} trees to be offset in a year!"]].map((info) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return SizedBox(
+                    width: 335,
+                    height: 174,
+                    child: Stack(
+                      children: <Widget>[
+                        Card(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                width: 335,
+                                height: 200,
+                                child: Image.asset(
+                                  'images/${info[0]}',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ],
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          elevation: 5,
+                          margin: EdgeInsets.all(10),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          left: 20,
+                          child: SizedBox(
+                            height: 150,
+                              child: Container(
+                                  width: 250,
+                                  child: Text(
+                                info[1],
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 15, color: Colors.black),
+                              )),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              );
+            }).toList(),
+          )),
+      const Padding(
         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Text("Information source: "),
       ),
