@@ -233,19 +233,22 @@ class _CheckItemStartState extends State<CheckItemStart> {
     final Size size = MediaQuery.of(context).size;
     ThemeData themeData = Theme.of(context);
 
-    return Column(children: [
+    return Column(mainAxisAlignment: MainAxisAlignment.center,children: [
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text("Check your item",
-                style: themeData.textTheme.headline1,
-                textAlign: TextAlign.left),
+            Flexible(
+              child: Text("We'll help you calculate the carbon score of your clothing, before or after you buy.",
+                  style: themeData.textTheme.headline3,
+                  softWrap: true,
+                  textAlign: TextAlign.center),
+            ),
           ],
         ),
       ),
-      addVerticalSpace(size.height / 2 - 200),
+      addVerticalSpace(30),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -286,6 +289,7 @@ class _CheckItemStartState extends State<CheckItemStart> {
               fontSize: 17,
             )),
       ),
+      addVerticalSpace(size.height / 6),
     ]);
   }
 

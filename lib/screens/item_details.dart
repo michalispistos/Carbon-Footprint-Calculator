@@ -21,7 +21,7 @@ class ItemInfoPage extends StatelessWidget {
               elevation: 0,
               title: const Flexible(
                 child: Text(
-                  'Details about your item',
+                  'Tell us about your item',
                   style: TextStyle(
                     fontSize: 17,
                   ),

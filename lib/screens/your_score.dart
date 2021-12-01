@@ -220,6 +220,7 @@ class _YourScoreState extends State<YourScore> {
   late int viewBy;
   late int selectedMonth;
   late int selectedYear;
+  bool emptyChart = false;
 
   @override
   void initState() {
@@ -396,109 +397,135 @@ class _YourScoreState extends State<YourScore> {
         padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
         child: SizedBox(
           height: size.height / 2,
-          child: FutureBuilder(
-              future: Future.wait([
-                historyValuesInventory,
-                historyDatesInventory,
-                clothesInventory,
-                allHistoryValuesInventory,
-                allHistoryDatesInventory
-              ]),
-              builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-                if (snapshot.hasData) {
-                  //TODO: Right now we only have the ability to generate a bar
-                  //  chart for the full year. We should add functionality to do
-                  //  it for a given month / week.
-                  return BarChart(BarChartData(
-                      barTouchData: BarTouchData(touchTooltipData:
-                          BarTouchTooltipData(getTooltipItem:
-                              (group, groupIndex, rod, rodIndex) {
-                        String period = "";
-                        switch (viewBy) {
-                          case 2:
-                            int value = group.x.toInt();
-                            String suffix = value % 10 == 1
-                                ? "st"
-                                : value % 10 == 2
-                                    ? "nd"
-                                    : value % 10 == 3
-                                        ? "rd"
-                                        : "th";
-                            period = value.toString() + suffix;
-                            break;
-                          case 3:
-                            period = months[group.x.toInt() - 1];
-                            break;
+          child: Stack(children: [
+            Center(
+                child: FutureBuilder(
+                    future: Future.wait([
+                      historyValuesInventory,
+                      historyDatesInventory,
+                      clothesInventory,
+                      allHistoryValuesInventory,
+                      allHistoryDatesInventory
+                    ]),
+                    builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                      if (snapshot.hasData) {
+                        if (emptyChart) {
+                          return const Flexible(
+                              child: Text(
+                                  'No data available for this time period'));
                         }
+                      }
+                      return const SizedBox.shrink();
+                    })),
+            FutureBuilder(
+                future: Future.wait([
+                  historyValuesInventory,
+                  historyDatesInventory,
+                  clothesInventory,
+                  allHistoryValuesInventory,
+                  allHistoryDatesInventory
+                ]),
+                builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                  if (snapshot.hasData) {
+                    List<BarChartGroupData> clothingBarGroups =
+                        buildBarGroupsFromClothingList(
+                            snapshot.data![0],
+                            snapshot.data![1],
+                            snapshot.data![2],
+                            snapshot.data![3],
+                            snapshot.data![4],
+                            viewBy,
+                            month: selectedMonth,
+                            year: selectedYear);
 
-                        String prefix = rodIndex == 0
-                            ? "Your Total score for "
-                            : (rodIndex == 1
-                                ? "Your Average score per item for "
-                                : "Average score amongst users for ");
-                        return BarTooltipItem(
-                            prefix +
-                                period +
-                                ' ' +
-                                (viewBy == 2 ? months[selectedMonth - 1] : '') +
-                                '\n',
-                            themeData.textTheme.bodyText1!
-                                .copyWith(color: Colors.white),
-                            children: [
-                              TextSpan(
-                                  text: rod.y.toString(),
-                                  style: themeData.textTheme.headline6!
-                                      .copyWith(color: Colors.white))
-                            ]);
-                      })),
-                      barGroups: buildBarGroupsFromClothingList(
-                          snapshot.data![0],
-                          snapshot.data![1],
-                          snapshot.data![2],
-                          snapshot.data![3],
-                          snapshot.data![4],
-                          viewBy,
-                          month: selectedMonth,
-                          year: selectedYear),
-                      titlesData: FlTitlesData(
-                        show: true,
-                        // rightTitles: SideTitles(showTitles: false),
-                        topTitles: SideTitles(showTitles: false),
-                        bottomTitles: SideTitles(
-                            showTitles: true,
-                            getTextStyles: (context, value) => const TextStyle(
-                                color: Color(0xff7589a2),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14),
-                            margin: 20,
-                            getTitles: (double value) {
-                              switch (viewBy) {
-                                case 2:
-                                  // Month view
-                                  String suffix = value % 10 == 1
-                                      ? "st"
-                                      : value % 10 == 2
-                                          ? "nd"
-                                          : value % 10 == 3
-                                              ? "rd"
-                                              : "th";
-                                  return value.toInt().toString() + suffix;
-                                case 3:
-                                  // Year view
-                                  return months[value.toInt() - 1]
-                                      .substring(0, 3);
-                                default:
-                                  return value.toString();
-                              }
-                            }),
-                      )));
-                } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                }
+                    emptyChart = clothingBarGroups.isEmpty;
 
-                // By default, show a loading spinner.
-                return const Center(child: CircularProgressIndicator());
-              }),
+                    return BarChart(BarChartData(
+                        barTouchData: BarTouchData(touchTooltipData:
+                            BarTouchTooltipData(getTooltipItem:
+                                (group, groupIndex, rod, rodIndex) {
+                          String period = "";
+                          switch (viewBy) {
+                            case 2:
+                              int value = group.x.toInt();
+                              String suffix = value % 10 == 1
+                                  ? "st"
+                                  : value % 10 == 2
+                                      ? "nd"
+                                      : value % 10 == 3
+                                          ? "rd"
+                                          : "th";
+                              period = value.toString() + suffix;
+                              break;
+                            case 3:
+                              period = months[group.x.toInt() - 1];
+                              break;
+                          }
+
+                          String prefix = rodIndex == 0
+                              ? "Your Total score for "
+                              : (rodIndex == 1
+                                  ? "Your Average score per item for "
+                                  : "Average score amongst users for ");
+                          return BarTooltipItem(
+                              prefix +
+                                  period +
+                                  ' ' +
+                                  (viewBy == 2
+                                      ? months[selectedMonth - 1]
+                                      : '') +
+                                  '\n',
+                              themeData.textTheme.bodyText1!
+                                  .copyWith(color: Colors.white),
+                              children: [
+                                TextSpan(
+                                    text: rod.y.toString(),
+                                    style: themeData.textTheme.headline6!
+                                        .copyWith(color: Colors.white))
+                              ]);
+                        })),
+                        barGroups: clothingBarGroups,
+                        titlesData: FlTitlesData(
+                          show: true,
+                          // rightTitles: SideTitles(showTitles: false),
+                          topTitles: SideTitles(showTitles: false),
+                          bottomTitles: SideTitles(
+                              showTitles: true,
+                              getTextStyles: (context, value) =>
+                                  const TextStyle(
+                                      color: Color(0xff7589a2),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                              margin: 20,
+                              getTitles: (double value) {
+                                switch (viewBy) {
+                                  case 2:
+                                    // Month view
+                                    String suffix = value % 10 == 1
+                                        ? "st"
+                                        : value % 10 == 2
+                                            ? "nd"
+                                            : value % 10 == 3
+                                                ? "rd"
+                                                : "th";
+                                    return value.toInt().toString() + suffix;
+                                  case 3:
+                                    // Year view
+                                    return months[value.toInt() - 1]
+                                        .substring(0, 3);
+                                  default:
+                                    return value.toString();
+                                }
+                              }),
+                        )));
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+
+                  // By default, show a loading spinner.
+                  return const Center(child: CircularProgressIndicator());
+                })
+          ]),
         ),
       ),
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [

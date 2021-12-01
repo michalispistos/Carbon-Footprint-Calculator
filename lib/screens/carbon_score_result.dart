@@ -37,8 +37,6 @@ class CarbonScoreResult extends StatelessWidget {
                       globals.tab = 1;
                       Navigator.pushAndRemoveUntil(
                         context,
-                        //TODO: right now we go back to the home screen but don't
-                        //  change tab to Your Clothes. fix this.
                         MaterialPageRoute(
                             builder: (context) =>
                                 const ItemCalculationStart()),
@@ -165,7 +163,7 @@ class CarbonScoreResult extends StatelessWidget {
                   height: size.height / 2 - 20,
                   child: Image.asset('images/phonecart.png')),
             ),
-            addVerticalSpace(40),
+            addVerticalSpace(30),
             Text(
                 "Carbon score: " +
                     carbonFootprint.getFootprint(item).toStringAsFixed(2),
@@ -179,6 +177,21 @@ class CarbonScoreResult extends StatelessWidget {
                 createNameDialog(context);
               },
               child: const Text('Add this to your clothes'),
+            ),
+            FlatButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0)),
+              color: const Color(0xffe7f6ff),
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                      const ItemCalculationStart()),
+                      (Route<dynamic> route) => false,
+                );
+              },
+              child: const Text('Exit without adding'),
             )
           ],
         ));
