@@ -170,7 +170,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                             contentPadding: EdgeInsets.all(10.0),
                             border: OutlineInputBorder(),
                             focusedBorder: OutlineInputBorder(),
-                            hintText: "i.e. 45%"),
+                            hintText: "i.e. 45"),
                         style: const TextStyle(
                             fontSize: 15.0, color: Colors.black),
                         controller: controller,

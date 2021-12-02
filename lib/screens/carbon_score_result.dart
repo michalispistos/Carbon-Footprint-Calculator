@@ -29,6 +29,7 @@ class _CarbonScoreResultState extends State<CarbonScoreResult> {
   void initState() {
     super.initState();
     item = widget.item;
+
   }
 
   Future createItemAddedDialog(BuildContext context) {
@@ -167,10 +168,11 @@ class _CarbonScoreResultState extends State<CarbonScoreResult> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final ThemeData themeData = Theme.of(context);
-
     if(update){
       checkUpdateAchievements(context,"new_item");
+      update = false;
     }
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(),
