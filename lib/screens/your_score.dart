@@ -410,9 +410,11 @@ class _YourScoreState extends State<YourScore> {
                     builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
                       if (snapshot.hasData) {
                         if (emptyChart) {
-                          return const Flexible(
+                          return Flexible(
+                            child: Container(
+                              width: 200,
                               child: Text(
-                                  'No data available for this time period'));
+                                  'No data available for this time period')));
                         }
                       }
                       return const SizedBox.shrink();
