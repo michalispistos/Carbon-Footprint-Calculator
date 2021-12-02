@@ -7,11 +7,24 @@ import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 import 'package:carbon_footprint_calculator/screens/your_score.dart';
 import 'package:carbon_footprint_calculator/screens/recycle_items.dart';
 import 'package:http/http.dart' as http;
+import 'package:carbon_footprint_calculator/screens/achievements.dart';
 
-class RecycleItem extends StatelessWidget {
+class RecycleItem extends StatefulWidget {
   final Clothing clothing;
+  const RecycleItem({Key? key, required this.clothing}) : super(key: key);
 
-  RecycleItem(this.clothing);
+  @override
+  _RecycleItemState createState() => _RecycleItemState();
+}
+
+class _RecycleItemState extends State<RecycleItem> {
+  late final Clothing clothing;
+
+  @override
+  void initState() {
+    super.initState();
+    clothing = widget.clothing;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +35,7 @@ class RecycleItem extends StatelessWidget {
         appBar: AppBar(
             title: const Flexible(
           child: Padding(
-              padding: EdgeInsets.fromLTRB(80, 0, 0, 0),
+              padding: EdgeInsets.fromLTRB(75, 0, 0, 0),
               child: Text(
                 'Recycle',
                 style: TextStyle(
@@ -50,7 +63,8 @@ class RecycleItem extends StatelessWidget {
                   child: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      text: "Recycling this item would lower your carbon footprint by: ",
+                      text:
+                          "Recycling this item would lower your carbon footprint by: ",
                       style: themeData.textTheme.headline3,
                       children: <TextSpan>[
                         TextSpan(
@@ -117,7 +131,7 @@ class RecycleItem extends StatelessWidget {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (context) => const ItemCalculationStart()),
+                builder: (context) => ItemCalculationStart(type: "recycle")),
             (Route<dynamic> route) => false,
           )
         });

@@ -95,7 +95,7 @@ class _RecycleYourClothesState extends State<RecycleYourClothes> {
                   hintText: "i.e SW7 1BA",
                 ),
                 style: const TextStyle(fontSize: 15.0, color: Colors.black))),
-        addVerticalSpace(20),
+        addVerticalSpace(15),
         MaterialButton(
           color: Colors.blue,
           shape:
@@ -110,7 +110,7 @@ class _RecycleYourClothesState extends State<RecycleYourClothes> {
             _getCurrentLocation();
           },
         ),
-        addVerticalSpace(20),
+        addVerticalSpace(10),
         MaterialButton(
           color: Colors.green,
           shape:
@@ -125,6 +125,7 @@ class _RecycleYourClothesState extends State<RecycleYourClothes> {
             getClosestRecyclingCentres();
           },
         ),
+        addVerticalSpace(15),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Expanded(
               child: SizedBox(

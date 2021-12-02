@@ -1,5 +1,6 @@
 import 'package:carbon_footprint_calculator/data/item.dart';
 import 'package:carbon_footprint_calculator/screens/achievements.dart';
+import 'package:carbon_footprint_calculator/screens/history.dart';
 import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
 import 'package:carbon_footprint_calculator/screens/item_details.dart';
 import 'package:carbon_footprint_calculator/screens/recycle_item.dart';
@@ -22,8 +23,10 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'login.dart';
 
 class ItemCalculationStart extends StatefulWidget {
-  const ItemCalculationStart({
+  String type;
+  ItemCalculationStart({
     Key? key,
+    required this.type,
   }) : super(key: key);
 
   @override
@@ -37,6 +40,11 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
     super.initState();
     _tabController = TabController(vsync: this, length: myTabs.length);
     _tabController.animateTo(globals.tab);
+    if (widget.type == "recycle") {
+      checkUpdateAchievements(context, "recycle");
+    } else if (widget.type == "give_away") {
+      checkUpdateAchievements(context, "give_away");
+    }
   }
 
   final List<Tab> myTabs = <Tab>[
@@ -102,27 +110,18 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
       child: DefaultTabController(
         length: 4,
         child: Scaffold(
-          // TODO: Implement drawer functionality.
           endDrawerEnableOpenDragGesture: false,
           endDrawer: Drawer(
             child: ListView(
               // Important: Remove any padding from the ListView.
               padding: EdgeInsets.zero,
               children: [
-                DrawerHeader(
-                    decoration: const BoxDecoration(color: Color(0xffe7f6ff)),
-                    child: Text('Menu', style: themeData.textTheme.headline1)),
-                ListTile(
-                  title: const Text('Log Out'),
-                  onTap: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      //  change tab to Your Clothes. fix this.
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage(signOut: true)),
-                      (Route<dynamic> route) => false,
-                    );
-                  },
+                SizedBox(
+                  height: 120,
+                  child: DrawerHeader(
+                      decoration: const BoxDecoration(color: Color(0xffe7f6ff)),
+                      child:
+                          Text('Menu', style: themeData.textTheme.headline1)),
                 ),
                 ListTile(
                     leading: const Icon(Icons.emoji_events),
@@ -135,7 +134,32 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
                         MaterialPageRoute(
                             builder: (context) => const AchievementsPage()),
                       );
-                    })
+                    }),
+                ListTile(
+                    leading: const Icon(Icons.history),
+                    title:
+                        Text('History', style: themeData.textTheme.headline3),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HistoryPage()),
+                      );
+                    }),
+                ListTile(
+                  leading: const Icon(Icons.logout),
+                  title: Text('Log Out', style: themeData.textTheme.headline3),
+                  onTap: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      //  change tab to Your Clothes. fix this.
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage(signOut: true)),
+                      (Route<dynamic> route) => false,
+                    );
+                  },
+                )
               ],
             ),
           ),
@@ -171,7 +195,6 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
                                 Scaffold.of(context).openEndDrawer();
                               });
                         })
-
                       ]),
                 ),
                 addVerticalSpace(15),
@@ -230,19 +253,23 @@ class _CheckItemStartState extends State<CheckItemStart> {
     final Size size = MediaQuery.of(context).size;
     ThemeData themeData = Theme.of(context);
 
-    return Column(children: [
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text("Check your item",
-                style: themeData.textTheme.headline1,
-                textAlign: TextAlign.left),
+            Flexible(
+              child: Text(
+                  "We'll help you calculate the carbon score of your clothing, before or after you buy.",
+                  style: themeData.textTheme.headline3,
+                  softWrap: true,
+                  textAlign: TextAlign.center),
+            ),
           ],
         ),
       ),
-      addVerticalSpace(size.height / 2 - 200),
+      addVerticalSpace(30),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -283,6 +310,7 @@ class _CheckItemStartState extends State<CheckItemStart> {
               fontSize: 17,
             )),
       ),
+      addVerticalSpace(size.height / 6),
     ]);
   }
 

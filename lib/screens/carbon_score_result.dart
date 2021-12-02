@@ -4,18 +4,33 @@ import 'package:carbon_footprint_calculator/data/item.dart';
 import 'package:carbon_footprint_calculator/utils/carbon_calculator.dart';
 import 'package:carbon_footprint_calculator/utils/carbon_footprint.dart';
 import 'package:carbon_footprint_calculator/screens/check_item.dart';
+import 'package:carbon_footprint_calculator/screens/achievements.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 
-class CarbonScoreResult extends StatelessWidget {
+class CarbonScoreResult extends StatefulWidget {
   final Item item;
+  const CarbonScoreResult({Key? key, required this.item}) : super(key: key);
+
+  @override
+  _CarbonScoreResultState createState() => _CarbonScoreResultState();
+}
+
+class _CarbonScoreResultState extends State<CarbonScoreResult> {
+  late final Item item;
   final CarbonFootprint carbonFootprint =
       CarbonFootprint(calculator: DefaultCarbonCalculator());
   String itemName = "";
+  bool update = false;
 
-  CarbonScoreResult({Key? key, required this.item}) : super(key: key);
+  @override
+  void initState() {
+    super.initState();
+    item = widget.item;
+
+  }
 
   Future createItemAddedDialog(BuildContext context) {
     return showDialog(
@@ -37,11 +52,8 @@ class CarbonScoreResult extends StatelessWidget {
                       globals.tab = 1;
                       Navigator.pushAndRemoveUntil(
                         context,
-                        //TODO: right now we go back to the home screen but don't
-                        //  change tab to Your Clothes. fix this.
                         MaterialPageRoute(
-                            builder: (context) =>
-                                const ItemCalculationStart()),
+                            builder: (context) => ItemCalculationStart(type:"")),
                         (Route<dynamic> route) => false,
                       );
                     },
@@ -103,11 +115,14 @@ class CarbonScoreResult extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pop();
                   itemName = controller.text.toString();
-                  if(itemName == ""){
+                  if (itemName == "") {
                     createErrorDialog(context, "Complete item's name");
-                  }else {
+                  } else {
                     addClothes(itemName, item);
                     createItemAddedDialog(context);
+                    setState(() {
+                      update = true;
+                    });
                   }
                 },
               )
@@ -151,6 +166,10 @@ class CarbonScoreResult extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final ThemeData themeData = Theme.of(context);
+    if(update){
+      checkUpdateAchievements(context,"new_item");
+      update = false;
+    }
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -165,7 +184,7 @@ class CarbonScoreResult extends StatelessWidget {
                   height: size.height / 2 - 20,
                   child: Image.asset('images/phonecart.png')),
             ),
-            addVerticalSpace(40),
+            addVerticalSpace(30),
             Text(
                 "Carbon score: " +
                     carbonFootprint.getFootprint(item).toStringAsFixed(2),
@@ -179,13 +198,28 @@ class CarbonScoreResult extends StatelessWidget {
                 createNameDialog(context);
               },
               child: const Text('Add this to your clothes'),
+            ),
+            FlatButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0)),
+              color: const Color(0xffe7f6ff),
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                      ItemCalculationStart(type:"")),
+                      (Route<dynamic> route) => false,
+                );
+              },
+              child: const Text('Exit without adding'),
             )
           ],
         ));
   }
 
+
   void addClothes(String itemName, Item item) async {
-    print(globals.userid);
     final test = await http.post(
         Uri.parse("https://footprintcalculator.herokuapp.com/clothes"),
         headers: <String, String>{
@@ -197,7 +231,6 @@ class CarbonScoreResult extends StatelessWidget {
           'carbon_score': carbonFootprint.getFootprint(item),
           'owner': globals.userid
         }));
-
-
   }
 }
+

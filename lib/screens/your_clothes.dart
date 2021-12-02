@@ -289,7 +289,7 @@ class _ClothesListState extends State<ClothesList> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                          RecycleItem(clothing)),
+                          RecycleItem(clothing:clothing)),
                     );
                   } else if (removeDropDownValue == "Sell/Donate") {
                     Navigator.push(

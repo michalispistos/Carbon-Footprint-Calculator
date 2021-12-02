@@ -117,7 +117,7 @@ class GiveAwayItem extends StatelessWidget {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (context) => const ItemCalculationStart()),
+                builder: (context) => ItemCalculationStart(type:"give_away")),
             (Route<dynamic> route) => false,
           )
         });

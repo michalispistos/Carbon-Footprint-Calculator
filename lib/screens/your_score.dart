@@ -31,6 +31,7 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
+
 const months = <String>[
   'January',
   'February',
@@ -223,6 +224,7 @@ class _YourScoreState extends State<YourScore> {
   late int selectedMonth;
   late int selectedYear;
   double lifetimeScore = 0;
+  bool emptyChart = false;
 
   @override
   void initState() {
@@ -339,119 +341,204 @@ class _YourScoreState extends State<YourScore> {
             )
           ],
         ),
+
       ),
+
       addVerticalSpace(10),
-      Column(children: [
-        Text("Viewing data for", style: themeData.textTheme.headline6),
-        Text(currentGraphPeriod(), style: themeData.textTheme.headline5)
-      ]),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+              decoration:
+                  // Might want a color here later
+                  const BoxDecoration(
+                      color: Colors.transparent, shape: BoxShape.circle),
+              child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      switch (viewBy) {
+                        case 2:
+                          if (selectedMonth == 1) {
+                            selectedMonth = 12;
+                            selectedYear--;
+                          } else {
+                            selectedMonth--;
+                          }
+                          break;
+                        case 3:
+                          selectedYear--;
+                          break;
+                      }
+                    });
+                  },
+                  icon: const Icon(Icons.arrow_back))),
+          addHorizontalSpace(15),
+          Column(children: [
+            Text("Viewing data for", style: themeData.textTheme.headline6),
+            Text(currentGraphPeriod(), style: themeData.textTheme.headline5)
+          ]),
+          addHorizontalSpace(15),
+          Container(
+              decoration:
+                  // Might want a color here later
+                  const BoxDecoration(
+                      color: Colors.transparent, shape: BoxShape.circle),
+              child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      switch (viewBy) {
+                        case 2:
+                          if (selectedMonth == 12) {
+                            selectedMonth = 1;
+                            selectedYear++;
+                          } else {
+                            selectedMonth++;
+                          }
+                          break;
+                        case 3:
+                          selectedYear++;
+                          break;
+                      }
+                    });
+                  },
+                  icon: const Icon(Icons.arrow_forward)))
+        ],
+      ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
         child: SizedBox(
           height: size.height / 2,
-          child: FutureBuilder(
-              future: Future.wait([
-                historyValuesInventory,
-                historyDatesInventory,
-                clothesInventory,
-                allHistoryValuesInventory,
-                allHistoryDatesInventory
-              ]),
-              builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-                if (snapshot.hasData) {
-                  //TODO: Right now we only have the ability to generate a bar
-                  //  chart for the full year. We should add functionality to do
-                  //  it for a given month / week.
-                  return BarChart(BarChartData(
-                      barTouchData: BarTouchData(touchTooltipData:
-                          BarTouchTooltipData(getTooltipItem:
-                              (group, groupIndex, rod, rodIndex) {
-                        String period = "";
-                        switch (viewBy) {
-                          case 2:
-                            int value = group.x.toInt();
-                            String suffix = value % 10 == 1
-                                ? "st"
-                                : value % 10 == 2
-                                    ? "nd"
-                                    : value % 10 == 3
-                                        ? "rd"
-                                        : "th";
-                            period = value.toString() + suffix;
-                            break;
-                          case 3:
-                            period = months[group.x.toInt() - 1];
-                            break;
+          child: Stack(children: [
+            Center(
+                child: FutureBuilder(
+                    future: Future.wait([
+                      historyValuesInventory,
+                      historyDatesInventory,
+                      clothesInventory,
+                      allHistoryValuesInventory,
+                      allHistoryDatesInventory
+                    ]),
+                    builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                      if (snapshot.hasData) {
+                        if (emptyChart) {
+                          return Flexible(
+                            child: Container(
+                              width: 200,
+                              child: Text(
+                                  'No data available for this time period')));
                         }
+                      }
+                      return const SizedBox.shrink();
+                    })),
+            FutureBuilder(
+                future: Future.wait([
+                  historyValuesInventory,
+                  historyDatesInventory,
+                  clothesInventory,
+                  allHistoryValuesInventory,
+                  allHistoryDatesInventory
+                ]),
+                builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                  if (snapshot.hasData) {
+                    List<BarChartGroupData> clothingBarGroups =
+                        buildBarGroupsFromClothingList(
+                            snapshot.data![0],
+                            snapshot.data![1],
+                            snapshot.data![2],
+                            snapshot.data![3],
+                            snapshot.data![4],
+                            viewBy,
+                            month: selectedMonth,
+                            year: selectedYear);
 
-                        String prefix = rodIndex == 0
-                            ? "Your Total score for "
-                            : (rodIndex == 1
-                                ? "Your Average score per item for "
-                                : "Average score amongst users for ");
-                        return BarTooltipItem(
-                            prefix +
-                                period +
-                                ' ' +
-                                (viewBy == 2 ? months[selectedMonth - 1] : '') +
-                                '\n',
-                            themeData.textTheme.bodyText1!
-                                .copyWith(color: Colors.white),
-                            children: [
-                              TextSpan(
-                                  text: rod.y.toString(),
-                                  style: themeData.textTheme.headline6!
-                                      .copyWith(color: Colors.white))
-                            ]);
-                      })),
-                      barGroups: buildBarGroupsFromClothingList(
-                          snapshot.data![0],
-                          snapshot.data![1],
-                          snapshot.data![2],
-                          snapshot.data![3],
-                          snapshot.data![4],
-                          viewBy,
-                          month: selectedMonth,
-                          year: selectedYear),
-                      titlesData: FlTitlesData(
-                        show: true,
-                        // rightTitles: SideTitles(showTitles: false),
-                        topTitles: SideTitles(showTitles: false),
-                        bottomTitles: SideTitles(
-                            showTitles: true,
-                            getTextStyles: (context, value) => const TextStyle(
-                                color: Color(0xff7589a2),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14),
-                            margin: 20,
-                            getTitles: (double value) {
-                              switch (viewBy) {
-                                case 2:
-                                  // Month view
-                                  String suffix = value % 10 == 1
-                                      ? "st"
-                                      : value % 10 == 2
-                                          ? "nd"
-                                          : value % 10 == 3
-                                              ? "rd"
-                                              : "th";
-                                  return value.toInt().toString() + suffix;
-                                case 3:
-                                  // Year view
-                                  return months[value.toInt() - 1]
-                                      .substring(0, 3);
-                                default:
-                                  return value.toString();
-                              }
-                            }),
-                      )));
-                } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                }
+                    emptyChart = clothingBarGroups.isEmpty;
 
-                // By default, show a loading spinner.
-                return const Center(child: CircularProgressIndicator());
-              }),
+                    return BarChart(BarChartData(
+                        barTouchData: BarTouchData(touchTooltipData:
+                            BarTouchTooltipData(getTooltipItem:
+                                (group, groupIndex, rod, rodIndex) {
+                          String period = "";
+                          switch (viewBy) {
+                            case 2:
+                              int value = group.x.toInt();
+                              String suffix = value % 10 == 1
+                                  ? "st"
+                                  : value % 10 == 2
+                                      ? "nd"
+                                      : value % 10 == 3
+                                          ? "rd"
+                                          : "th";
+                              period = value.toString() + suffix;
+                              break;
+                            case 3:
+                              period = months[group.x.toInt() - 1];
+                              break;
+                          }
+
+                          String prefix = rodIndex == 0
+                              ? "Your Total score for "
+                              : (rodIndex == 1
+                                  ? "Your Average score per item for "
+                                  : "Average score amongst users for ");
+                          return BarTooltipItem(
+                              prefix +
+                                  period +
+                                  ' ' +
+                                  (viewBy == 2
+                                      ? months[selectedMonth - 1]
+                                      : '') +
+                                  '\n',
+                              themeData.textTheme.bodyText1!
+                                  .copyWith(color: Colors.white),
+                              children: [
+                                TextSpan(
+                                    text: rod.y.toString(),
+                                    style: themeData.textTheme.headline6!
+                                        .copyWith(color: Colors.white))
+                              ]);
+                        })),
+                        barGroups: clothingBarGroups,
+                        titlesData: FlTitlesData(
+                          show: true,
+                          // rightTitles: SideTitles(showTitles: false),
+                          topTitles: SideTitles(showTitles: false),
+                          bottomTitles: SideTitles(
+                              showTitles: true,
+                              getTextStyles: (context, value) =>
+                                  const TextStyle(
+                                      color: Color(0xff7589a2),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                              margin: 20,
+                              getTitles: (double value) {
+                                switch (viewBy) {
+                                  case 2:
+                                    // Month view
+                                    String suffix = value % 10 == 1
+                                        ? "st"
+                                        : value % 10 == 2
+                                            ? "nd"
+                                            : value % 10 == 3
+                                                ? "rd"
+                                                : "th";
+                                    return value.toInt().toString() + suffix;
+                                  case 3:
+                                    // Year view
+                                    return months[value.toInt() - 1]
+                                        .substring(0, 3);
+                                  default:
+                                    return value.toString();
+                                }
+                              }),
+                        )));
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+
+                  // By default, show a loading spinner.
+                  return const Center(child: CircularProgressIndicator());
+                })
+          ]),
         ),
       ),
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -537,6 +624,7 @@ class _YourScoreState extends State<YourScore> {
                         Positioned(
                           bottom: 0,
                           left: 20,
+                          right: 20,
                           child: SizedBox(
                             height: 150,
                               child: Container(
@@ -560,7 +648,7 @@ class _YourScoreState extends State<YourScore> {
         child: Text("Information source: "),
       ),
       Padding(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: InkWell(
               child: const Text(
                 "https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle",
@@ -645,20 +733,24 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
       // Year View
 
       for (Clothing clothing in clothesList) {
-        if (dateClothesMap.containsKey(clothing.dateTime.month)) {
-          dateClothesMap[clothing.dateTime.month]!.add(clothing);
-        } else {
-          dateClothesMap[clothing.dateTime.month] = [clothing];
+        if (clothing.dateTime.year == year) {
+          if (dateClothesMap.containsKey(clothing.dateTime.month)) {
+            dateClothesMap[clothing.dateTime.month]!.add(clothing);
+          } else {
+            dateClothesMap[clothing.dateTime.month] = [clothing];
+          }
         }
       }
 
       for (var i = 0; i < historyValues.length; i++) {
         DateTime date = historyDates[i];
         double value = historyValues[i];
-        if (dateValuesMap.containsKey(date.month)) {
-          dateValuesMap[date.month]!.add(value);
-        } else {
-          dateValuesMap[date.month] = [value];
+        if (date.year == year) {
+          if (dateValuesMap.containsKey(date.month)) {
+            dateValuesMap[date.month]!.add(value);
+          } else {
+            dateValuesMap[date.month] = [value];
+          }
         }
       }
 
@@ -666,10 +758,12 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
         for (var j = 0; j < allHistoryValues[i].length; j++) {
           DateTime date = allHistoryDates[i][j];
           double value = allHistoryValues[i][j];
-          if (averageDateValuesMap.containsKey(date.month)) {
-            averageDateValuesMap[date.month]!.add(value);
-          } else {
-            averageDateValuesMap[date.month] = [value];
+          if (date.year == year) {
+            if (averageDateValuesMap.containsKey(date.month)) {
+              averageDateValuesMap[date.month]!.add(value);
+            } else {
+              averageDateValuesMap[date.month] = [value];
+            }
           }
         }
       }
@@ -713,12 +807,6 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
   return result;
 }
 
-// class ClothesInventory {
-//   final int userId;
-//   final List<Clothing> clothingList;
-//
-//   ClothesInventory({required this.userId, required this.clothingList});
-// }
 
 class Clothing {
   final int id;
