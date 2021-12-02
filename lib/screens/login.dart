@@ -1,11 +1,12 @@
+import 'dart:async';
+import 'dart:convert' show json;
+
+import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 import 'package:google_sign_in/google_sign_in.dart';
 import "package:http/http.dart" as http;
-import 'dart:async';
-import 'dart:convert' show json;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'check_item.dart';
@@ -19,6 +20,7 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
 
 class LoginPage extends StatefulWidget {
   final bool signOut;
+
   const LoginPage({Key? key, required bool this.signOut}) : super(key: key);
 
   @override
@@ -34,7 +36,8 @@ class LoginPageState extends State<LoginPage> {
     if (widget.signOut) {
       _handleSignOut();
     }
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) async {
+    _googleSignIn.onCurrentUserChanged
+        .listen((GoogleSignInAccount? account) async {
       setState(() {
         _currentUser = account;
       });
@@ -93,6 +96,7 @@ class LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildBody() {
+    ThemeData themeData = Theme.of(context);
     GoogleSignInAccount? user = _currentUser;
     if (user != null) {
       return ItemCalculationStart(type:"");
@@ -118,8 +122,8 @@ class LoginPageState extends State<LoginPage> {
             //      //       fontSize: 20,
             //      //     ))),
             //  addVerticalSpace(50),
-            Padding(
-                padding: EdgeInsets.fromLTRB(15, 0, 100, 0),
+            const Padding(
+                padding: EdgeInsets.fromLTRB(25, 0, 100, 0),
                 child: Text("Buy smart and save the environment",
                     textAlign: TextAlign.left,
                     style: TextStyle(
@@ -136,12 +140,14 @@ class LoginPageState extends State<LoginPage> {
                     height: 225.0,
                     child: Image.asset('images/leaf.png'))),
             addVerticalSpace(65),
-            ElevatedButton(
-              child: const Text('SIGN IN',
+            FlatButton(
+              child: const Text('Sign In',
                   style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
+                    fontSize: 17,
                   )),
+              color: const Color(0xfffffaca),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14.0)),
               onPressed: _handleSignIn,
             ),
           ],

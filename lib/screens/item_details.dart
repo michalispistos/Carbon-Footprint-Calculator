@@ -1,7 +1,9 @@
 import 'dart:collection';
+
 import 'package:carbon_footprint_calculator/screens/carbon_score_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../data/item.dart';
 
 class ItemInfoPage extends StatelessWidget {
@@ -9,21 +11,34 @@ class ItemInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-            title: const Flexible(
-          child: Text(
-            'Details about your item',
-            style: TextStyle(
-              fontSize: 17,
-            ),
-            maxLines: 2,
-            softWrap: false,
-            overflow: TextOverflow.fade,
-          ),
-        )),
-        resizeToAvoidBottomInset: false,
-        body: const ItemDetails());
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: Scaffold(
+          backgroundColor: const Color(0xfffffaca),
+          appBar: AppBar(
+              toolbarHeight: 70,
+              elevation: 0,
+              title: const Flexible(
+                child: Text(
+                  'Tell us about your item',
+                  style: TextStyle(
+                    fontSize: 17,
+                  ),
+                  maxLines: 2,
+                  softWrap: false,
+                  overflow: TextOverflow.fade,
+                ),
+              )),
+          resizeToAvoidBottomInset: false,
+          body: Container(
+              decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(45),
+                      topRight: Radius.circular(45))),
+              child: const ItemDetails())),
+    );
   }
 }
 
@@ -272,15 +287,14 @@ class _ItemDetailsState extends State<ItemDetails> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image.asset('images/coatrack.png'),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
-          Text("Type of product",
-              style: TextStyle(
-                  fontSize: 17, color: const Color.fromRGBO(91, 91, 91, 1)))
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text("Type of product", style: themeData.textTheme.headline4)
         ]),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           DropdownButton(
@@ -307,10 +321,8 @@ class _ItemDetailsState extends State<ItemDetails> {
             }).toList(),
           )
         ]),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
-          Text("Weight of product (kg)",
-              style:
-                  TextStyle(fontSize: 17, color: Color.fromRGBO(91, 91, 91, 1)))
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text("Weight of product (kg)", style: themeData.textTheme.headline4)
         ]),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           SizedBox(
@@ -337,11 +349,8 @@ class _ItemDetailsState extends State<ItemDetails> {
               margin: const EdgeInsets.only(
                 left: 40,
               ),
-              child: const Text("Materials",
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: Color.fromRGBO(91, 91, 91, 1),
-                  ))),
+              child: Text("Materials",
+                  style: themeData.textTheme.headline4)),
           _buildAddMaterialButton(),
         ]),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
