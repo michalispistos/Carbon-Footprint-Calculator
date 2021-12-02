@@ -537,6 +537,7 @@ class _YourScoreState extends State<YourScore> {
                         Positioned(
                           bottom: 0,
                           left: 20,
+                          right: 20,
                           child: SizedBox(
                             height: 150,
                               child: Container(
