@@ -22,8 +22,9 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'login.dart';
 
 class ItemCalculationStart extends StatefulWidget {
-  const ItemCalculationStart({
-    Key? key,
+  String type;
+  ItemCalculationStart({
+    Key? key, required this.type,
   }) : super(key: key);
 
   @override
@@ -37,6 +38,11 @@ class _ItemCalculationStartState extends State<ItemCalculationStart>
     super.initState();
     _tabController = TabController(vsync: this, length: myTabs.length);
     _tabController.animateTo(globals.tab);
+    if(widget.type == "recycle"){
+      checkUpdateAchievements(context, "recycle");
+    }else if(widget.type == "give_away") {
+      checkUpdateAchievements(context, "give_away");
+    }
   }
 
   final List<Tab> myTabs = <Tab>[
