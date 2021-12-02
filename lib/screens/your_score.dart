@@ -332,7 +332,9 @@ class _YourScoreState extends State<YourScore> {
             )
           ],
         ),
+
       ),
+
       addVerticalSpace(10),
       Column(children: [
         Text("Viewing data for", style: themeData.textTheme.headline6),
@@ -650,12 +652,6 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
   return result;
 }
 
-// class ClothesInventory {
-//   final int userId;
-//   final List<Clothing> clothingList;
-//
-//   ClothesInventory({required this.userId, required this.clothingList});
-// }
 
 class Clothing {
   final int id;

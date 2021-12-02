@@ -54,7 +54,6 @@ class LoginPageState extends State<LoginPage> {
       _googleSignIn.signIn().then((result) {
         result!.authentication.then((googleKey) async {
           String body = json.encode({"token": googleKey.idToken});
-          print("key: " + googleKey.idToken.toString());
           http.Response response = await http.post(
             Uri.parse("http://footprintcalculator.herokuapp.com/auth/login"),
             headers: {"Content-Type": "application/json"},
@@ -88,6 +87,7 @@ class LoginPageState extends State<LoginPage> {
         headers: globals.headers,
       );
       globals.headers["cookie"] = "";
+      print("LOGOUT");
       globals.userid = null;
     });
   }
