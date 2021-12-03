@@ -587,60 +587,58 @@ class _YourScoreState extends State<YourScore> {
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 15, color: Colors.black),
           )),
-      Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-          child: CarouselSlider(
-            options: CarouselOptions(height: 400.0),
-            items: [
-              ["car.gif", "The average passenger vehicle emits about 0.65 kg of CO\u2082 per km. Your clothes carbon footprint is equivalent to a ${(lifetimeScore / 0.65).toStringAsFixed(2)} km car journey!"],
-              ["plane.gif", "A Boeing 737 plane emits 90 kg CO\u2082 per hour per passenger. Your clothes carbon footprint is equivalent to a ${(lifetimeScore / 1.5).toStringAsFixed(2)} minute plane journey!"],
-              ["tree.gif", "The average fully mature tree can absorb 21.77 kg of CO\u2082 per year. Your clothes carbon footprint will need ${(lifetimeScore / 21.77).toStringAsFixed(2)} trees to be offset in a year!"]].map((info) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return SizedBox(
-                    width: 335,
-                    height: 174,
-                    child: Stack(
-                      children: <Widget>[
-                        Card(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: 335,
-                                height: 200,
-                                child: Image.asset(
-                                  'images/${info[0]}',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ],
+      CarouselSlider(
+        options: CarouselOptions(height: 400.0),
+        items: [
+          ["car.gif", "The average passenger vehicle emits about 0.65 kg of CO\u2082 per km. Your clothes carbon footprint is equivalent to a ${(lifetimeScore / 0.65).toStringAsFixed(2)} km car journey!"],
+          ["plane.gif", "A Boeing 737 plane emits 90 kg CO\u2082 per hour per passenger. Your clothes carbon footprint is equivalent to a ${(lifetimeScore / 1.5).toStringAsFixed(2)} minute plane journey!"],
+          ["tree.gif", "The average fully mature tree can absorb 21.77 kg of CO\u2082 per year. Your clothes carbon footprint will need ${(lifetimeScore / 21.77).toStringAsFixed(2)} trees to be offset in a year!"]].map((info) {
+          return Builder(
+            builder: (BuildContext context) {
+              return SizedBox(
+                width: 335,
+                height: 174,
+                child: Stack(
+                  children: <Widget>[
+                    Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: 335,
+                            height: 200,
+                            child: Image.asset(
+                              'images/${info[0]}',
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          elevation: 5,
-                          margin: EdgeInsets.all(10),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          left: 20,
-                          right: 20,
-                          child: SizedBox(
-                            height: 150,
-                              child: Container(
-                                  width: 250,
-                                  child: TextBold(text: info[1]),
-                              ),
-                          ),
-                        )
-                      ],
+                        ],
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      elevation: 5,
+                      margin: EdgeInsets.all(10),
                     ),
-                  );
-                },
+                    Positioned(
+                      bottom: 0,
+                      left: 20,
+                      right: 20,
+                      child: SizedBox(
+                        height: 150,
+                          child: Container(
+                              width: 250,
+                              child: TextBold(text: info[1]),
+                          ),
+                      ),
+                    )
+                  ],
+                ),
               );
-            }).toList(),
-          )),
+            },
+          );
+        }).toList(),
+      ),
       const Padding(
         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Text("Information source: "),

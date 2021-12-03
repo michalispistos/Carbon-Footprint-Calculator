@@ -1,17 +1,11 @@
+
+import 'package:carbon_footprint_calculator/screens/recycle_item.dart';
 import 'package:carbon_footprint_calculator/screens/throw_away_item.dart';
-
-import 'dart:collection';
-import 'dart:convert';
-
-
 import 'package:carbon_footprint_calculator/screens/your_score.dart';
 import 'package:carbon_footprint_calculator/widgets/border_icon.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:carbon_footprint_calculator/screens/recycle_item.dart';
-import 'package:http/http.dart' as http;
-import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 
 import 'give_away_item.dart';
 
@@ -22,7 +16,11 @@ class ClothesList extends StatefulWidget {
   _ClothesListState createState() => _ClothesListState();
 }
 
-
+enum SortType {
+  ascending,
+  descending,
+  neutral
+}
 
 class _ClothesListState extends State<ClothesList> {
   List<Clothing> allClothes = [];
@@ -31,6 +29,7 @@ class _ClothesListState extends State<ClothesList> {
   String scoreDropdownValue = 'All';
   String removeDropDownValue = 'Recycle';
   bool isClothingRemoved = false;
+  SortType sortType = SortType.neutral;
 
 
   @override
@@ -71,6 +70,18 @@ class _ClothesListState extends State<ClothesList> {
   Widget _displayClothes() {
     clothes =
         filteredClothes(allClothes, typeDropdownValue, scoreDropdownValue);
+    switch (sortType) {
+      case SortType.ascending:
+        clothes.sort((a,b)=> a.carbonScore.compareTo(b.carbonScore));
+        break;
+      case SortType.descending:
+        clothes.sort((a,b)=> b.carbonScore.compareTo(a.carbonScore));
+        break;
+      case SortType.neutral:
+        // no-op
+        break;
+    }
+
 
     return ListView.builder(
       padding: const EdgeInsets.only(top: 5),
@@ -218,9 +229,27 @@ class _ClothesListState extends State<ClothesList> {
             Text("Name", style: Theme.of(context).textTheme.headline5),
             const Spacer(),
             Padding(
-              padding: const EdgeInsets.only(right: 60.0),
-              child:
+              padding: const EdgeInsets.only(right: 12.0),
+              child: Row(
+                children: [
                   Text("Score", style: Theme.of(context).textTheme.headline5),
+                  IconButton(onPressed: () {
+                    setState(() {
+                      sortType = SortType.values[
+                          (sortType.index + 1) % SortType.values.length];
+                    });
+                  }, icon: Builder(builder: (BuildContext context) {
+                    switch (sortType) {
+                      case SortType.ascending:
+                        return const Icon(Icons.arrow_drop_up);
+                      case SortType.descending:
+                        return const Icon(Icons.arrow_drop_down);
+                      case SortType.neutral:
+                        return const Icon(Icons.compare_arrows);
+                    }
+                  }))
+                ],
+              ),
             )
           ]),
         ),
