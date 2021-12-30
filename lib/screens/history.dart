@@ -114,9 +114,9 @@ class _HistoryPageState extends State<HistoryPage> {
           image = "images/give_away_clothes.jpg";
         }
 
-        Color scoreColor = Colors.green;
+        Color scoreColor = Color.fromRGBO(254, 96, 79, 1);
         if (historyValue < 0) {
-          scoreColor = Color.fromRGBO(254, 96, 79, 1);
+          scoreColor = Colors.green;
         }
 
         return Padding(

@@ -29,9 +29,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-
 
 const months = <String>[
   'January',
@@ -47,7 +47,6 @@ const months = <String>[
   'November',
   'December'
 ];
-
 
 List<Clothing> parseClothes(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
@@ -107,6 +106,18 @@ Future<List<double>> fetchHistoryValues() async {
     }
 
     return List<double>.from(list.map((x) => x.toDouble()).toList());
+  } else {
+    throw Exception('Failed to load history values');
+  }
+}
+
+Future<DateTime> fetchCreatedAtDate() async {
+  final response = await http.get(Uri.parse(
+      "https://footprintcalculator.herokuapp.com/users/created-date/${globals.userid}"));
+  if (response.statusCode == 200) {
+    String dateStr = jsonDecode(response.body)["createdAt"].substring(0,10);
+    DateTime date = DateFormat('yyyy-MM-dd').parse(dateStr);
+    return date;
   } else {
     throw Exception('Failed to load history values');
   }
@@ -224,7 +235,8 @@ class _YourScoreState extends State<YourScore> {
   late int viewBy;
   late int selectedMonth;
   late int selectedYear;
-  double lifetimeScore = 0;
+  late DateTime creationDate;
+  double currentScore = 0;
   bool emptyChart = false;
 
   @override
@@ -239,11 +251,59 @@ class _YourScoreState extends State<YourScore> {
     historyValuesInventory = fetchHistoryValues();
     allHistoryDatesInventory = fetchAllHistoryDates();
     allHistoryValuesInventory = fetchAllHistoryValues();
-    fetchHistoryValues().then((data) => {
+    fetchCreatedAtDate().then((date){
       setState(() {
-        lifetimeScore = data.fold(0, (prev, curr) => (prev) + (curr));
-      })
+        creationDate = date;
+      });
     });
+  }
+
+  Future<double> calculateCurrentScore() async {
+    double currScore = 0;
+    DateTime date;
+    double value;
+
+    switch (viewBy) {
+      case 2:
+        // Month View
+
+        await historyValuesInventory.then(
+          (historyValues) async =>
+              await historyDatesInventory.then((historyDates) => {
+                    for (var i = 0; i < historyValues.length; i++)
+                      {
+                        date = historyDates[i],
+                        value = historyValues[i],
+                        if (date.month == selectedMonth &&
+                            date.year == selectedYear)
+                          {
+                            currScore += value,
+                          }
+                      }
+                  }),
+        );
+        break;
+      case 3:
+        // Year View
+        await historyValuesInventory.then(
+          (historyValues) async =>
+              await historyDatesInventory.then((historyDates) => {
+                    for (var i = 0; i < historyValues.length; i++)
+                      {
+                        date = historyDates[i],
+                        value = historyValues[i],
+                        if (date.year == selectedYear)
+                          {
+                            currScore += value,
+                          }
+                      }
+                  }),
+        );
+
+        break;
+    }
+
+    return currScore;
   }
 
   // FutureBuilder calculateLifetimeCarbonScore() {
@@ -293,6 +353,11 @@ class _YourScoreState extends State<YourScore> {
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
     final Size size = MediaQuery.of(context).size;
+    calculateCurrentScore().then((value) =>
+        setState((){
+          currentScore = value;
+        })
+    );
 
     return SingleChildScrollView(
         child: Column(children: [
@@ -316,7 +381,7 @@ class _YourScoreState extends State<YourScore> {
                             .copyWith(height: 1.1),
                         textAlign: TextAlign.center,
                       ),
-                      calculateNewUsersCarbonScore(0, true)
+                      calculateNewUsersCarbonScore(0, true),
                     ]),
                   )),
             ),
@@ -342,9 +407,7 @@ class _YourScoreState extends State<YourScore> {
             )
           ],
         ),
-
       ),
-
       addVerticalSpace(10),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -359,15 +422,19 @@ class _YourScoreState extends State<YourScore> {
                     setState(() {
                       switch (viewBy) {
                         case 2:
+                        if(selectedYear > creationDate.year || (selectedYear == creationDate.year && selectedMonth > creationDate.month)) {
                           if (selectedMonth == 1) {
                             selectedMonth = 12;
                             selectedYear--;
                           } else {
                             selectedMonth--;
                           }
+                        }
                           break;
                         case 3:
-                          selectedYear--;
+                          if(selectedYear > creationDate.year) {
+                            selectedYear--;
+                          }
                           break;
                       }
                     });
@@ -389,15 +456,19 @@ class _YourScoreState extends State<YourScore> {
                     setState(() {
                       switch (viewBy) {
                         case 2:
-                          if (selectedMonth == 12) {
-                            selectedMonth = 1;
-                            selectedYear++;
-                          } else {
-                            selectedMonth++;
+                          if(selectedYear < DateTime.now().year || (selectedYear == DateTime.now().year && selectedMonth < DateTime.now().month)) {
+                            if (selectedMonth == 12) {
+                              selectedMonth = 1;
+                              selectedYear++;
+                            } else {
+                              selectedMonth++;
+                            }
                           }
                           break;
                         case 3:
-                          selectedYear++;
+                          if(selectedYear < DateTime.now().year) {
+                            selectedYear++;
+                          }
                           break;
                       }
                     });
@@ -405,6 +476,101 @@ class _YourScoreState extends State<YourScore> {
                   icon: const Icon(Icons.arrow_forward)))
         ],
       ),
+      CarouselSlider(
+        options: CarouselOptions(height: 400.0),
+        items: [
+          [
+            "car.gif",
+            "The average passenger vehicle emits about 0.65 kg of CO\u2082 per km. Your clothes carbon footprint is equivalent to a ${(currentScore / 0.65).toStringAsFixed(2)} km car journey!"
+          ],
+          [
+            "plane.gif",
+            "A Boeing 737 plane emits 90 kg CO\u2082 per hour per passenger. Your clothes carbon footprint is equivalent to a ${(currentScore / 1.5).toStringAsFixed(2)} minute plane journey!"
+          ],
+          [
+            "tree.gif",
+            "The average fully mature tree can absorb 21.77 kg of CO\u2082 per year. Your clothes carbon footprint will need ${(currentScore / 21.77).toStringAsFixed(2)} trees to be offset in a year!"
+          ]
+        ].map((info) {
+          return Builder(
+            builder: (BuildContext context) {
+              return SizedBox(
+                width: 335,
+                height: 174,
+                child: Stack(
+                  children: <Widget>[
+                    Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: 335,
+                            height: 200,
+                            child: Image.asset(
+                              'images/${info[0]}',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ],
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      elevation: 5,
+                      margin: EdgeInsets.all(10),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      left: 20,
+                      right: 20,
+                      child: SizedBox(
+                        height: 150,
+                        child: Container(
+                          width: 250,
+                          child: TextBold(text: info[1]),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+          );
+        }).toList(),
+      ),
+      addVerticalSpace(10),
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        FlatButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+          color: const Color(0xfffffaca),
+          onPressed: () {
+            setState(() {
+              viewBy = 2;
+            });
+          },
+          child: const Text('View by month',
+              style: TextStyle(
+                fontSize: 17,
+              )),
+        ),
+        addHorizontalSpace(10),
+        FlatButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+          color: const Color(0xfffffaca),
+          onPressed: () {
+            setState(() {
+              viewBy = 3;
+            });
+          },
+          child: const Text('View by year',
+              style: TextStyle(
+                fontSize: 17,
+              )),
+        ),
+      ]),
+      addVerticalSpace(10),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
         child: SizedBox(
@@ -423,10 +589,10 @@ class _YourScoreState extends State<YourScore> {
                       if (snapshot.hasData) {
                         if (emptyChart) {
                           return Flexible(
-                            child: Container(
-                              width: 200,
-                              child: Text(
-                                  'No data available for this time period')));
+                              child: Container(
+                                  width: 200,
+                                  child: Text(
+                                      'No data available for this time period')));
                         }
                       }
                       return const SizedBox.shrink();
@@ -542,37 +708,6 @@ class _YourScoreState extends State<YourScore> {
           ]),
         ),
       ),
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        FlatButton(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
-          color: const Color(0xfffffaca),
-          onPressed: () {
-            setState(() {
-              viewBy = 2;
-            });
-          },
-          child: const Text('View by month',
-              style: TextStyle(
-                fontSize: 17,
-              )),
-        ),
-        addHorizontalSpace(10),
-        FlatButton(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
-          color: const Color(0xfffffaca),
-          onPressed: () {
-            setState(() {
-              viewBy = 3;
-            });
-          },
-          child: const Text('View by year',
-              style: TextStyle(
-                fontSize: 17,
-              )),
-        ),
-      ]),
       const Padding(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: Text(
@@ -580,65 +715,6 @@ class _YourScoreState extends State<YourScore> {
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 15, color: Colors.black),
           )),
-      const Padding(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-          child: Text(
-            "Swipe to see your score in perspective!",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 15, color: Colors.black),
-          )),
-      CarouselSlider(
-        options: CarouselOptions(height: 400.0),
-        items: [
-          ["car.gif", "The average passenger vehicle emits about 0.65 kg of CO\u2082 per km. Your clothes carbon footprint is equivalent to a ${(lifetimeScore / 0.65).toStringAsFixed(2)} km car journey!"],
-          ["plane.gif", "A Boeing 737 plane emits 90 kg CO\u2082 per hour per passenger. Your clothes carbon footprint is equivalent to a ${(lifetimeScore / 1.5).toStringAsFixed(2)} minute plane journey!"],
-          ["tree.gif", "The average fully mature tree can absorb 21.77 kg of CO\u2082 per year. Your clothes carbon footprint will need ${(lifetimeScore / 21.77).toStringAsFixed(2)} trees to be offset in a year!"]].map((info) {
-          return Builder(
-            builder: (BuildContext context) {
-              return SizedBox(
-                width: 335,
-                height: 174,
-                child: Stack(
-                  children: <Widget>[
-                    Card(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            width: 335,
-                            height: 200,
-                            child: Image.asset(
-                              'images/${info[0]}',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ],
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      elevation: 5,
-                      margin: EdgeInsets.all(10),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      left: 20,
-                      right: 20,
-                      child: SizedBox(
-                        height: 150,
-                          child: Container(
-                              width: 250,
-                              child: TextBold(text: info[1]),
-                          ),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            },
-          );
-        }).toList(),
-      ),
       const Padding(
         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Text("Information source: "),
@@ -802,7 +878,6 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
 
   return result;
 }
-
 
 class Clothing {
   final int id;

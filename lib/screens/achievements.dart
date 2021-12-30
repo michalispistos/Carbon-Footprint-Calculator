@@ -9,6 +9,13 @@ import 'package:http/http.dart' as http;
 import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 import 'package:carbon_footprint_calculator/screens/your_score.dart';
 import 'package:achievement_view/achievement_view.dart';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share/share.dart';
 
 List<Achievement> parseAchievements(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
@@ -196,6 +203,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           addVerticalSpace(22),
+
                           Flexible(
                               child: Text(achievement.name,
                                   style: TextStyle(
@@ -214,9 +222,27 @@ class _AchievementsPageState extends State<AchievementsPage> {
                           ),
                         ]))
               ]),
-              addVerticalSpace(22),
+              // addVerticalSpace(22),
+              Column(
+                children:[
+                     IconButton(
+                        icon: const Icon(Icons.share),
+                        onPressed: () async {
+                          final ByteData bytes = await rootBundle.load("images/medal.png");
+                          final Uint8List list = bytes.buffer.asUint8List();
+
+                          final tempDir = await getTemporaryDirectory();
+                          final file = await new File('${tempDir.path}/image.jpg').create();
+                          file.writeAsBytesSync(list);
+                          Share.shareFiles(['${file.path}'],text:
+                              achievement.name + " - " +  achievement.description,
+                          );
+                          setState((){});
+                        },
+
+                      ),
               Container(
-                  height: 100,
+                  height: 40,
                   child: Align(
                       alignment: Alignment(0, 1),
                       child: Text(
@@ -225,7 +251,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
                             fontSize: 15,
                             color: Colors.black,
                           )))),
-            ]),
+            ])]),
             LinearProgressIndicator(
               value: progress /
                   achievement.tasks_num,
@@ -252,6 +278,8 @@ class _AchievementsPageState extends State<AchievementsPage> {
     }
 
   }
+
+
 
 }
 
