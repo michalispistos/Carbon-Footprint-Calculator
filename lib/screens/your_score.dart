@@ -23,12 +23,15 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
+import 'package:carbon_footprint_calculator/widgets/bold_text.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 const months = <String>[
   'January',
@@ -103,6 +106,18 @@ Future<List<double>> fetchHistoryValues() async {
     }
 
     return List<double>.from(list.map((x) => x.toDouble()).toList());
+  } else {
+    throw Exception('Failed to load history values');
+  }
+}
+
+Future<DateTime> fetchCreatedAtDate() async {
+  final response = await http.get(Uri.parse(
+      "https://footprintcalculator.herokuapp.com/users/created-date/${globals.userid}"));
+  if (response.statusCode == 200) {
+    String dateStr = jsonDecode(response.body)["createdAt"].substring(0,10);
+    DateTime date = DateFormat('yyyy-MM-dd').parse(dateStr);
+    return date;
   } else {
     throw Exception('Failed to load history values');
   }
@@ -220,6 +235,9 @@ class _YourScoreState extends State<YourScore> {
   late int viewBy;
   late int selectedMonth;
   late int selectedYear;
+  late DateTime creationDate;
+  double currentScore = 0;
+  bool emptyChart = false;
 
   @override
   void initState() {
@@ -233,6 +251,59 @@ class _YourScoreState extends State<YourScore> {
     historyValuesInventory = fetchHistoryValues();
     allHistoryDatesInventory = fetchAllHistoryDates();
     allHistoryValuesInventory = fetchAllHistoryValues();
+    fetchCreatedAtDate().then((date){
+      setState(() {
+        creationDate = date;
+      });
+    });
+  }
+
+  Future<double> calculateCurrentScore() async {
+    double currScore = 0;
+    DateTime date;
+    double value;
+
+    switch (viewBy) {
+      case 2:
+        // Month View
+
+        await historyValuesInventory.then(
+          (historyValues) async =>
+              await historyDatesInventory.then((historyDates) => {
+                    for (var i = 0; i < historyValues.length; i++)
+                      {
+                        date = historyDates[i],
+                        value = historyValues[i],
+                        if (date.month == selectedMonth &&
+                            date.year == selectedYear)
+                          {
+                            currScore += value,
+                          }
+                      }
+                  }),
+        );
+        break;
+      case 3:
+        // Year View
+        await historyValuesInventory.then(
+          (historyValues) async =>
+              await historyDatesInventory.then((historyDates) => {
+                    for (var i = 0; i < historyValues.length; i++)
+                      {
+                        date = historyDates[i],
+                        value = historyValues[i],
+                        if (date.year == selectedYear)
+                          {
+                            currScore += value,
+                          }
+                      }
+                  }),
+        );
+
+        break;
+    }
+
+    return currScore;
   }
 
   // FutureBuilder calculateLifetimeCarbonScore() {
@@ -282,6 +353,11 @@ class _YourScoreState extends State<YourScore> {
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
     final Size size = MediaQuery.of(context).size;
+    calculateCurrentScore().then((value) =>
+        setState((){
+          currentScore = value;
+        })
+    );
 
     return SingleChildScrollView(
         child: Column(children: [
@@ -305,7 +381,7 @@ class _YourScoreState extends State<YourScore> {
                             .copyWith(height: 1.1),
                         textAlign: TextAlign.center,
                       ),
-                      calculateNewUsersCarbonScore(0, true)
+                      calculateNewUsersCarbonScore(0, true),
                     ]),
                   )),
             ),
@@ -333,119 +409,136 @@ class _YourScoreState extends State<YourScore> {
         ),
       ),
       addVerticalSpace(10),
-      Column(children: [
-        Text("Viewing data for", style: themeData.textTheme.headline6),
-        Text(currentGraphPeriod(), style: themeData.textTheme.headline5)
-      ]),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
-        child: SizedBox(
-          height: size.height / 2,
-          child: FutureBuilder(
-              future: Future.wait([
-                historyValuesInventory,
-                historyDatesInventory,
-                clothesInventory,
-                allHistoryValuesInventory,
-                allHistoryDatesInventory
-              ]),
-              builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-                if (snapshot.hasData) {
-                  //TODO: Right now we only have the ability to generate a bar
-                  //  chart for the full year. We should add functionality to do
-                  //  it for a given month / week.
-                  return BarChart(BarChartData(
-                      barTouchData: BarTouchData(touchTooltipData:
-                          BarTouchTooltipData(getTooltipItem:
-                              (group, groupIndex, rod, rodIndex) {
-                        String period = "";
-                        switch (viewBy) {
-                          case 2:
-                            int value = group.x.toInt();
-                            String suffix = value % 10 == 1
-                                ? "st"
-                                : value % 10 == 2
-                                    ? "nd"
-                                    : value % 10 == 3
-                                        ? "rd"
-                                        : "th";
-                            period = value.toString() + suffix;
-                            break;
-                          case 3:
-                            period = months[group.x.toInt() - 1];
-                            break;
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+              decoration:
+                  // Might want a color here later
+                  const BoxDecoration(
+                      color: Colors.transparent, shape: BoxShape.circle),
+              child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      switch (viewBy) {
+                        case 2:
+                        if(selectedYear > creationDate.year || (selectedYear == creationDate.year && selectedMonth > creationDate.month)) {
+                          if (selectedMonth == 1) {
+                            selectedMonth = 12;
+                            selectedYear--;
+                          } else {
+                            selectedMonth--;
+                          }
                         }
-
-                        String prefix = rodIndex == 0
-                            ? "Your Total score for "
-                            : (rodIndex == 1
-                                ? "Your Average score per item for "
-                                : "Average score amongst users for ");
-                        return BarTooltipItem(
-                            prefix +
-                                period +
-                                ' ' +
-                                (viewBy == 2 ? months[selectedMonth - 1] : '') +
-                                '\n',
-                            themeData.textTheme.bodyText1!
-                                .copyWith(color: Colors.white),
-                            children: [
-                              TextSpan(
-                                  text: rod.y.toString(),
-                                  style: themeData.textTheme.headline6!
-                                      .copyWith(color: Colors.white))
-                            ]);
-                      })),
-                      barGroups: buildBarGroupsFromClothingList(
-                          snapshot.data![0],
-                          snapshot.data![1],
-                          snapshot.data![2],
-                          snapshot.data![3],
-                          snapshot.data![4],
-                          viewBy,
-                          month: selectedMonth,
-                          year: selectedYear),
-                      titlesData: FlTitlesData(
-                        show: true,
-                        // rightTitles: SideTitles(showTitles: false),
-                        topTitles: SideTitles(showTitles: false),
-                        bottomTitles: SideTitles(
-                            showTitles: true,
-                            getTextStyles: (context, value) => const TextStyle(
-                                color: Color(0xff7589a2),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14),
-                            margin: 20,
-                            getTitles: (double value) {
-                              switch (viewBy) {
-                                case 2:
-                                  // Month view
-                                  String suffix = value % 10 == 1
-                                      ? "st"
-                                      : value % 10 == 2
-                                          ? "nd"
-                                          : value % 10 == 3
-                                              ? "rd"
-                                              : "th";
-                                  return value.toInt().toString() + suffix;
-                                case 3:
-                                  // Year view
-                                  return months[value.toInt() - 1]
-                                      .substring(0, 3);
-                                default:
-                                  return value.toString();
-                              }
-                            }),
-                      )));
-                } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                }
-
-                // By default, show a loading spinner.
-                return const Center(child: CircularProgressIndicator());
-              }),
-        ),
+                          break;
+                        case 3:
+                          if(selectedYear > creationDate.year) {
+                            selectedYear--;
+                          }
+                          break;
+                      }
+                    });
+                  },
+                  icon: const Icon(Icons.arrow_back))),
+          addHorizontalSpace(15),
+          Column(children: [
+            Text("Viewing data for", style: themeData.textTheme.headline6),
+            Text(currentGraphPeriod(), style: themeData.textTheme.headline5)
+          ]),
+          addHorizontalSpace(15),
+          Container(
+              decoration:
+                  // Might want a color here later
+                  const BoxDecoration(
+                      color: Colors.transparent, shape: BoxShape.circle),
+              child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      switch (viewBy) {
+                        case 2:
+                          if(selectedYear < DateTime.now().year || (selectedYear == DateTime.now().year && selectedMonth < DateTime.now().month)) {
+                            if (selectedMonth == 12) {
+                              selectedMonth = 1;
+                              selectedYear++;
+                            } else {
+                              selectedMonth++;
+                            }
+                          }
+                          break;
+                        case 3:
+                          if(selectedYear < DateTime.now().year) {
+                            selectedYear++;
+                          }
+                          break;
+                      }
+                    });
+                  },
+                  icon: const Icon(Icons.arrow_forward)))
+        ],
       ),
+      CarouselSlider(
+        options: CarouselOptions(height: 400.0),
+        items: [
+          [
+            "car.gif",
+            "The average passenger vehicle emits about 0.65 kg of CO\u2082 per km. Your clothes carbon footprint is equivalent to a ${(currentScore / 0.65).toStringAsFixed(2)} km car journey!"
+          ],
+          [
+            "plane.gif",
+            "A Boeing 737 plane emits 90 kg CO\u2082 per hour per passenger. Your clothes carbon footprint is equivalent to a ${(currentScore / 1.5).toStringAsFixed(2)} minute plane journey!"
+          ],
+          [
+            "tree.gif",
+            "The average fully mature tree can absorb 21.77 kg of CO\u2082 per year. Your clothes carbon footprint will need ${(currentScore / 21.77).toStringAsFixed(2)} trees to be offset in a year!"
+          ]
+        ].map((info) {
+          return Builder(
+            builder: (BuildContext context) {
+              return SizedBox(
+                width: 335,
+                height: 174,
+                child: Stack(
+                  children: <Widget>[
+                    Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: 335,
+                            height: 200,
+                            child: Image.asset(
+                              'images/${info[0]}',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ],
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      elevation: 5,
+                      margin: EdgeInsets.all(10),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      left: 20,
+                      right: 20,
+                      child: SizedBox(
+                        height: 150,
+                        child: Container(
+                          width: 250,
+                          child: TextBold(text: info[1]),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+          );
+        }).toList(),
+      ),
+      addVerticalSpace(10),
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         FlatButton(
           shape:
@@ -477,26 +570,157 @@ class _YourScoreState extends State<YourScore> {
               )),
         ),
       ]),
+      addVerticalSpace(10),
       Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
+        child: SizedBox(
+          height: size.height / 2,
+          child: Stack(children: [
+            Center(
+                child: FutureBuilder(
+                    future: Future.wait([
+                      historyValuesInventory,
+                      historyDatesInventory,
+                      clothesInventory,
+                      allHistoryValuesInventory,
+                      allHistoryDatesInventory
+                    ]),
+                    builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                      if (snapshot.hasData) {
+                        if (emptyChart) {
+                          return Flexible(
+                              child: Container(
+                                  width: 200,
+                                  child: Text(
+                                      'No data available for this time period')));
+                        }
+                      }
+                      return const SizedBox.shrink();
+                    })),
+            FutureBuilder(
+                future: Future.wait([
+                  historyValuesInventory,
+                  historyDatesInventory,
+                  clothesInventory,
+                  allHistoryValuesInventory,
+                  allHistoryDatesInventory
+                ]),
+                builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                  if (snapshot.hasData) {
+                    List<BarChartGroupData> clothingBarGroups =
+                        buildBarGroupsFromClothingList(
+                            snapshot.data![0],
+                            snapshot.data![1],
+                            snapshot.data![2],
+                            snapshot.data![3],
+                            snapshot.data![4],
+                            viewBy,
+                            month: selectedMonth,
+                            year: selectedYear);
+
+                    emptyChart = clothingBarGroups.isEmpty;
+
+                    return BarChart(BarChartData(
+                        barTouchData: BarTouchData(touchTooltipData:
+                            BarTouchTooltipData(getTooltipItem:
+                                (group, groupIndex, rod, rodIndex) {
+                          String period = "";
+                          switch (viewBy) {
+                            case 2:
+                              int value = group.x.toInt();
+                              String suffix = value % 10 == 1
+                                  ? "st"
+                                  : value % 10 == 2
+                                      ? "nd"
+                                      : value % 10 == 3
+                                          ? "rd"
+                                          : "th";
+                              period = value.toString() + suffix;
+                              break;
+                            case 3:
+                              period = months[group.x.toInt() - 1];
+                              break;
+                          }
+
+                          String prefix = rodIndex == 0
+                              ? "Your Total score for "
+                              : (rodIndex == 1
+                                  ? "Your Average score per item for "
+                                  : "Average score amongst users for ");
+                          return BarTooltipItem(
+                              prefix +
+                                  period +
+                                  ' ' +
+                                  (viewBy == 2
+                                      ? months[selectedMonth - 1]
+                                      : '') +
+                                  '\n',
+                              themeData.textTheme.bodyText1!
+                                  .copyWith(color: Colors.white),
+                              children: [
+                                TextSpan(
+                                    text: rod.y.toString(),
+                                    style: themeData.textTheme.headline6!
+                                        .copyWith(color: Colors.white))
+                              ]);
+                        })),
+                        barGroups: clothingBarGroups,
+                        titlesData: FlTitlesData(
+                          show: true,
+                          // rightTitles: SideTitles(showTitles: false),
+                          topTitles: SideTitles(showTitles: false),
+                          bottomTitles: SideTitles(
+                              showTitles: true,
+                              getTextStyles: (context, value) =>
+                                  const TextStyle(
+                                      color: Color(0xff7589a2),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                              margin: 20,
+                              getTitles: (double value) {
+                                switch (viewBy) {
+                                  case 2:
+                                    // Month view
+                                    String suffix = value % 10 == 1
+                                        ? "st"
+                                        : value % 10 == 2
+                                            ? "nd"
+                                            : value % 10 == 3
+                                                ? "rd"
+                                                : "th";
+                                    return value.toInt().toString() + suffix;
+                                  case 3:
+                                    // Year view
+                                    return months[value.toInt() - 1]
+                                        .substring(0, 3);
+                                  default:
+                                    return value.toString();
+                                }
+                              }),
+                        )));
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+
+                  // By default, show a loading spinner.
+                  return const Center(child: CircularProgressIndicator());
+                })
+          ]),
+        ),
+      ),
+      const Padding(
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: Text(
             "Your score is measured in kg of CO2 produced.",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 15, color: Colors.black),
           )),
-      Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-          child: Text(
-            "The average passenger vehicle emits about 0.65 kg of CO2 per km.",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 15, color: Colors.black),
-          )),
-      Padding(
+      const Padding(
         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Text("Information source: "),
       ),
       Padding(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: InkWell(
               child: const Text(
                 "https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle",
@@ -581,20 +805,24 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
       // Year View
 
       for (Clothing clothing in clothesList) {
-        if (dateClothesMap.containsKey(clothing.dateTime.month)) {
-          dateClothesMap[clothing.dateTime.month]!.add(clothing);
-        } else {
-          dateClothesMap[clothing.dateTime.month] = [clothing];
+        if (clothing.dateTime.year == year) {
+          if (dateClothesMap.containsKey(clothing.dateTime.month)) {
+            dateClothesMap[clothing.dateTime.month]!.add(clothing);
+          } else {
+            dateClothesMap[clothing.dateTime.month] = [clothing];
+          }
         }
       }
 
       for (var i = 0; i < historyValues.length; i++) {
         DateTime date = historyDates[i];
         double value = historyValues[i];
-        if (dateValuesMap.containsKey(date.month)) {
-          dateValuesMap[date.month]!.add(value);
-        } else {
-          dateValuesMap[date.month] = [value];
+        if (date.year == year) {
+          if (dateValuesMap.containsKey(date.month)) {
+            dateValuesMap[date.month]!.add(value);
+          } else {
+            dateValuesMap[date.month] = [value];
+          }
         }
       }
 
@@ -602,10 +830,12 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
         for (var j = 0; j < allHistoryValues[i].length; j++) {
           DateTime date = allHistoryDates[i][j];
           double value = allHistoryValues[i][j];
-          if (averageDateValuesMap.containsKey(date.month)) {
-            averageDateValuesMap[date.month]!.add(value);
-          } else {
-            averageDateValuesMap[date.month] = [value];
+          if (date.year == year) {
+            if (averageDateValuesMap.containsKey(date.month)) {
+              averageDateValuesMap[date.month]!.add(value);
+            } else {
+              averageDateValuesMap[date.month] = [value];
+            }
           }
         }
       }
@@ -648,13 +878,6 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
 
   return result;
 }
-
-// class ClothesInventory {
-//   final int userId;
-//   final List<Clothing> clothingList;
-//
-//   ClothesInventory({required this.userId, required this.clothingList});
-// }
 
 class Clothing {
   final int id;

@@ -89,7 +89,7 @@ class ThrowAwayItem extends StatelessWidget {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const ItemCalculationStart()),
+                      builder: (context) => ItemCalculationStart(type:"")),
                   (Route<dynamic> route) => false,
                 );
               },
@@ -162,7 +162,7 @@ class ThrowAwayItem extends StatelessWidget {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (context) => const ItemCalculationStart()),
+                builder: (context) =>ItemCalculationStart(type:"")),
             (Route<dynamic> route) => false,
           )
         });
