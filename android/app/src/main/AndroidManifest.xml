@@ -2,8 +2,6 @@
     package="com.example.carbon_footprint_calculator">
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <application
         android:label="carbon_footprint_calculator"
         android:icon="@mipmap/ic_launcher">
