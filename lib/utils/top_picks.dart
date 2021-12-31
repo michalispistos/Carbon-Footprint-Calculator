@@ -101,7 +101,7 @@ class TopPicks {
       name: json['name'] as String,
       slug: json['slug'] as String,
       imageUrl: json['image'] as String,
-      ethicalLabel: json['image'] as String,
+      ethicalLabel: json['ethicalLabel'] as String,
       ethicalRating: json['ethicalRating'] as int,
       price: json['price'] as int,
     );
