@@ -114,6 +114,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
   List<Achievement> achievements = [];
   List<int> myAchievements = [];
   List<dynamic> progresses = [];
+  bool canShare = false;
 
   @override
   void initState() {
@@ -172,6 +173,9 @@ class _AchievementsPageState extends State<AchievementsPage> {
           border_color = MEDAL_BG_COLOR;
           achievement_icon = MEDAL_IMAGE;
           text_color = NORMAL_TEXT_COLOR;
+          canShare = true;
+        }else{
+          canShare = false;
         }
 
         int progress = 0;
@@ -222,6 +226,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
               // addVerticalSpace(22),
               Column(
                 children:[
+                    canShare?
                      IconButton(
                         icon: const Icon(Icons.share),
                         onPressed: () async {
@@ -237,7 +242,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
                           setState((){});
                         },
 
-                      ),
+                      ): Container(),
               Container(
                   height: 40,
                   child: Align(
