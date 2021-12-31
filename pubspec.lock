@@ -127,13 +127,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.2"
-  file_picker:
-    dependency: "direct main"
-    description:
-      name: file_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.10.0"
   fl_chart:
     dependency: "direct main"
     description:
@@ -152,7 +145,7 @@ packages:
       name: flutter_barcode_scanner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.2"
+    version: "2.0.0"
   flutter_cache_manager:
     dependency: "direct main"
     description:
@@ -194,7 +187,7 @@ packages:
       name: flutter_plugin_android_lifecycle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.11"
+    version: "2.0.5"
   flutter_svg:
     dependency: transitive
     description:

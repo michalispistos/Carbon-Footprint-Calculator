@@ -53,7 +53,6 @@ dependencies:
   intl: any
   carousel_slider: ^4.0.0
   share: ^2.0.4
-  file_picker: ^1.9.0
 
 
 dev_dependencies:
