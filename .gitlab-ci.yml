@@ -1,5 +1,6 @@
 stages:
   - release
+  - deploy
 
 release:staging:
   stage: release
@@ -9,3 +10,15 @@ release:staging:
   only:
     refs:
       - ci-cd
+
+pages:
+  stage: deploy
+  script:
+  - mkdir .public
+  - cp -r * .public
+  - mv .public public
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
