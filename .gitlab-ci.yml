@@ -1,6 +1,6 @@
 stages:
+  - pages-deploy
   - release
-  - deploy
 
 release:staging:
   stage: release
@@ -12,7 +12,7 @@ release:staging:
       - ci-cd
 
 pages:
-  stage: deploy
+  stage: pages-deploy
   script:
   - mkdir .public
   - cp -r * .public
