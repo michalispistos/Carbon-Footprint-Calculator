@@ -17,6 +17,7 @@
 //       });
 //
 // }
+//
 
 import 'dart:collection';
 import 'dart:convert';
@@ -25,13 +26,13 @@ import 'dart:ui';
 import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 import 'package:carbon_footprint_calculator/widgets/bold_text.dart';
 import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 const months = <String>[
   'January',
@@ -115,7 +116,7 @@ Future<DateTime> fetchCreatedAtDate() async {
   final response = await http.get(Uri.parse(
       "https://footprintcalculator.herokuapp.com/users/created-date/${globals.userid}"));
   if (response.statusCode == 200) {
-    String dateStr = jsonDecode(response.body)["createdAt"].substring(0,10);
+    String dateStr = jsonDecode(response.body)["createdAt"].substring(0, 10);
     DateTime date = DateFormat('yyyy-MM-dd').parse(dateStr);
     return date;
   } else {
@@ -251,7 +252,7 @@ class _YourScoreState extends State<YourScore> {
     historyValuesInventory = fetchHistoryValues();
     allHistoryDatesInventory = fetchAllHistoryDates();
     allHistoryValuesInventory = fetchAllHistoryValues();
-    fetchCreatedAtDate().then((date){
+    fetchCreatedAtDate().then((date) {
       setState(() {
         creationDate = date;
       });
@@ -353,11 +354,9 @@ class _YourScoreState extends State<YourScore> {
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
     final Size size = MediaQuery.of(context).size;
-    calculateCurrentScore().then((value) =>
-        setState((){
+    calculateCurrentScore().then((value) => setState(() {
           currentScore = value;
-        })
-    );
+        }));
 
     return SingleChildScrollView(
         child: Column(children: [
@@ -409,73 +408,6 @@ class _YourScoreState extends State<YourScore> {
         ),
       ),
       addVerticalSpace(10),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-              decoration:
-                  // Might want a color here later
-                  const BoxDecoration(
-                      color: Colors.transparent, shape: BoxShape.circle),
-              child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      switch (viewBy) {
-                        case 2:
-                        if(selectedYear > creationDate.year || (selectedYear == creationDate.year && selectedMonth > creationDate.month)) {
-                          if (selectedMonth == 1) {
-                            selectedMonth = 12;
-                            selectedYear--;
-                          } else {
-                            selectedMonth--;
-                          }
-                        }
-                          break;
-                        case 3:
-                          if(selectedYear > creationDate.year) {
-                            selectedYear--;
-                          }
-                          break;
-                      }
-                    });
-                  },
-                  icon: const Icon(Icons.arrow_back))),
-          addHorizontalSpace(15),
-          Column(children: [
-            Text("Viewing data for", style: themeData.textTheme.headline6),
-            Text(currentGraphPeriod(), style: themeData.textTheme.headline5)
-          ]),
-          addHorizontalSpace(15),
-          Container(
-              decoration:
-                  // Might want a color here later
-                  const BoxDecoration(
-                      color: Colors.transparent, shape: BoxShape.circle),
-              child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      switch (viewBy) {
-                        case 2:
-                          if(selectedYear < DateTime.now().year || (selectedYear == DateTime.now().year && selectedMonth < DateTime.now().month)) {
-                            if (selectedMonth == 12) {
-                              selectedMonth = 1;
-                              selectedYear++;
-                            } else {
-                              selectedMonth++;
-                            }
-                          }
-                          break;
-                        case 3:
-                          if(selectedYear < DateTime.now().year) {
-                            selectedYear++;
-                          }
-                          break;
-                      }
-                    });
-                  },
-                  icon: const Icon(Icons.arrow_forward)))
-        ],
-      ),
       CarouselSlider(
         options: CarouselOptions(height: 400.0),
         items: [
@@ -539,37 +471,77 @@ class _YourScoreState extends State<YourScore> {
         }).toList(),
       ),
       addVerticalSpace(10),
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        FlatButton(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
-          color: const Color(0xfffffaca),
-          onPressed: () {
-            setState(() {
-              viewBy = 2;
-            });
-          },
-          child: const Text('View by month',
-              style: TextStyle(
-                fontSize: 17,
-              )),
-        ),
-        addHorizontalSpace(10),
-        FlatButton(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
-          color: const Color(0xfffffaca),
-          onPressed: () {
-            setState(() {
-              viewBy = 3;
-            });
-          },
-          child: const Text('View by year',
-              style: TextStyle(
-                fontSize: 17,
-              )),
-        ),
-      ]),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+              decoration:
+                  // Might want a color here later
+                  const BoxDecoration(
+                      color: Colors.transparent, shape: BoxShape.circle),
+              child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      switch (viewBy) {
+                        case 2:
+                          if (selectedYear > creationDate.year ||
+                              (selectedYear == creationDate.year &&
+                                  selectedMonth > creationDate.month)) {
+                            if (selectedMonth == 1) {
+                              selectedMonth = 12;
+                              selectedYear--;
+                            } else {
+                              selectedMonth--;
+                            }
+                          }
+                          break;
+                        case 3:
+                          if (selectedYear > creationDate.year) {
+                            selectedYear--;
+                          }
+                          break;
+                      }
+                    });
+                  },
+                  icon: const Icon(Icons.arrow_back))),
+          addHorizontalSpace(15),
+          Column(children: [
+            Text("Viewing data for", style: themeData.textTheme.headline6),
+            Text(currentGraphPeriod(), style: themeData.textTheme.headline5)
+          ]),
+          addHorizontalSpace(15),
+          Container(
+              decoration:
+                  // Might want a color here later
+                  const BoxDecoration(
+                      color: Colors.transparent, shape: BoxShape.circle),
+              child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      switch (viewBy) {
+                        case 2:
+                          if (selectedYear < DateTime.now().year ||
+                              (selectedYear == DateTime.now().year &&
+                                  selectedMonth < DateTime.now().month)) {
+                            if (selectedMonth == 12) {
+                              selectedMonth = 1;
+                              selectedYear++;
+                            } else {
+                              selectedMonth++;
+                            }
+                          }
+                          break;
+                        case 3:
+                          if (selectedYear < DateTime.now().year) {
+                            selectedYear++;
+                          }
+                          break;
+                      }
+                    });
+                  },
+                  icon: const Icon(Icons.arrow_forward)))
+        ],
+      ),
       addVerticalSpace(10),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
@@ -708,6 +680,38 @@ class _YourScoreState extends State<YourScore> {
           ]),
         ),
       ),
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        FlatButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+          color: const Color(0xfffffaca),
+          onPressed: () {
+            setState(() {
+              viewBy = 2;
+            });
+          },
+          child: const Text('View by month',
+              style: TextStyle(
+                fontSize: 17,
+              )),
+        ),
+        addHorizontalSpace(10),
+        FlatButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+          color: const Color(0xfffffaca),
+          onPressed: () {
+            setState(() {
+              viewBy = 3;
+            });
+          },
+          child: const Text('View by year',
+              style: TextStyle(
+                fontSize: 17,
+              )),
+        ),
+      ]),
+      addVerticalSpace(10),
       const Padding(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: Text(
