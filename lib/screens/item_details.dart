@@ -108,7 +108,7 @@ class _ItemDetailsState extends State<ItemDetails> {
                   fontSize: 17,
                 )),
             content: SizedBox(
-                height: 20,
+                height: 35,
                 child: Text(errorMessage,
                     style: const TextStyle(
                       fontSize: 15,

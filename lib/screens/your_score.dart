@@ -237,7 +237,6 @@ class _YourScoreState extends State<YourScore> {
   late int selectedMonth;
   late int selectedYear;
   late DateTime creationDate;
-  double currentScore = 0;
   bool emptyChart = false;
 
   @override
@@ -354,9 +353,9 @@ class _YourScoreState extends State<YourScore> {
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
     final Size size = MediaQuery.of(context).size;
-    calculateCurrentScore().then((value) => setState(() {
-          currentScore = value;
-        }));
+    // calculateCurrentScore().then((value) => setState(() {
+    //       currentScore = value;
+    //     }));
 
     return SingleChildScrollView(
         child: Column(children: [
@@ -408,68 +407,80 @@ class _YourScoreState extends State<YourScore> {
         ),
       ),
       addVerticalSpace(10),
-      CarouselSlider(
-        options: CarouselOptions(height: 400.0),
-        items: [
-          [
-            "car.gif",
-            "The average passenger vehicle emits about 0.65 kg of CO\u2082 per km. Your clothes carbon footprint is equivalent to a ${(currentScore / 0.65).toStringAsFixed(2)} km car journey!"
-          ],
-          [
-            "plane.gif",
-            "A Boeing 737 plane emits 90 kg CO\u2082 per hour per passenger. Your clothes carbon footprint is equivalent to a ${(currentScore / 1.5).toStringAsFixed(2)} minute plane journey!"
-          ],
-          [
-            "tree.gif",
-            "The average fully mature tree can absorb 21.77 kg of CO\u2082 per year. Your clothes carbon footprint will need ${(currentScore / 21.77).toStringAsFixed(2)} trees to be offset in a year!"
-          ]
-        ].map((info) {
-          return Builder(
-            builder: (BuildContext context) {
-              return SizedBox(
-                width: 335,
-                height: 174,
-                child: Stack(
-                  children: <Widget>[
-                    Card(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            width: 335,
-                            height: 200,
-                            child: Image.asset(
-                              'images/${info[0]}',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ],
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      elevation: 5,
-                      margin: EdgeInsets.all(10),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      left: 20,
-                      right: 20,
-                      child: SizedBox(
-                        height: 150,
-                        child: Container(
-                          width: 250,
-                          child: TextBold(text: info[1]),
-                        ),
-                      ),
-                    )
+      FutureBuilder<double>(
+          future: calculateCurrentScore(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              double currentScore = snapshot.data!;
+              return CarouselSlider(
+                options: CarouselOptions(height: 400.0),
+                items: [
+                  [
+                    "car.gif",
+                    "The average passenger vehicle emits about 0.65 kg of CO\u2082 per km. Your clothes carbon footprint is equivalent to a ${(currentScore / 0.65).toStringAsFixed(2)} km car journey!"
                   ],
-                ),
+                  [
+                    "plane.gif",
+                    "A Boeing 737 plane emits 90 kg CO\u2082 per hour per passenger. Your clothes carbon footprint is equivalent to a ${(currentScore / 1.5).toStringAsFixed(2)} minute plane journey!"
+                  ],
+                  [
+                    "tree.gif",
+                    "The average fully mature tree can absorb 21.77 kg of CO\u2082 per year. Your clothes carbon footprint will need ${(currentScore / 21.77).toStringAsFixed(2)} trees to be offset in a year!"
+                  ]
+                ].map((info) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return SizedBox(
+                        width: 335,
+                        height: 174,
+                        child: Stack(
+                          children: <Widget>[
+                            Card(
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    width: 335,
+                                    height: 200,
+                                    child: Image.asset(
+                                      'images/${info[0]}',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              elevation: 5,
+                              margin: EdgeInsets.all(10),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              left: 20,
+                              right: 20,
+                              child: SizedBox(
+                                height: 150,
+                                child: Container(
+                                  width: 250,
+                                  child: TextBold(text: info[1]),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }).toList(),
               );
-            },
-          );
-        }).toList(),
-      ),
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
+            }
+
+            // By default, show a loading spinner.
+            return const CircularProgressIndicator();
+          }),
       addVerticalSpace(10),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -494,10 +505,11 @@ class _YourScoreState extends State<YourScore> {
                               selectedMonth--;
                             }
                           }
+                            // selectedMonth = 8;
                           break;
                         case 3:
                           if (selectedYear > creationDate.year) {
-                            selectedYear--;
+                              selectedYear--;
                           }
                           break;
                       }
@@ -587,6 +599,7 @@ class _YourScoreState extends State<YourScore> {
                             snapshot.data![3],
                             snapshot.data![4],
                             viewBy,
+                            creationDate,
                             month: selectedMonth,
                             year: selectedYear);
 
@@ -742,6 +755,16 @@ class _YourScoreState extends State<YourScore> {
   String currentGraphPeriod() {
     switch (viewBy) {
       case 2:
+        if(selectedYear == creationDate.year && selectedMonth < creationDate.month){
+          setState(() {
+            selectedMonth = creationDate.month;
+          });
+        }
+        if(selectedYear == DateTime.now().year && selectedMonth > DateTime.now().month){
+          setState(() {
+            selectedMonth = DateTime.now().month;
+          });
+        }
         return months[selectedMonth - 1] + ' ' + selectedYear.toString();
       case 3:
         return selectedYear.toString();
@@ -758,6 +781,7 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
     List<List<double>> allHistoryValues,
     List<List<DateTime>> allHistoryDates,
     int viewBy,
+    DateTime creationDate,
     {int month = -1,
     int year = -1}) {
   List<BarChartGroupData> result = [];
@@ -773,10 +797,12 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
           DateTime date = allHistoryDates[i][j];
           double value = allHistoryValues[i][j];
           if (date.month == month && date.year == year) {
-            if (averageDateValuesMap.containsKey(date.day)) {
-              averageDateValuesMap[date.day]!.add(value);
-            } else {
-              averageDateValuesMap[date.day] = [value];
+            if(date.year > creationDate.year || date.month > creationDate.month || date.day >= creationDate.day) {
+              if (averageDateValuesMap.containsKey(date.day)) {
+                averageDateValuesMap[date.day]!.add(value);
+              } else {
+                averageDateValuesMap[date.day] = [value];
+              }
             }
           }
         }
@@ -810,11 +836,11 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
 
       for (Clothing clothing in clothesList) {
         if (clothing.dateTime.year == year) {
-          if (dateClothesMap.containsKey(clothing.dateTime.month)) {
-            dateClothesMap[clothing.dateTime.month]!.add(clothing);
-          } else {
-            dateClothesMap[clothing.dateTime.month] = [clothing];
-          }
+            if (dateClothesMap.containsKey(clothing.dateTime.month)) {
+              dateClothesMap[clothing.dateTime.month]!.add(clothing);
+            } else {
+              dateClothesMap[clothing.dateTime.month] = [clothing];
+            }
         }
       }
 
@@ -835,11 +861,13 @@ List<BarChartGroupData> buildBarGroupsFromClothingList(
           DateTime date = allHistoryDates[i][j];
           double value = allHistoryValues[i][j];
           if (date.year == year) {
-            if (averageDateValuesMap.containsKey(date.month)) {
-              averageDateValuesMap[date.month]!.add(value);
-            } else {
-              averageDateValuesMap[date.month] = [value];
-            }
+            if (date.year > creationDate.year || date.month >= creationDate.month){
+              if (averageDateValuesMap.containsKey(date.month)) {
+                averageDateValuesMap[date.month]!.add(value);
+              } else {
+                averageDateValuesMap[date.month] = [value];
+              }
+          }
           }
         }
       }

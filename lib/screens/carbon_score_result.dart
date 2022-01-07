@@ -85,13 +85,13 @@ class _CarbonScoreResultState extends State<CarbonScoreResult> {
           return AlertDialog(
             title: const Text(""),
             content: SizedBox(
-                height: 70,
+                height: 75,
                 child: Column(children: [
                   const Text("Please input name of your Item",
                       style: TextStyle(fontSize: 16.0, color: Colors.black)),
                   const SizedBox(height: 10),
                   SizedBox(
-                      height: 30,
+                      height: 35,
                       child: TextField(
                         textAlign: TextAlign.center,
                         cursorColor: Colors.black,
