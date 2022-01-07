@@ -74,13 +74,13 @@ img {
 
 .centered {
   text-align: center;
-  position: fixed;
-  top: 57%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin-top:50px;
+  margin-bottom: 50px;
 }
 
+
 .row {
+  margin-top: 50px;
   display: flex;
 }
 
