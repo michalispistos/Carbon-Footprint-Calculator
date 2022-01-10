@@ -20,8 +20,7 @@ class GiveAwayItem extends StatelessWidget {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-            title: const Flexible(
-          child: Padding(
+            title: Padding(
               padding: EdgeInsets.fromLTRB(50, 0, 0, 0),
               child: Text(
                 'Sell or Donate',
@@ -32,7 +31,7 @@ class GiveAwayItem extends StatelessWidget {
                 softWrap: false,
                 overflow: TextOverflow.fade,
               )),
-        )),
+        ),
         body: SingleChildScrollView(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

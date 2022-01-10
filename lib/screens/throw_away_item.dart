@@ -20,8 +20,7 @@ class ThrowAwayItem extends StatelessWidget {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-            title: Flexible(
-          child: Padding(
+            title: Padding(
               padding: EdgeInsets.fromLTRB(55, 0, 0, 0),
               child: Text(
                 'Throw away',
@@ -32,7 +31,7 @@ class ThrowAwayItem extends StatelessWidget {
                 softWrap: false,
                 overflow: TextOverflow.fade,
               )),
-        )),
+        ),
         body: SingleChildScrollView(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

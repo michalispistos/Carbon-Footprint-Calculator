@@ -19,8 +19,7 @@ class ItemInfoPage extends StatelessWidget {
           appBar: AppBar(
               toolbarHeight: 70,
               elevation: 0,
-              title: const Flexible(
-                child: Text(
+              title: Text(
                   'Tell us about your item',
                   style: TextStyle(
                     fontSize: 17,
@@ -29,7 +28,7 @@ class ItemInfoPage extends StatelessWidget {
                   softWrap: false,
                   overflow: TextOverflow.fade,
                 ),
-              )),
+              ),
           resizeToAvoidBottomInset: false,
           body: Container(
               decoration: const BoxDecoration(
