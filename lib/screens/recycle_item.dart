@@ -33,6 +33,7 @@ class _RecycleItemState extends State<RecycleItem> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+            backgroundColor: Colors.blue,
             title: const Flexible(
           child: Padding(
               padding: EdgeInsets.fromLTRB(75, 0, 0, 0),
