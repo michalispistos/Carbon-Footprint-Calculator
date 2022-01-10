@@ -53,7 +53,7 @@ dependencies:
   intl: any
   carousel_slider: ^4.0.0
   share: ^2.0.4
-
+  progress_dialog: ^1.2.4
 
 dev_dependencies:
   flutter_test:

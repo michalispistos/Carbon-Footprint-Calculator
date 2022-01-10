@@ -9,6 +9,7 @@ import 'package:carbon_footprint_calculator/widgets/widget_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:carbon_footprint_calculator/utils/globals.dart' as globals;
 import 'package:http/http.dart' as http;
+import 'package:progress_dialog/progress_dialog.dart';
 
 class CarbonScoreResult extends StatefulWidget {
   final Item item;
@@ -121,6 +122,11 @@ class _CarbonScoreResultState extends State<CarbonScoreResult> {
                     addClothes(itemName, item);
                     createItemAddedDialog(context);
                     setState(() {
+                      ProgressDialog pr = new ProgressDialog(context);
+                      pr.show();
+                      Future.delayed(Duration(seconds: 3)).then((value) {
+                        pr.hide();
+                      });
                       update = true;
                     });
                   }
