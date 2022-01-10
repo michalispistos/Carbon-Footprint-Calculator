@@ -20,7 +20,7 @@ class ThrowAwayItem extends StatelessWidget {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-            title: const Flexible(
+            title: Flexible(
           child: Padding(
               padding: EdgeInsets.fromLTRB(55, 0, 0, 0),
               child: Text(
