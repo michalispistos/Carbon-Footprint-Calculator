@@ -33,20 +33,7 @@ class _RecycleItemState extends State<RecycleItem> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-            backgroundColor: Colors.blue,
-            title: const Flexible(
-          child: Padding(
-              padding: EdgeInsets.fromLTRB(75, 0, 0, 0),
-              child: Text(
-                'Recycles',
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-                maxLines: 2,
-                softWrap: false,
-                overflow: TextOverflow.fade,
-              )),
-        )),
+            title: Text("Recycle")),
         body: SingleChildScrollView(
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
