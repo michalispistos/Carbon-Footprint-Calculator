@@ -37,7 +37,7 @@ class _RecycleItemState extends State<RecycleItem> {
           child: Padding(
               padding: EdgeInsets.fromLTRB(75, 0, 0, 0),
               child: Text(
-                'Recycle',
+                'Recycles',
                 style: TextStyle(
                   fontSize: 20,
                 ),
